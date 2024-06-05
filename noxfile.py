@@ -477,7 +477,9 @@ def publish(session: nox.Session, lib: str) -> None:
         session.run("poetry", "publish", "--build", *session.posargs)
     output = session.run("poetry", "version", "-s", silent=True)
     version = output.splitlines()[-1]
-    session.run("git", "tag", f"{lib}/v{version}", external=True)
+    tag = f"{lib}/v{version}"
+    session.run("git", "tag", tag, external=True)
+    session.run("git", "push", "origin", tag, external=True)
 
 
 def get_version(directory: str, root=False) -> str:
