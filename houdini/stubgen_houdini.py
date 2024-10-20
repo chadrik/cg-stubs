@@ -12,6 +12,7 @@ from stubgenlib import (
     AdvancedSigMatcher,
     SignatureFixer,
     CppTypeConverter,
+    DefaultSigGenerator,
 )
 
 
@@ -80,15 +81,6 @@ class AnnotationFixer(ast.NodeTransformer):
                 ctx=ast.Load(),
             )
         return new_node
-
-
-class DefaultSigGenerator(SignatureGenerator):
-    """Sig Gen that uses the signature extracted from the source code"""
-
-    def get_function_sig(
-        self, default_sig: FunctionSig, ctx: FunctionContext
-    ) -> list[FunctionSig] | None:
-        return [default_sig]
 
 
 class HoudiniCppTypeConverter(CppTypeConverter):
