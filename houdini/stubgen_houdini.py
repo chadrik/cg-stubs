@@ -189,7 +189,7 @@ class DefaultSigGenerator(SignatureGenerator):
     ) -> list[FunctionSig] | None:
         return [default_sig]
 
-from functools import lru_cache
+
 class HoudiniCppTypeConverter(CppTypeConverter):
     TUPLE_TYPES = {
         "_StringTuple": "str",
@@ -292,6 +292,9 @@ class HoudiniSignatureGenerator(AdvancedSignatureGenerator):
             "*.__gt__": "(self, other: object) -> bool",
             "*.__ge__": "(self, other: object) -> bool",
             "*.applicationVersion": "(include_patch: bool = False) -> Tuple[int, int, int]",
+            # FIXME: The type annotation and default value for precision are being stripped out.
+            #   Possible that it is being stripped out because it is `Literal`, but even
+            #   when we declare it as a string, the default is also pulled out.
             "*.runVex": "(vex_file: str, inputs: dict[str, Any], precision: Literal['32', '64'] = '32') -> dict[str, Any]",
             "*.startHoudiniEngineDebugger": "(portOrPipeName: Union[int, str]) -> None",
             "*.NetworkMovableItem.shiftPosition": "(self, vector2: Union[Sequence[float], Vector2]) -> None",
@@ -448,7 +451,11 @@ class ASTStubGenerator(mypy.stubgen.ASTStubGenerator):
         return enum_names
 
     def dedent(self) -> None:
-        """When we exit the class, add any missing methods or enums we have flagged above."""
+        """When we exit the class, add any missing methods or enums we have flagged above.
+
+        We override this method to inject missing methods as we exit the class, because
+        it is the only method on the generator called while the class context still exists.
+        """
         if self._current_class:
             class_name = self._current_class.name
             for missing_definition in MISSING_FUNCTION_DEFINITIONS.get(class_name, {}):
