@@ -5,9 +5,10 @@ from _typeshed import Incomplete
 
 import datetime
 import typing
-from typing import Any, Dict, Iterator, Iterable, Literal, Optional, Sequence, Self, Union, Tuple
+from typing import Any, Callable, Dict, Iterator, Iterable, Literal, Optional, Sequence, Self, Union, Tuple
 
 import pxr.Sdf
+import pxr.Usd
 from PySide2 import QtGui, QtWidgets
 
 
@@ -9083,7 +9084,7 @@ class Node(NetworkMovableItem):
 
 
         '''
-    def recursiveGlob(self, *args, **kwargs) -> Tuple[Node, ...]:
+    def recursiveGlob(self, pattern: str, filter: EnumValue = ..., include_subnets: bool = ...) -> Sequence[Node]:
         """
 
         recursiveGlob(self, pattern, filter=hou.nodeTypeFilter.NoFilter,
@@ -9246,7 +9247,7 @@ class Node(NetworkMovableItem):
 
 
         """
-    def setNamedInput(self, *args) -> None:
+    def setNamedInput(self, input_name: str, item_to_become_input: NetworkMovableItem, output_name_or_index: Union[str, int]) -> None:
         """
 
         setNamedInput(self, input_name, item_to_become_input,
@@ -9322,7 +9323,7 @@ class Node(NetworkMovableItem):
 
 
         """
-    def inputs(self) -> Tuple[Node, ...]:
+    def inputs(self) -> Sequence[Self]:
         """
 
         inputs(self) -> tuple of hou.Node
@@ -9478,7 +9479,7 @@ class Node(NetworkMovableItem):
 
 
         """
-    def outputs(self) -> Tuple[Node, ...]:
+    def outputs(self) -> Sequence[Self]:
         """
 
         outputs(self) -> tuple of hou.Node
@@ -9722,7 +9723,7 @@ class Node(NetworkMovableItem):
 
         '''
     def numItems(self, item_type: Optional[EnumValue] = None, selected_only: bool = False, include_hidden: bool = False) -> int: ...
-    def deleteItems(self, *args, **kwargs) -> None:
+    def deleteItems(self, items: Iterable[NetworkMovableItem], disable_safety_checks: bool = ...) -> None:
         """
 
         deleteItems(self, items, disable_safety_checks=False)
@@ -9743,7 +9744,7 @@ class Node(NetworkMovableItem):
 
 
         """
-    def copyItemsToClipboard(self, *args) -> None:
+    def copyItemsToClipboard(self, items: Iterable[NetworkMovableItem]) -> None:
         """
 
         copyItemsToClipboard(self, items)
@@ -10766,7 +10767,7 @@ class OpNode(Node):
 
 
         """
-    def fileReferences(self, *args, **kwargs) -> Tuple[tuple[Parm, str], ...]:
+    def fileReferences(project_dir_variable: str = ..., include_all_refs: bool = ...) -> Sequence[Tuple[Parm, str]]:
         '''
 
         fileReferences(self, recurse = True, project_dir_variable = \\"HIP\\",
@@ -11278,7 +11279,7 @@ class OpNode(Node):
 
         """
     def saveToCompiledVexFile(self, file_name: str, context_name: Optional[str] = None) -> None: ...
-    def cook(self, *args, **kwargs) -> None:
+    def cook(self, force: bool = ..., frame_range: Sequence[float] = ...) -> None:
         """
 
         cook(self, force=False, frame_range=())
@@ -11294,7 +11295,7 @@ class OpNode(Node):
 
 
         """
-    def needsToCook(self, *args) -> bool:
+    def needsToCook(self, time: float = ...) -> bool:
         """
 
         needsToCook(self, time=hou.time()) -> bool
@@ -11397,7 +11398,7 @@ class OpNode(Node):
 
 
         """
-    def setDeleteScript(self, *args) -> None:
+    def setDeleteScript(self, script_text: str, language: EnumValue = ...) -> None:
         """
 
         setDeleteScript(self, script_text, language=hou.scriptLanguage.Python)
@@ -11548,7 +11549,7 @@ class OpNode(Node):
 
 
         """
-    def stampValue(self, *args) -> str:
+    def stampValue(self, parm_name: str, default_value: Union[float, str]) -> str:
         '''
 
         stampValue(self, parm_name, default_value)
@@ -11815,7 +11816,7 @@ class OpNode(Node):
         '''
     def simulation(self) -> DopSimulation: ...
     def findNodesThatProcessedObject(self, dop_object: DopObject) -> Tuple[Node, ...]: ...
-    def addError(self, *args, **kwargs) -> None:
+    def addError(self, message: str, severity: EnumValue = ...) -> None:
         """
 
         addError(self, message, severity=Hom:hou.severityType.Error)
@@ -12905,7 +12906,7 @@ class ObjNode(OpNode):
 
 
         """
-    def material(self, *args, **kwargs) -> None:
+    def material(self, operation: str, parameter: Optional[Sequence[str]] = ...) -> None:
         '''
 
         material(self, operation, parameter)
@@ -13064,7 +13065,7 @@ class Prim:
         """
     def edges(self) -> Tuple[Edge, ...]: ...
     def numEdges(self) -> int: ...
-    def floatAttribValue(self, *args) -> float:
+    def floatAttribValue(self, attrib: Union[Attrib, str]) -> float:
         """
 
         floatAttribValue(self, attrib) -> float
@@ -13082,7 +13083,7 @@ class Prim:
 
 
         """
-    def floatListAttribValue(self, *args) -> Tuple[float, ...]:
+    def floatListAttribValue(self, name_or_attrib: Union[Attrib, str]) -> Sequence[float]:
         """
 
         floatListAttribValue(self, name_or_attrib) -> tuple of float
@@ -13098,7 +13099,7 @@ class Prim:
 
 
         """
-    def intAttribValue(self, *args) -> int:
+    def intAttribValue(self, attrib: Union[Attrib, str]) -> int:
         """
 
         intAttribValue(self, name_or_attrib) -> int
@@ -13110,7 +13111,7 @@ class Prim:
 
 
         """
-    def intListAttribValue(self, *args) -> Tuple[int, ...]:
+    def intListAttribValue(self, name_or_attrib: Union[Attrib, str]) -> Sequence[int]:
         """
 
         intListAttribValue(self, name_or_attrib) -> tuple of int
@@ -13122,7 +13123,7 @@ class Prim:
 
 
         """
-    def stringAttribValue(self, *args) -> str:
+    def stringAttribValue(self, attrib: Union[Attrib, str]) -> str:
         """
 
         stringAttribValue(self, name_or_attrib) -> str
@@ -13133,7 +13134,7 @@ class Prim:
 
 
         """
-    def stringListAttribValue(self, *args) -> Tuple[str, ...]:
+    def stringListAttribValue(self, name_or_attrib: Union[Attrib, str]) -> Sequence[str]:
         """
 
         stringListAttribValue(self, name_or_attrib) -> tuple of str
@@ -13149,7 +13150,7 @@ class Prim:
 
 
         """
-    def dictAttribValue(self, *args) -> dict[str, Any]:
+    def dictAttribValue(self, attrib: Union[Attrib, str]) -> Dict[str, Any]:
         """
 
         dictAttribValue(self, name_or_attrib) -> dict
@@ -13160,7 +13161,7 @@ class Prim:
 
 
         """
-    def dictListAttribValue(self, *args) -> Tuple[dict[str, Any], ...]:
+    def dictListAttribValue(self, name_or_attrib: Union[Attrib, str]) -> Sequence[dict[str, Any]]:
         """
 
         dictListAttribValue(self, name_or_attrib) -> tuple of str
@@ -13175,7 +13176,7 @@ class Prim:
 
 
         """
-    def setAttribValue(self, *args) -> None:
+    def setAttribValue(self, name_or_attrib: Union[Attrib, str], attrib_value: Union[int, float, str, Dict[str, Any]]) -> None:
         '''
 
         setAttribValue(self, name_or_attrib, attrib_value)
@@ -13285,7 +13286,7 @@ class Prim:
 
 
         """
-    def attribValue(self, *args) -> Any:
+    def attribValue(self, attrib: Union[Attrib, str]) -> Union[int, float, str, Sequence[int], Sequence[float], Dict[str, Any]]:
         """
 
         attribValue(self, name_or_attrib) -> int, float, str, tuple or dict
@@ -13320,7 +13321,7 @@ class Prim:
 
 
         """
-    def attribValueAtInterior(self, *args) -> Any:
+    def attribValueAtInterior(self, attrib: Union[Attrib, str], u: float, v: float, w: float = ...) -> Union[int, float, str, Sequence[int], Sequence[float]]:
         """
 
         attribValueAtInterior(self, attrib_or_name, u, v, w=0.0) -> int, float,
@@ -13387,10 +13388,10 @@ class Prim:
 
         """
     def primuConvert(self, u: float, mode: int, tol: Optional[float] = ...) -> float: ...
-    def voxelRangeAsBool(self, range: BoundingBox) -> Tuple[bool, ...]: ...
-    def voxelRangeAsInt(self, range: BoundingBox) -> Tuple[int, ...]: ...
-    def voxelRangeAsFloat(self, range: BoundingBox) -> Tuple[float, ...]: ...
-    def voxelRangeAsVector3(self, range: BoundingBox) -> Tuple[Vector3, ...]: ...
+    def voxelRangeAsBool(self, range: BoundingBox) -> Sequence[bool]: ...
+    def voxelRangeAsInt(self, range: BoundingBox) -> Sequence[int]: ...
+    def voxelRangeAsFloat(self, range: BoundingBox) -> Sequence[float]: ...
+    def voxelRangeAsVector3(self, range: BoundingBox) -> Sequence[Vector3]: ...
 
 class Face(Prim):
     """
@@ -13470,7 +13471,7 @@ class Face(Prim):
 
 
         """
-    def attribValueAt(self, attrib_or_name: str, u: float, du: int = ...) -> Any:
+    def attribValueAt(self, attrib_or_name: Union[Attrib, str], u: float, du: float = ...) -> Union[int, float, str, Sequence[int], Sequence[float]]:
         """
 
         attribValueAt(self, attrib_or_name, u, du=0) -> int, float, str or tuple
@@ -14941,7 +14942,7 @@ class NodeTypeCategory:
 
 
         """
-    def nodeType(self, type_name: str) -> Optional[NodeType]:
+    def nodeType(category_or_name: Union[NodeTypeCategory, str], internal_name: Optional[str] = ...) -> Optional[NodeType]:
         """
 
         nodeType(self, type_name) -> hou.NodeType or None
@@ -15832,7 +15833,7 @@ class ParmTemplateGroup:
 
 
         '''
-    def findIndices(self, *args) -> Tuple[int, ...]:
+    def findIndices(self, name_or_parm_template: Union[ParmTemplate, str]) -> Sequence[int]:
         """
 
         findIndices(self, name_or_parm_template) -> tuple of int
@@ -15857,7 +15858,7 @@ class ParmTemplateGroup:
 
 
         """
-    def findFolder(self, *args) -> Optional[ParmTemplate]:
+    def findFolder(self, label_or_labels: Union[str, Sequence[str]]) -> Optional[ParmTemplate]:
         """
 
         findFolder(self, label_or_labels) -> hou.FolderParmTemplate or None
@@ -15880,7 +15881,7 @@ class ParmTemplateGroup:
 
 
         """
-    def findIndicesForFolder(self, *args) -> Tuple[int, ...]:
+    def findIndicesForFolder(self, name_or_parm_template: Union[ParmTemplate, str]) -> Sequence[int]:
         """
 
         findIndicesForFolder(self, label_or_labels) -> tuple of int
@@ -15928,7 +15929,7 @@ class ParmTemplateGroup:
           >     return parm_template
 
         '''
-    def containingFolderIndices(self, *args) -> Tuple[int, ...]:
+    def containingFolderIndices(self, name_or_parm_template_or_indices: Union[str, ParmTemplate, Sequence[int]]) -> Sequence[int]:
         """
 
         containingFolderIndices(self, name_or_parm_template_or_indices) -> tuple
@@ -16037,7 +16038,7 @@ class ParmTemplateGroup:
 
 
         """
-    def replace(self, *args) -> None:
+    def replace(self, name_or_parm_template_or_indices: Union[str, ParmTemplate, Sequence[int]], parm_template: ParmTemplate) -> None:
         """
 
         replace(self, name_or_parm_template_or_indices, parm_template)
@@ -16068,7 +16069,7 @@ class ParmTemplateGroup:
 
 
         """
-    def insertBefore(self, *args) -> None:
+    def insertBefore(self, name_or_parm_template_or_indices: Union[str, ParmTemplate, Sequence[int]], parm_template: ParmTemplate) -> None:
         """
 
         insertBefore(self, name_or_parm_template_or_indices, parm_template)
@@ -16084,7 +16085,7 @@ class ParmTemplateGroup:
 
 
         """
-    def insertAfter(self, *args) -> None:
+    def insertAfter(self, name_or_parm_template_or_indices: Union[str, ParmTemplate, Sequence[int]], parm_template: ParmTemplate) -> None:
         """
 
         insertAfter(self, name_or_parm_template_or_indices, parm_template)
@@ -16112,7 +16113,7 @@ class ParmTemplateGroup:
 
 
         """
-    def appendToFolder(self, *args) -> None:
+    def appendToFolder(self, label_or_labels_or_parm_template_or_indices: Union[str, Sequence[str], ParmTemplate, Sequence[int]], parm_template: ParmTemplate) -> None:
         '''
 
         appendToFolder(self, label_or_labels_or_parm_template_or_indices,
@@ -16150,7 +16151,7 @@ class ParmTemplateGroup:
 
 
         """
-    def remove(self, *args) -> None:
+    def remove(self, name_or_parm_template_or_indices: Union[str, ParmTemplate, Sequence[int]]) -> None:
         """
 
         remove(self, name_or_parm_template_or_indices)
@@ -16165,7 +16166,7 @@ class ParmTemplateGroup:
 
 
         """
-    def hide(self, *args) -> None:
+    def hide(self, name_or_parm_template_or_indices: Union[str, ParmTemplate, Sequence[int]], on: bool) -> None:
         """
 
         hide(self, name_or_parm_template_or_indices, on)
@@ -16187,7 +16188,7 @@ class ParmTemplateGroup:
 
 
         """
-    def hideFolder(self, *args) -> None:
+    def hideFolder(self, label_or_labels: Union[str, Sequence[str]], on: bool) -> None:
         '''
 
         hideFolder(self, label_or_labels, on)
@@ -16223,7 +16224,7 @@ class ParmTemplateGroup:
 
 
         '''
-    def isHidden(self, *args) -> bool:
+    def isHidden(self, name_or_parm_template_or_indices: Union[str, ParmTemplate, Sequence[int]]) -> bool:
         """
 
         isHidden(self, name_or_parm_template_or_indices) -> bool
@@ -16241,7 +16242,7 @@ class ParmTemplateGroup:
 
 
         """
-    def isFolderHidden(self, *args) -> bool:
+    def isFolderHidden(self, label_or_labels: Union[str, Sequence[str]]) -> bool:
         '''
 
         isFolderHidden(self, label_or_labels) -> bool
@@ -16270,7 +16271,7 @@ class ParmTemplateGroup:
 
 
         """
-    def asDialogScript(self, *args, **kwargs) -> str:
+    def asDialogScript(self, rename_conflicting_parms: bool = ..., full_info: bool = ..., script_name: Optional[str] = ..., script_label: Optional[str] = ..., script_tags: Dict[str, str] = ...) -> str:
         """
 
         asDialogScript(rename_conflicting_parms=False, full_info=False,
@@ -16947,7 +16948,7 @@ class PaneTab:
 
 
         """
-    def displayRadialMenu(self, *args) -> None:
+    def displayRadialMenu(self, menu: Union[str, RadialScriptItem]) -> None:
         """
 
         displayRadialMenu(self, menu)
@@ -17307,7 +17308,7 @@ class DopData:
           > [\'SolverParms/ActiveValue\', \'Solver/Random\']
 
         '''
-    def createSubData(self, *args, **kwargs) -> DopData:
+    def createSubData(self, data_name: str, data_type: str = ..., avoid_name_collisions: bool = ...) -> DopData:
         '''
 
         createSubData(self, data_name, data_type=\\"SIM_EmptyData\\",
@@ -18600,7 +18601,7 @@ class AgentLayer:
 
 
         """
-    def bindings(self, *args) -> Tuple[AgentShapeBinding, ...]:
+    def bindings(self, transform: Optional[int] = ...) -> Sequence[AgentShapeBinding]:
         """
 
         bindings(self, transform = None) -> tuple of hou.AgentShapeBinding
@@ -19526,7 +19527,7 @@ class anim:
 
         """
     @staticmethod
-    def saveBookmarks(*args, **kwargs) -> bool:
+    def saveBookmarks(filename: str, bookmarks: Optional[Sequence[Bookmark]] = ..., include_temporary: bool = ...) -> bool:
         """
 
         saveBookmarks(filename, bookmarks=None, include_temporary=False) -> bool
@@ -19574,7 +19575,7 @@ class anim:
 
         """
     @staticmethod
-    def saveBookmarksToString(*args, **kwargs) -> bytes:
+    def saveBookmarksToString(bookmarks: Optional[Sequence[Bookmark]] = ..., include_temporary: bool = ..., binary: bool = ...) -> bytes:
         """
 
         saveBookmarksToString(bookmarks=None, include_temporary=False,
@@ -19676,7 +19677,7 @@ class anim:
 
         """
     @staticmethod
-    def mergeGeometryChannels(*args) -> None:
+    def mergeGeometryChannels(collection_name: str, geometry: Geometry, channel_names: Optional[Sequence[str]] = ...) -> None:
         """
 
         mergeGeometryChannels(collection_name, geometry, channel_names=None)
@@ -19708,7 +19709,7 @@ class anim:
 
         """
     @staticmethod
-    def getGeometryChannels(*args) -> None:
+    def getGeometryChannels(collection_name: str, geometry: Geometry, channel_names: Optional[Sequence[str]] = ...) -> None:
         """
 
         getGeometryChannels(collection_name, geometry, channel_names=None)
@@ -19767,7 +19768,7 @@ class anim:
 
         """
     @staticmethod
-    def setGeometryChannelsFromPattern(*args) -> None:
+    def setGeometryChannelsFromPattern(collection_name: str, geometry: Geometry, pattern: str) -> None:
         """
 
         setGeometryChannelsFromPattern(collection_name, geometry, pattern)
@@ -19829,7 +19830,7 @@ class anim:
 
         """
     @staticmethod
-    def isGeometryChannelPinned(*args) -> bool:
+    def isGeometryChannelPinned(collection_name: str, channel_names: Optional[str] = ...) -> bool:
         """
 
         isGeometryChannelPinned(collection_name, channel_name=None) -> bool
@@ -20667,7 +20668,7 @@ class AssetGalleryDataSource:
 
 
         """
-    def addItem(self, *args, **kwargs) -> str:
+    def addItem(self, label: str, file_path: Optional[str] = ..., thumbnail: bytes = ..., type_name: str = ..., blind_data: bytes = ..., creation_date: int = ...) -> str:
         """
 
         addItem(self, label, file_path=None, thumbnail=b'', type_name='asset',
@@ -20980,7 +20981,7 @@ class Attrib:
 
 
         """
-    def setOption(self, *args) -> None:
+    def setOption(self, name: str, value: Union[int, float, str, Vector2, Vector3, Vector4, Quaternion, Matrix3, Matrix4, Sequence[float], Sequence[int]], type_hint: EnumValue = ...) -> None:
         """
 
         setOption(self, name, value, type_hint = hou.fieldType::NoSuchField)
@@ -21050,7 +21051,7 @@ class Attrib:
 
 
         """
-    def options(self) -> Any:
+    def options(self) -> Dict[str, Union[bool, int, float, str, Vector2, Vector3, Vector4, Quaternion, Matrix3, Matrix4, Sequence[int], Sequence[float]]]:
         """
 
         option(self, name) -> bool, int, float, str, hou.Vector2, hou.Vector3,
@@ -21065,7 +21066,7 @@ class Attrib:
 
 
         """
-    def option(self, option_name: str) -> Any: ...
+    def option(self, option_name: str) -> Union[bool, int, float, str, Vector2, Vector3, Vector4, Quaternion, Matrix3, Matrix4, Sequence[int], Sequence[float]]: ...
 
 class AttribDataId:
     """
@@ -21595,7 +21596,7 @@ class Bookmark:
 
 
         """
-    def setMetadata(self, *args) -> None:
+    def setMetadata(self, key: str, value: Any, type_hint: EnumValue = ...) -> None:
         """
 
         setMetadata(self, key, value, type_hint = hou.fieldType.NoSuchField)
@@ -21755,7 +21756,7 @@ class BoundingBox:
           >     return (self.minvec() + self.maxvec()) * 0.5
 
         """
-    def enlargeToContain(self, *args) -> None:
+    def enlargeToContain(self, point_or_bbox: Union[Sequence[float], BoundingBox]) -> None:
         """
 
         enlargeToContain(self, point_or_bbox)
@@ -21980,7 +21981,7 @@ class BoundingRect:
           > <hou.Vector2 [0.6, 0.6]>
 
         """
-    def enlargeToContain(self, *args) -> None:
+    def enlargeToContain(self, point_or_rect: Union[Sequence[float], BoundingRect]) -> None:
         """
 
         enlargeToContain(self, point_or_rect)
@@ -22015,7 +22016,7 @@ class BoundingRect:
           > <hou.BoundingRect [0.5, 0.5, 1, 1]>
 
         """
-    def intersects(self, *args) -> bool:
+    def intersects(self, rect: BoundingRect) -> bool:
         """
 
         intersects(self, rect) -> bool
@@ -22032,7 +22033,7 @@ class BoundingRect:
           > False
 
         """
-    def contains(self, *args) -> bool:
+    def contains(self, rect: BoundingRect) -> bool:
         """
 
         contains(self, rect) -> bool
@@ -22378,7 +22379,7 @@ class ChannelGraph:
     def __eq__(self, other: object) -> bool: ...
     def __ne__(self, other: object) -> bool: ...
     def __hash__(self) -> int: ...
-    def selectedKeyframes(self) -> dict[Parm, Tuple[BaseKeyframe, ...]]:
+    def selectedKeyframes(self) -> dict[Parm, Sequence[BaseKeyframe]]:
         """
 
         selectedKeyframes(self) -> dictionary of (, tuple of hou.BaseKeyframe)
@@ -22586,7 +22587,7 @@ class ChannelList:
 
 
         """
-    def remove(self, *args) -> None:
+    def remove(self, parm: Union[Parm, Sequence[Parm]]) -> None:
         """
 
         remove(self, parm)
@@ -22599,7 +22600,7 @@ class ChannelList:
 
 
         """
-    def select(self, *args) -> None:
+    def select(self, parm: Union[Parm, Sequence[Parm]]) -> None:
         """
 
         select(self, parm)
@@ -22612,7 +22613,7 @@ class ChannelList:
 
 
         """
-    def deselect(self, *args) -> None:
+    def deselect(self, parm: Union[Parm, Sequence[Parm]]) -> None:
         """
 
         deselect(self, parm)
@@ -22625,7 +22626,7 @@ class ChannelList:
 
 
         """
-    def pin(self, *args) -> None:
+    def pin(self, parm: Union[Parm, Sequence[Parm]]) -> None:
         """
 
         pin(self, parm)
@@ -22638,7 +22639,7 @@ class ChannelList:
 
 
         """
-    def unpin(self, *args) -> None:
+    def unpin(self, parm: Union[Parm, Sequence[Parm]]) -> None:
         """
 
         unpin(self, parm)
@@ -22651,7 +22652,7 @@ class ChannelList:
 
 
         """
-    def selectValue(self, *args) -> None:
+    def selectValue(self, parm: Union[Parm, Sequence[Parm]]) -> None:
         """
 
         selectValue(self, parm)
@@ -22665,7 +22666,7 @@ class ChannelList:
 
 
         """
-    def deselectValue(self, *args) -> None:
+    def deselectValue(self, parm: Union[Parm, Sequence[Parm]]) -> None:
         """
 
         deselectValue(self, parm)
@@ -22732,7 +22733,7 @@ class ChannelList:
 
 
         """
-    def addNodeGeometryChannels(self, *args, **kwargs) -> str:
+    def addNodeGeometryChannels(self, node: SopNode, pattern: Optional[str] = ..., selected: bool = ..., pinned: bool = ..., valueselected: bool = ...) -> str:
         """
 
         addNodeGeometryChannels(self, node, pattern=None, selected=True,
@@ -22763,7 +22764,7 @@ class ChannelList:
 
 
         """
-    def addGeometryChannels(self, *args, **kwargs) -> str:
+    def addGeometryChannels(self, geometry: Geometry, collection_name: Optional[str] = ..., pattern: Optional[str] = ..., selected: bool = ..., pinned: bool = ..., valueselected: bool = ...) -> str:
         '''
 
         addGeometryChannels(self, geometry, collection_name=None, pattern=None,
@@ -22870,7 +22871,7 @@ class ChannelList:
 
 
         """
-    def selectGeometryChannel(self, *args) -> None:
+    def selectGeometryChannel(self, collection_name: str, channel: Optional[str] = ...) -> str:
         """
 
         selectGeometryChannel(self, collection_name, channel=None)
@@ -22887,7 +22888,7 @@ class ChannelList:
 
 
         """
-    def deselectGeometryChannel(self, *args) -> None:
+    def deselectGeometryChannel(self, collection_name: str, channel: Optional[str] = ...) -> str:
         """
 
         deselectGeometryChannel(self, collection_name, channel=None)
@@ -22904,7 +22905,7 @@ class ChannelList:
 
 
         """
-    def pinGeometryChannel(self, *args) -> None:
+    def pinGeometryChannel(self, collection_name: str, channel: Optional[str] = ...) -> str:
         """
 
         pinGeometryChannel(self, collection_name, channel=None)
@@ -22921,7 +22922,7 @@ class ChannelList:
 
 
         """
-    def unpinGeometryChannel(self, *args) -> None:
+    def unpinGeometryChannel(self, collection_name: str, channel: Optional[str] = ...) -> str:
         """
 
         unpinGeometryChannel(self, collection_name, channel=None)
@@ -22938,7 +22939,7 @@ class ChannelList:
 
 
         """
-    def selectGeometryChannelValue(self, *args) -> None:
+    def selectGeometryChannelValue(self, collection_name: str, channel: Optional[str] = ...) -> str:
         """
 
         selectGeometryChannelValue(self, collection_name, channel=None)
@@ -22955,8 +22956,8 @@ class ChannelList:
 
 
         """
-    def deselectGeometryChannelValue(self, *args) -> None: ...
-    def containsGeometryChannel(self, *args) -> bool:
+    def deselectGeometryChannelValue(self, collection_name: str, channel: Optional[str] = ...) -> str: ...
+    def containsGeometryChannel(self, collection_name: str, channel: Optional[str] = ...) -> bool:
         """
 
         containsGeometryChannel(self, collection_name, channel=None) -> bool
@@ -23135,7 +23136,7 @@ class ChannelList:
 
 
         """
-    def asCode(self, *args, **kwargs) -> str:
+    def asCode(self, var_name: str = ...) -> str:
         """
 
         asCode(self,var_name) -> str
@@ -23719,7 +23720,7 @@ class ChopNode(OpNode):
 
 
         """
-    def clipData(self, *args) -> bytes:
+    def clipData(self, binary: Any) -> bytes:
         """
 
         clipData(self, binary) -> str for Python 2, bytes for Python 3
@@ -23742,7 +23743,7 @@ class ChopNode(OpNode):
 
 
         """
-    def saveClip(self, *args) -> bool:
+    def saveClip(self, file_name: str) -> bool:
         """
 
         saveClip(self, file_name)
@@ -25709,7 +25710,7 @@ class Cop2Node(OpNode):
 
 
         """
-    def allPixels(self, *args, **kwargs) -> Tuple[float, ...]:
+    def allPixels(self, plane: str = ..., component: Optional[str] = ..., interleaved: bool = ..., time: float = ...) -> Sequence[float]:
         '''
 
         allPixels(self, plane=\\"C\\", component=None, interleaved=True, time=-1.0)
@@ -25757,7 +25758,7 @@ class Cop2Node(OpNode):
 
 
         '''
-    def allPixelsAsString(self, *args, **kwargs) -> bytes:
+    def allPixelsAsString(self, plane: str = ..., component: Optional[str] = ..., interleaved: bool = ..., time: float = ...) -> bytes:
         '''
 
         allPixelsAsString(self, plane=\\"C\\", component=None, interleaved=True,
@@ -25852,7 +25853,7 @@ class Cop2Node(OpNode):
 
 
         """
-    def imageBounds(self, *args, **kwargs) -> Tuple[int, ...]:
+    def imageBounds(self, plane: str = ...) -> Sequence[int, int, int]:
         '''
 
         imageBounds(self, plane=\\"C\\") -> tuple of int
@@ -25946,7 +25947,7 @@ class Cop2Node(OpNode):
 
 
         """
-    def saveImage(self, *args) -> None:
+    def saveImage(self, file_name: str, frame_range: Sequence[float] = ...) -> None:
         """
 
         saveImage(self, file_name, frame_range=())
@@ -26132,7 +26133,7 @@ class crowds:
 
         """
     @staticmethod
-    def setBlendshapeDeformerParms(*args, **kwargs) -> None:
+    def setBlendshapeDeformerParms(base_shape_geo: Geometry, attribs: str = ..., point_id_attrib: str = ..., prim_id_attrib: str = ...) -> None:
         '''
 
         setBlendshapeDeformerParms(self, base_shape_geo, attribs=\\"P N\\",
@@ -26160,7 +26161,7 @@ class crowds:
 
         '''
     @staticmethod
-    def findAgentDefinitions(*args, **kwargs) -> Tuple[AgentDefinition, ...]:
+    def findAgentDefinitions(geometry: Geometry, group: str = ..., group_type: EnumValue = ...) -> Sequence[AgentDefinition]:
         '''
 
         findAgentDefinitions(geometry, group = \\"\\",
@@ -26195,7 +26196,7 @@ class crowds:
 
         '''
     @staticmethod
-    def replaceAgentDefinitions(*args, **kwargs) -> None:
+    def replaceAgentDefinitions(geometry: Geometry, new_definition_map: Dict[AgentDefinition, AgentDefinition], group: str = ..., group_type: EnumValue = ...) -> None:
         '''
 
         replaceAgentDefinitions(geometry, new_definition_map, group = \\"\\",
@@ -26847,7 +26848,7 @@ class Desktop:
 
 
         """
-    def createFloatingPaneTab(self, *args, **kwargs) -> PaneTab:
+    def createFloatingPaneTab(self, pane_tab_type: EnumValue, position: Sequence[float] = ..., size: Sequence[float] = ..., python_panel_interface: Optional[PythonPanelInterface] = ..., immediate: bool = ...) -> PaneTab:
         """
 
         createFloatingPaneTab(self, pane_tab_type, position=(), size=(),
@@ -26907,7 +26908,7 @@ class Desktop:
           >     return pane_tab
 
         """
-    def createFloatingPane(self, *args) -> PaneTab: ...
+    def createFloatingPane(self, pane_tab_type: EnumValue, position: Sequence[float] = ..., size: Sequence[float] = ..., python_panel_interface: Optional[PythonPanelInterface] = ..., immediate: bool = ...) -> PaneTab: ...
     def floatingPanels(self) -> Tuple[FloatingPanel, ...]:
         """
 
@@ -27095,7 +27096,7 @@ class Dialog:
 
 
         """
-    def setValue(self, *args) -> None:
+    def setValue(self, name: str, value: Union[bool, int, float, str, Vector2, Vector3, Vector4, Quaternion, Matrix3, Matrix4]) -> None:
         """
 
         setValue(self, name, value)
@@ -27123,7 +27124,7 @@ class Dialog:
 
 
         """
-    def waitForValueToChangeTo(self, *args) -> None:
+    def waitForValueToChangeTo(self, name: str, new_value: Union[bool, int, float, str, Vector2, Vector3, Vector4, Quaternion, Matrix3, Matrix4]) -> None:
         """
 
         waitForValueToChangeTo(self, name, new_value)
@@ -27704,7 +27705,7 @@ class DopRecord:
 
 
         """
-    def setField(self, *args) -> None:
+    def setField(self, field_name: str, value: Union[bool, int, float, str, Vector2, Vector3, Vector4, Quaternion, Matrix3, Matrix4]) -> None:
         """
 
         setField(self, field_name, value)
@@ -28269,7 +28270,7 @@ class AdvancedDrawable(Drawable):
     thisown: Incomplete
     def __init__(self, *args, **kwargs) -> None: ...
     __swig_destroy__: Incomplete
-    def setParams(self, params: AdvancedDrawable.Params) -> None:
+    def setParams(self, params: Optional[Dict[str, Any]] = ...) -> None:
         """
 
         setParams(self, params)
@@ -28383,7 +28384,7 @@ class AdvancedDrawable(Drawable):
 
 
         """
-    def draw(self, *args, **kwargs) -> None:
+    def draw(self, handle: Incomplete, params: Optional[Dict[str, Any]] = ...) -> None:
         """
 
         draw(self, handle, params=None)
@@ -28750,7 +28751,7 @@ class SimpleDrawable(Drawable):
 
 
         """
-    def setOutlineColor(self, *args) -> None:
+    def setOutlineColor(self, color: Union[Color, Vector4]) -> None:
         """
 
         setOutlineColor(self, color)
@@ -29030,7 +29031,7 @@ class EdgeGroup:
 
 
         """
-    def add(self, *args) -> None:
+    def add(self, edge_or_list_or_edge_group: Union[Edge, Sequence[Edge], EdgeGroup]) -> None:
         """
 
         add(self, edge_or_list_or_edge_group)
@@ -29051,7 +29052,7 @@ class EdgeGroup:
 
 
         """
-    def remove(self, *args) -> None:
+    def remove(self, edge_or_list_or_edge_group: Union[Edge, Sequence[Edge], EdgeGroup]) -> None:
         """
 
         remove(self, edge_or_list_or_edge_group)
@@ -29183,7 +29184,7 @@ class FlipbookSettings:
 
 
         """
-    def outputToMPlay(self, *args) -> bool:
+    def outputToMPlay(self, value: Optional[bool] = ...) -> Optional[bool]:
         """
 
         outputToMPlay(self) -> bool
@@ -29192,7 +29193,7 @@ class FlipbookSettings:
 
 
         """
-    def leaveFrameAtEnd(self, *args) -> bool:
+    def leaveFrameAtEnd(self, value: Optional[bool] = ...) -> Optional[bool]:
         """
 
         leaveFrameAtEnd(self) -> bool
@@ -29202,7 +29203,7 @@ class FlipbookSettings:
 
 
         """
-    def output(self, *args) -> str:
+    def output(self, value: Optional[str] = ...) -> Optional[str]:
         """
 
         output(self) -> str
@@ -29211,7 +29212,7 @@ class FlipbookSettings:
 
 
         """
-    def sessionLabel(self, *args) -> str:
+    def sessionLabel(self, value: Optional[str] = ...) -> Optional[str]:
         """
 
         sessionLabel(self) -> str
@@ -29220,7 +29221,7 @@ class FlipbookSettings:
 
 
         """
-    def visibleObjects(self, *args) -> str:
+    def visibleObjects(self, value: Optional[str] = ...) -> Optional[str]:
         """
 
         visibleObjects(self) -> str
@@ -29229,7 +29230,7 @@ class FlipbookSettings:
 
 
         """
-    def visibleTypes(self, *args) -> EnumValue:
+    def visibleTypes(self, value: Optional[EnumValue] = ...) -> Optional[EnumValue]:
         """
 
         visibleTypes(self) -> hou.flipbookObjectType
@@ -29238,7 +29239,7 @@ class FlipbookSettings:
 
 
         """
-    def frameRange(self, *args) -> Tuple[float, ...]:
+    def frameRange(self, value: Optional[Sequence[float]] = ...) -> Optional[Tuple[float, float]]:
         """
 
         frameRange(self) -> tuple of double
@@ -29248,7 +29249,7 @@ class FlipbookSettings:
 
 
         """
-    def frameIncrement(self, *args) -> int:
+    def frameIncrement(self, value: Optional[float] = ...) -> Optional[float]:
         """
 
         frameIncrement(self) -> double
@@ -29257,7 +29258,7 @@ class FlipbookSettings:
 
 
         """
-    def beautyPassOnly(self, *args) -> bool:
+    def beautyPassOnly(self, value: Optional[bool] = ...) -> Optional[bool]:
         """
 
         beautyPassOnly(self) -> bool
@@ -29266,7 +29267,7 @@ class FlipbookSettings:
 
 
         """
-    def renderAllViewports(self, *args) -> bool:
+    def renderAllViewports(self, value: Optional[bool] = ...) -> Optional[bool]:
         """
 
         renderAllViewports(self) -> bool
@@ -29276,7 +29277,7 @@ class FlipbookSettings:
 
 
         """
-    def appendFramesToCurrent(self, *args) -> bool:
+    def appendFramesToCurrent(self, value: Optional[bool] = ...) -> Optional[bool]:
         """
 
         appendFramesToCurrent(self) -> bool
@@ -29286,7 +29287,7 @@ class FlipbookSettings:
 
 
         """
-    def scopeChannelKeyframesOnly(self, *args) -> bool:
+    def scopeChannelKeyframesOnly(self, value: Optional[bool] = ...) -> Optional[bool]:
         """
 
         scopeChannelKeyframesOnly(self) -> bool
@@ -29295,7 +29296,7 @@ class FlipbookSettings:
 
 
         """
-    def blockEditing(self, *args) -> bool:
+    def blockEditing(self, value: Optional[bool] = ...) -> Optional[bool]:
         """
 
         blockEditing(self) -> bool
@@ -29304,7 +29305,7 @@ class FlipbookSettings:
 
 
         """
-    def initializeSimulations(self, *args) -> bool:
+    def initializeSimulations(self, value: Optional[bool] = ...) -> Optional[bool]:
         """
 
         initializeSimulations(self) -> bool
@@ -29315,7 +29316,7 @@ class FlipbookSettings:
 
 
         """
-    def audioFilename(self, *args) -> None:
+    def audioFilename(self, audio_file: Optional[str] = ...) -> Optional[str]:
         """
 
         audioFilename(self, audio_file)
@@ -29324,7 +29325,7 @@ class FlipbookSettings:
 
 
         """
-    def audioFrameStart(self, *args) -> float:
+    def audioFrameStart(self, audio_file: Optional[float] = ...) -> Optional[float]:
         """
 
         audioFrameStart(self) -> double
@@ -29333,7 +29334,7 @@ class FlipbookSettings:
 
 
         """
-    def audioTimeOffset(self, *args) -> float:
+    def audioTimeOffset(self, value: Optional[float] = ...) -> Optional[float]:
         """
 
         audioTimeOffset(self) -> double
@@ -29342,7 +29343,7 @@ class FlipbookSettings:
 
 
         """
-    def backgroundImage(self, *args) -> str:
+    def backgroundImage(self, value: Optional[str] = ...) -> Optional[str]:
         """
 
         backgroundImage(self) -> str
@@ -29351,7 +29352,7 @@ class FlipbookSettings:
 
 
         """
-    def overrideGamma(self, *args) -> bool:
+    def overrideGamma(self, value: Optional[bool] = ...) -> Optional[bool]:
         """
 
         overrideGamma(self) -> bool
@@ -29360,7 +29361,7 @@ class FlipbookSettings:
 
 
         """
-    def gamma(self, *args) -> float:
+    def gamma(self, value: Optional[float] = ...) -> Optional[float]:
         """
 
         gamma(self) -> double
@@ -29369,7 +29370,7 @@ class FlipbookSettings:
 
 
         """
-    def overrideLUT(self, *args) -> bool:
+    def overrideLUT(self, value: Optional[bool] = ...) -> Optional[bool]:
         """
 
         overrideLUT(self) -> bool
@@ -29378,7 +29379,7 @@ class FlipbookSettings:
 
 
         """
-    def LUT(self, *args) -> str:
+    def LUT(self, value: Optional[str] = ...) -> Optional[str]:
         """
 
         LUT(self) -> str
@@ -29466,7 +29467,7 @@ class FlipbookSettings:
 
 
         """
-    def antialias(self, *args) -> EnumValue:
+    def antialias(self, value: Optional[EnumValue] = ...) -> Optional[EnumValue]:
         """
 
         antialias(self) -> hou.flipbookAntialias
@@ -29486,7 +29487,7 @@ class FlipbookSettings:
 
 
         """
-    def useMotionBlur(self, *args) -> bool:
+    def useMotionBlur(self, value: Optional[bool] = ...) -> Optional[bool]:
         """
 
         useMotionBlur(self) -> bool
@@ -29495,7 +29496,7 @@ class FlipbookSettings:
 
 
         """
-    def motionBlurSegments(self, *args) -> int:
+    def motionBlurSegments(self, value: Optional[int] = ...) -> Optional[int]:
         """
 
         motionBlurSegments(self) -> int
@@ -29504,7 +29505,7 @@ class FlipbookSettings:
 
 
         """
-    def motionBlurFrameRange(self, *args) -> EnumValue:
+    def motionBlurFrameRange(self, value: Optional[EnumValue] = ...) -> Optional[EnumValue]:
         """
 
         motionBlurFrameRange(self) -> hou.flipbookMotionBlurBias
@@ -29522,7 +29523,7 @@ class FlipbookSettings:
 
 
         """
-    def shutterFromCamera(self, *args) -> bool:
+    def shutterFromCamera(self, value: Optional[bool] = ...) -> Optional[bool]:
         """
 
         shutterFromCamera(self) -> bool
@@ -29532,7 +29533,7 @@ class FlipbookSettings:
 
 
         """
-    def shutter(self, *args) -> float:
+    def shutter(self, value: Optional[float] = ...) -> Optional[float]:
         """
 
         shutter(self) -> double
@@ -29541,7 +29542,7 @@ class FlipbookSettings:
 
 
         """
-    def useDepthOfField(self, *args) -> bool:
+    def useDepthOfField(self, value: Optional[bool] = ...) -> Optional[bool]:
         """
 
         useDepthOfField(self) -> bool
@@ -29550,7 +29551,7 @@ class FlipbookSettings:
 
 
         """
-    def depthOfFieldFromCamera(self, *args) -> bool:
+    def depthOfFieldFromCamera(self, value: Optional[bool] = ...) -> Optional[bool]:
         """
 
         depthOfFieldFromCamera(self) -> bool
@@ -29559,7 +29560,7 @@ class FlipbookSettings:
 
 
         """
-    def depthOfFieldQuality(self, *args) -> float:
+    def depthOfFieldQuality(self, value: Optional[float] = ...) -> Optional[float]:
         """
 
         depthOfFieldQuality(self) -> double
@@ -29568,7 +29569,7 @@ class FlipbookSettings:
 
 
         """
-    def focusDistance(self, *args) -> float:
+    def focusDistance(self, value: Optional[float] = ...) -> Optional[float]:
         """
 
         focusDistance(self) -> double
@@ -29577,7 +29578,7 @@ class FlipbookSettings:
 
 
         """
-    def aperture(self, *args) -> float:
+    def aperture(self, value: Optional[float] = ...) -> Optional[float]:
         """
 
         aperture(self) -> double
@@ -29586,7 +29587,7 @@ class FlipbookSettings:
 
 
         """
-    def fStop(self, *args) -> float:
+    def fStop(self, value: Optional[float] = ...) -> Optional[float]:
         """
 
         fStop(self) -> double
@@ -29595,7 +29596,7 @@ class FlipbookSettings:
 
 
         """
-    def outputZoom(self, *args) -> int:
+    def outputZoom(self, value: Optional[int] = ...) -> Optional[int]:
         """
 
         outputZoom(self) -> int
@@ -29604,7 +29605,7 @@ class FlipbookSettings:
 
 
         """
-    def useResolution(self, *args) -> bool:
+    def useResolution(self, value: Optional[bool] = ...) -> Optional[bool]:
         """
 
         useResolution(self) -> bool
@@ -29614,7 +29615,7 @@ class FlipbookSettings:
 
 
         """
-    def resolution(self, *args) -> Tuple[int, ...]:
+    def resolution(self, value: Optional[Tuple[int, int]] = ...) -> Optional[Tuple[int, int]]:
         """
 
         resolution(self) -> tuple of int
@@ -29625,7 +29626,7 @@ class FlipbookSettings:
 
 
         """
-    def useSheetSize(self, *args) -> bool:
+    def useSheetSize(self, value: Optional[bool] = ...) -> Optional[bool]:
         """
 
         useSheetSize(self) -> bool
@@ -29635,7 +29636,7 @@ class FlipbookSettings:
 
 
         """
-    def sheetSize(self, *args) -> Tuple[int, ...]:
+    def sheetSize(self, value: Optional[Sequence[int]] = ...) -> Optional[Tuple[int, int]]:
         """
 
         sheetSize() -> tuple of int
@@ -29646,7 +29647,7 @@ class FlipbookSettings:
 
 
         """
-    def cropOutMaskOverlay(self, *args) -> bool:
+    def cropOutMaskOverlay(self, value: Optional[bool] = ...) -> Optional[bool]:
         """
 
         cropOutMaskOverlay(self) -> bool
@@ -29655,7 +29656,7 @@ class FlipbookSettings:
 
 
         """
-    def fromAudioPanel(self, *args) -> None:
+    def fromAudioPanel(self, value: Optional[bool] = ...) -> Optional[bool]:
         """
 
         fromAudioPanel(self) -> bool
@@ -31704,7 +31705,7 @@ class Geometry:
 
 
         """
-    def containsPrimType(self, *args) -> bool:
+    def containsPrimType(self, type_or_name: Union[EnumValue, str]) -> bool:
         '''
 
         containsPrimType(self, type_or_name) -> bool
@@ -31724,7 +31725,7 @@ class Geometry:
 
 
         '''
-    def countPrimType(self, *args) -> int:
+    def countPrimType(self, type_or_name: Union[EnumValue, str]) -> int:
         '''
 
         countPrimType(self, type_or_name) -> long
@@ -31927,7 +31928,7 @@ class Geometry:
         """
     def globVertices(self, pattern: str) -> Tuple[Vertex, ...]: ...
     def globEdges(self, pattern: str) -> Tuple[Edge, ...]: ...
-    def findPointAttrib(self, *args) -> Optional[Attrib]:
+    def findPointAttrib(self, name: str, scope: EnumValue = ...) -> Optional[Attrib]:
         """
 
         findPointAttrib(self, name, scope=hou.attribScope.Public) -> hou.Attrib
@@ -31952,7 +31953,7 @@ class Geometry:
 
 
         """
-    def findPrimAttrib(self, *args) -> Optional[Attrib]:
+    def findPrimAttrib(self, name: str, scope: EnumValue = ...) -> Optional[Attrib]:
         """
 
         findPrimAttrib(self, name, scope=hou.attribScope.Public) -> hou.Attrib
@@ -31971,7 +31972,7 @@ class Geometry:
 
 
         """
-    def findVertexAttrib(self, *args) -> Optional[Attrib]:
+    def findVertexAttrib(self, name: str, scope: EnumValue = ...) -> Optional[Attrib]:
         """
 
         findVertexAttrib(self, name, scope=hou.attribScope.Public) -> hou.Attrib
@@ -31990,7 +31991,7 @@ class Geometry:
 
 
         """
-    def findGlobalAttrib(self, *args) -> Optional[Attrib]:
+    def findGlobalAttrib(self, name: str, scope: EnumValue = ...) -> Optional[Attrib]:
         """
 
         findGlobalAttrib(self, name, scope=hou.attribScope.Public) -> hou.Attrib
@@ -32029,7 +32030,7 @@ class Geometry:
 
 
         """
-    def floatAttribValue(self, *args) -> float:
+    def floatAttribValue(self, name_or_attrib: Union[str, Attrib]) -> float:
         """
 
         floatAttribValue(self, name_or_attrib) -> float
@@ -32047,7 +32048,7 @@ class Geometry:
 
 
         """
-    def floatListAttribValue(self, *args) -> Tuple[float, ...]:
+    def floatListAttribValue(self, name_or_attrib: Union[Attrib, str]) -> Sequence[float]:
         """
 
         floatListAttribValue(self, name_or_attrib) -> tuple of float
@@ -32065,7 +32066,7 @@ class Geometry:
 
 
         """
-    def intAttribValue(self, *args) -> int:
+    def intAttribValue(self, attrib: Union[Attrib, str]) -> int:
         """
 
         intAttribValue(self, name_or_attrib) -> int
@@ -32077,7 +32078,7 @@ class Geometry:
 
 
         """
-    def intListAttribValue(self, *args) -> Tuple[int, ...]:
+    def intListAttribValue(self, name_or_attrib: Union[Attrib, str]) -> Sequence[int]:
         """
 
         intListAttribValue(self, name_or_attrib) -> tuple of int
@@ -32089,7 +32090,7 @@ class Geometry:
 
 
         """
-    def stringAttribValue(self, *args) -> str:
+    def stringAttribValue(self, attrib: Union[Attrib, str]) -> str:
         """
 
         stringAttribValue(self, name_or_attrib) -> str
@@ -32101,7 +32102,7 @@ class Geometry:
 
 
         """
-    def stringListAttribValue(self, *args) -> Tuple[str, ...]:
+    def stringListAttribValue(self, name_or_attrib: Union[Attrib, str]) -> Sequence[str]:
         """
 
         stringListAttribValue(self, name_or_attrib) -> tuple of str
@@ -32113,7 +32114,7 @@ class Geometry:
 
 
         """
-    def dictAttribValue(self, *args) -> dict[str, Any]:
+    def dictAttribValue(self, attrib: Union[Attrib, str]) -> dict[str, Any]:
         """
 
         dictAttribValue(self, name_or_attrib) -> dict
@@ -32125,7 +32126,7 @@ class Geometry:
 
 
         """
-    def dictListAttribValue(self, *args) -> Tuple[dict[str, Any], ...]:
+    def dictListAttribValue(self, name_or_attrib: Union[Attrib, str]) -> Sequence[dict[str, Any]]:
         """
 
         dictListAttribValue(self, name_or_attrib) -> tuple of str
@@ -32168,7 +32169,7 @@ class Geometry:
 
 
         """
-    def pointFloatAttribValuesAsString(self, *args, **kwargs) -> bytes:
+    def pointFloatAttribValuesAsString(self, name: str, float_type: EnumValue = ...) -> bytes:
         '''
 
         pointFloatAttribValuesAsString(self, name,
@@ -32235,7 +32236,7 @@ class Geometry:
 
 
         """
-    def primFloatAttribValuesAsString(self, *args, **kwargs) -> bytes:
+    def primFloatAttribValuesAsString(self, name: str, float_type: EnumValue = ...) -> bytes:
         '''
 
         primFloatAttribValuesAsString(self, name) -> str for Python 2, bytes for
@@ -32296,7 +32297,7 @@ class Geometry:
 
 
         """
-    def vertexFloatAttribValuesAsString(self, *args, **kwargs) -> bytes:
+    def vertexFloatAttribValuesAsString(self, name: str, float_type: EnumValue = ...) -> bytes:
         '''
 
         vertexFloatAttribValuesAsString(self, name,
@@ -32362,7 +32363,7 @@ class Geometry:
 
 
         """
-    def pointIntAttribValuesAsString(self, *args, **kwargs) -> bytes:
+    def pointIntAttribValuesAsString(self, name: str, int_type: EnumValue = ...) -> bytes:
         '''
 
         pointIntAttribValuesAsString(self, name, int_type=hou.numericData.Int32)
@@ -32427,7 +32428,7 @@ class Geometry:
 
 
         """
-    def primIntAttribValuesAsString(self, *args, **kwargs) -> bytes:
+    def primIntAttribValuesAsString(self, name: str, int_type: EnumValue = ...) -> bytes:
         '''
 
         primIntAttribValuesAsString(self, name, int_type=hou.numericData.Int32)
@@ -32492,7 +32493,7 @@ class Geometry:
 
 
         """
-    def vertexIntAttribValuesAsString(self, *args, **kwargs) -> bytes:
+    def vertexIntAttribValuesAsString(self, name: str, int_type: EnumValue = ...) -> bytes:
         '''
 
         vertexIntAttribValuesAsString(self, name,
@@ -32698,9 +32699,9 @@ class Geometry:
 
 
         """
-    def setPointFloatAttribValuesFromString(self, *args, **kwargs) -> None: ...
-    def setPrimFloatAttribValuesFromString(self, *args, **kwargs) -> None: ...
-    def setVertexFloatAttribValuesFromString(self, *args, **kwargs) -> None: ...
+    def setPointFloatAttribValuesFromString(self, name: str, values: bytes, float_type: EnumValue = ...) -> None: ...
+    def setPrimFloatAttribValuesFromString(self, name: str, values: bytes, float_type: EnumValue = ...) -> None: ...
+    def setVertexFloatAttribValuesFromString(self, name: str, values: bytes, float_type: EnumValue = ...) -> None: ...
     def setPointIntAttribValues(self, name: str, values: Sequence[int]) -> None:
         """
 
@@ -32788,9 +32789,9 @@ class Geometry:
 
 
         """
-    def setPointIntAttribValuesFromString(self, *args, **kwargs) -> None: ...
-    def setPrimIntAttribValuesFromString(self, *args, **kwargs) -> None: ...
-    def setVertexIntAttribValuesFromString(self, *args, **kwargs) -> None: ...
+    def setPointIntAttribValuesFromString(self, name: str, values: bytes, int_type: EnumValue = ...) -> None: ...
+    def setPrimIntAttribValuesFromString(self, name: str, values: bytes, int_type: EnumValue = ...) -> None: ...
+    def setVertexIntAttribValuesFromString(self, name: str, values: bytes, int_type: EnumValue = ...) -> None: ...
     def setPointStringAttribValues(self, name: str, values: Sequence[str]) -> None:
         """
 
@@ -32966,7 +32967,7 @@ class Geometry:
 
 
         """
-    def createPoints(self, *args) -> Tuple[Point, ...]:
+    def createPoints(self, point_positions: Sequence[Sequence[float]]) -> Sequence[Point]:
         """
 
         createPoints(self, point_positions) -> tuple of hou.Point
@@ -33024,7 +33025,7 @@ class Geometry:
 
 
         """
-    def createPolygons(self, *args) -> Tuple[Polygon, ...]:
+    def createPolygons(self, point_positions: Sequence[Union[Point, Sequence[int]]], is_closed: bool = ...) -> Sequence[Polygon]:
         """
 
         createPolygons(self, points, is_closed=True) -> tuple of hou.Polygon
@@ -33452,7 +33453,7 @@ class Geometry:
 
 
         """
-    def transformPrims(self, prims: Union[Iterable[Prim], PrimGroup], matrix: Matrix4) -> None:
+    def transformPrims(self, prims: Union[Sequence[Prim], PrimGroup], matrix: Matrix4) -> None:
         """
 
         transformPrims(self, prims, matrix)
@@ -33503,7 +33504,7 @@ class Geometry:
           >         hou.hmath.buildRotateAboutAxis((0, 1, 0), i * 360.0 / num_copies))
 
         """
-    def deletePrims(self, prims: Union[Iterable[Prim], PrimGroup], keep_points: bool = ...) -> None:
+    def deletePrims(self, prims: Union[Sequence[Prim], PrimGroup], keep_points: bool = ...) -> None:
         """
 
         deletePrims(self, prims, keep_points=False)
@@ -33905,7 +33906,7 @@ class Geometry:
 
 
         """
-    def attribValue(self, *args) -> Any:
+    def attribValue(self, name_or_attrib: Union[str, Attrib]) -> Union[int, float, str, Sequence[float], Sequence[int], Dict[str, Any]]:
         """
 
         attribValue(self, name_or_attrib) -> int, float, str, tuple or dict
@@ -33999,7 +34000,7 @@ class Geometry:
         """
     def intrinsicSize(self, intrinsic_name: str) -> int: ...
     def intrinsicReadOnly(self, intrinsic_name: str) -> bool: ...
-    def setIntrinsicValue(self, *args) -> None:
+    def setIntrinsicValue(self, intrinsic_name: str, value: Union[int, float, str, Sequence[float], Sequence[int], Dict[str, Any]]) -> None:
         """
 
         setIntrinsicValue(self, intrinsic_name, value)
@@ -34287,7 +34288,7 @@ class Geometry:
 
 
         '''
-    def pointGroups(self, *args) -> Tuple[PointGroup, ...]:
+    def pointGroups(self, scope: EnumValue = ...) -> Sequence[PointGroup]:
         """
 
         pointGroups(self, scope=hou.groupScope.Public) -> tuple of
@@ -34307,7 +34308,7 @@ class Geometry:
           >     return [group.name() for group in geometry.pointGroups()]
 
         """
-    def findPointGroup(self, *args) -> Optional[PointGroup]:
+    def findPointGroup(self, name: str, scope: EnumValue = ...) -> Optional[PointGroup]:
         """
 
         findPointGroup(self, name, scope=hou.groupScope.Public) ->
@@ -34358,7 +34359,7 @@ class Geometry:
 
 
         """
-    def primGroups(self, *args) -> Tuple[PrimGroup, ...]:
+    def primGroups(self, scope: EnumValue = ...) -> Sequence[PrimGroup]:
         """
 
         primGroups(self, scope=hou.groupScope.Public) -> tuple of hou.PrimGroup
@@ -34372,7 +34373,7 @@ class Geometry:
 
 
         """
-    def findPrimGroup(self, *args) -> Optional[PrimGroup]:
+    def findPrimGroup(self, name: str, scope: EnumValue = ...) -> Optional[PrimGroup]:
         """
 
         findPrimGroup(self, name, scope=hou.groupScope.Public) -> hou.PrimGroup
@@ -34423,7 +34424,7 @@ class Geometry:
 
 
         """
-    def edgeGroups(self, *args) -> Tuple[EdgeGroup, ...]:
+    def edgeGroups(self, scope: EnumValue = ...) -> Sequence[EdgeGroup]:
         """
 
         edgeGroups(self, scope=hou.groupScope.Public) -> tuple of hou.EdgeGroup
@@ -34437,7 +34438,7 @@ class Geometry:
 
 
         """
-    def findEdgeGroup(self, *args) -> Optional[EdgeGroup]:
+    def findEdgeGroup(self, name: str, scope: EnumValue = ...) -> Optional[EdgeGroup]:
         """
 
         findEdgeGroup(self, name, scope=hou.groupScope.Public) -> hou.EdgeGroup
@@ -34472,7 +34473,7 @@ class Geometry:
 
 
         """
-    def vertexGroups(self, *args) -> Tuple[VertexGroup, ...]:
+    def vertexGroups(self, scope: EnumValue = ...) -> Sequence[VertexGroup]:
         """
 
         vertexGroups(self, scope=hou.groupScope.Public) -> tuple of
@@ -34492,7 +34493,7 @@ class Geometry:
           >     return [group.name() for group in geometry.vertexGroups()]
 
         """
-    def findVertexGroup(self, *args) -> Optional[VertexGroup]:
+    def findVertexGroup(self, name: str, scope: EnumValue = ...) -> Optional[VertexGroup]:
         """
 
         findVertexGroup(self, name, scope=hou.groupScope.Public) ->
@@ -34689,7 +34690,7 @@ class Geometry:
 
 
         """
-    def primLoop(self, *args, **kwargs) -> Tuple[Prim, ...]:
+    def primLoop(self, prims: Sequence[Prim], loop_type: EnumValue) -> Sequence[Prim]:
         """
 
         primLoop(self, prims, loop_type) -> tuple of hou.Prim
@@ -34718,7 +34719,7 @@ class Geometry:
 
 
         """
-    def pointLoop(self, *args, **kwargs) -> Tuple[Point, ...]:
+    def pointLoop(self, points: Sequence[Point], loop_type: EnumValue) -> Sequence[Point]:
         """
 
         pointLoop(self, points, full_loop) -> tuple of hou.Point
@@ -34746,7 +34747,7 @@ class Geometry:
 
 
         """
-    def edgeLoop(self, *args, **kwargs) -> Tuple[Edge, ...]:
+    def edgeLoop(self, edges: Sequence[Edge], loop_type: EnumValue, full_loop_per_edge: bool, force_ring: bool, allow_ring: bool) -> Sequence[Edge]:
         """
 
         edgeLoop(self, edges, loop_type, full_loop_per_edge, force_ring,
@@ -34789,7 +34790,7 @@ class Geometry:
 
 
         """
-    def pointNormals(self, *args) -> Tuple[Vector3, ...]:
+    def pointNormals(self, points: Union[Sequence[Point], PointGroup]) -> Sequence[Vector3]:
         """
 
         pointNormals(self, points) -> tuple of hou.Vector3
@@ -34804,7 +34805,7 @@ class Geometry:
 
 
         """
-    def importLop(self, *args, **kwargs) -> Optional[LopLockedStage]:
+    def importLop(self, lopnode: LopNode, selectionrule: LopSelectionRule, purpose: Optional[str] = ..., traversal: Optional[str] = ..., path_attrib_name: Optional[str] = ..., name_attrib_name: Optional[str] = ..., strip_layers: bool = ..., frame: Optional[float] = ...) -> LopLockedStage:
         """
 
         importLop(self, lopnode, selectionrule, purpose=None, traversal=None,
@@ -34850,7 +34851,7 @@ class Geometry:
 
 
         """
-    def importUsdStage(self, *args, **kwargs) -> None:
+    def importUsdStage(self, stage: pxr.Usd.Stage, selectionrule: LopSelectionRule, purpose: Optional[str] = ..., traversal: Optional[str] = ..., path_attrib_name: Optional[str] = ..., name_attrib_name: Optional[str] = ..., frame: Optional[float] = ...) -> None:
         """
 
         importUsdStage(self, stage, selectionrule, purpose=None, traversal=None,
@@ -34995,7 +34996,7 @@ class Geometry:
 
 
         """
-    def generateAttribMenu(self, *args, **kwargs) -> Tuple[str, ...]:
+    def generateAttribMenu(self, attrib_type: Optional[EnumValue] = ..., data_type: Optional[EnumValue] = ..., min_size: int = ..., max_size: int = ..., array_type: bool = ..., scalar_type: bool = ..., case_sensitive: bool = ..., pattern: str = ..., decode_tokens: bool = ...) -> Sequence[str]:
         '''
 
         generateAttribMenu(self, attrib_type=None, data_type=None, min_size=1,
@@ -35103,10 +35104,10 @@ class Geometry:
 
 
         """
-    def pointAttribs(self, scope: EnumValue) -> Tuple[Attrib, ...]: ...
-    def primAttribs(self, scope: EnumValue) -> Tuple[Attrib, ...]: ...
-    def vertexAttribs(self, scope: EnumValue) -> Tuple[Attrib, ...]: ...
-    def globalAttribs(self, scope: EnumValue) -> Tuple[Attrib, ...]: ...
+    def pointAttribs(self, scope: EnumValue) -> Sequence[Attrib]: ...
+    def primAttribs(self, scope: EnumValue) -> Sequence[Attrib]: ...
+    def vertexAttribs(self, scope: EnumValue) -> Sequence[Attrib]: ...
+    def globalAttribs(self, scope: EnumValue) -> Sequence[Attrib]: ...
 
 class GeometryDelta:
     """
@@ -35127,7 +35128,7 @@ class GeometryDelta:
     thisown: Incomplete
     def __init__(self, *args, **kwargs) -> None: ...
     __swig_destroy__: Incomplete
-    def setPointPositionsFromString(self, *args) -> None:
+    def setPointPositionsFromString(self, positions: bytes, float_type: EnumValue = ...) -> None:
         """
 
         setPointPositionsFromString(self, positions)
@@ -36514,7 +36515,7 @@ class GeometryViewport:
 
 
         """
-    def setCamera(self, *args) -> None:
+    def setCamera(self, camera_node: ObjNode) -> None:
         """
 
         setCamera(self, camera_node)
@@ -36761,7 +36762,7 @@ class GeometryViewport:
 
 
         """
-    def queryWorldPositionAndNormal(self, *args) -> Tuple[Vector3, Vector3, bool]:
+    def queryWorldPositionAndNormal(self, x: int, y: int, selectionRestriction: bool = ...) -> Tuple[Vector3, Vector3, bool]:
         """
 
         queryWorldPositionAndNormal(self, x,y,selectionRestriction) -> tuple of
@@ -38524,7 +38525,7 @@ class GeometryViewportSettings:
 
 
         """
-    def setCamera(self, *args) -> None:
+    def setCamera(self, camera_node: ObjNode) -> None:
         """
 
         setCamera(self, camera_node)
@@ -38544,7 +38545,7 @@ class GeometryViewportSettings:
 
 
         """
-    def geometryInfo(self, *args) -> EnumValue:
+    def geometryInfo(self, arg: EnumValue) -> EnumValue:
         """
 
         geometryInfo(self, hou.viewportGeometryInfo)
@@ -38560,7 +38561,7 @@ class GeometryViewportSettings:
 
 
         """
-    def handleHighlight(self, *args) -> EnumValue:
+    def handleHighlight(self, arg: EnumValue) -> EnumValue:
         """
 
         handleHighlight(self, hou.viewportHandleHighlight)
@@ -38577,7 +38578,7 @@ class GeometryViewportSettings:
 
 
         """
-    def closureSelection(self, *args) -> EnumValue:
+    def closureSelection(self, arg: EnumValue) -> EnumValue:
         """
 
         closureSelection(self, hou.viewportClosureSelection)
@@ -38596,7 +38597,7 @@ class GeometryViewportSettings:
 
 
         """
-    def guideFontSize(self, *args) -> EnumValue: ...
+    def guideFontSize(self) -> EnumValue: ...
     def setOffsetVertexMarkers(self, enable: bool) -> None:
         """
 
@@ -38641,7 +38642,7 @@ class GeometryViewportSettings:
 
 
         """
-    def levelOfDetail(self, *args) -> float:
+    def levelOfDetail(self) -> float:
         """
 
         levelOfDetail(self) -> double
@@ -38650,7 +38651,7 @@ class GeometryViewportSettings:
 
 
         """
-    def volumeQuality(self, *args) -> EnumValue:
+    def volumeQuality(self) -> EnumValue:
         """
 
         volumeQuality(self) -> hou.viewportVolumeQuality
@@ -38668,7 +38669,7 @@ class GeometryViewportSettings:
 
 
         """
-    def volumeAmbientShadows(self, *args) -> float:
+    def volumeAmbientShadows(self) -> float:
         """
 
         volumeAmbientShadows(self) -> double
@@ -38678,7 +38679,7 @@ class GeometryViewportSettings:
 
 
         """
-    def volumeBSplines(self, *args) -> EnumValue:
+    def volumeBSplines(self) -> EnumValue:
         """
 
         volumeBSplines(self) -> hou.viewportVolumeBSplines
@@ -38706,7 +38707,7 @@ class GeometryViewportSettings:
 
 
         """
-    def volumeWireAsPoints(self, *args) -> bool:
+    def volumeWireAsPoints(self) -> bool:
         """
 
         volumeWireAsPoints(self) -> bool
@@ -38715,7 +38716,7 @@ class GeometryViewportSettings:
 
 
         """
-    def polygonConvexQuality(self, *args) -> bool:
+    def polygonConvexQuality(self) -> bool:
         """
 
         polygonConvexQuality(self) -> bool
@@ -38725,7 +38726,7 @@ class GeometryViewportSettings:
 
 
         """
-    def subdivsionLimit(self, *args) -> int:
+    def subdivsionLimit(self) -> int:
         """
 
         subdivsionLimit(self) -> int
@@ -38735,7 +38736,7 @@ class GeometryViewportSettings:
 
 
         """
-    def wireWidth(self, *args) -> float:
+    def wireWidth(self) -> float:
         """
 
         wireWidth(self) -> double
@@ -38745,7 +38746,7 @@ class GeometryViewportSettings:
 
 
         """
-    def wireBlend(self, *args) -> float:
+    def wireBlend(self) -> float:
         """
 
         wireBlend(self) -> double
@@ -38756,7 +38757,7 @@ class GeometryViewportSettings:
 
 
         """
-    def interiorWireAlpha(self, *args) -> float:
+    def interiorWireAlpha(self) -> float:
         """
 
         interiorWireAlpha(self) -> double
@@ -38767,7 +38768,7 @@ class GeometryViewportSettings:
 
 
         """
-    def shadeOpenCurves(self, *args) -> bool:
+    def shadeOpenCurves(self) -> bool:
         """
 
         shadeOpenCurves(self) -> bool
@@ -38776,7 +38777,7 @@ class GeometryViewportSettings:
 
 
         """
-    def selectWireframeAsSolid(self, *args) -> bool:
+    def selectWireframeAsSolid(self) -> bool:
         """
 
         selectWireframeAsSolid(self) -> bool
@@ -38808,7 +38809,7 @@ class GeometryViewportSettings:
 
 
         """
-    def particleDisplayType(self, *args) -> EnumValue:
+    def particleDisplayType(self) -> EnumValue:
         """
 
         particleDisplayType(self) -> hou.viewportParticleDisplay
@@ -38829,7 +38830,7 @@ class GeometryViewportSettings:
 
 
         """
-    def allowParticleSprites(self, *args) -> bool:
+    def allowParticleSprites(self) -> bool:
         """
 
         allowParticleSprites(self) -> bool
@@ -38839,7 +38840,7 @@ class GeometryViewportSettings:
 
 
         """
-    def particlePointSize(self, *args) -> float:
+    def particlePointSize(self) -> float:
         """
 
         particlePointSize(self) -> double
@@ -38848,7 +38849,7 @@ class GeometryViewportSettings:
 
 
         """
-    def particleDiscSize(self, *args) -> float:
+    def particleDiscSize(self) -> float:
         """
 
         particleDiscSize(self) -> double
@@ -38859,7 +38860,7 @@ class GeometryViewportSettings:
 
 
         """
-    def orientDiscToNormal(self, *args) -> bool:
+    def orientDiscToNormal(self) -> bool:
         """
 
         orientDiscToNormal(self) -> bool
@@ -38870,7 +38871,7 @@ class GeometryViewportSettings:
 
 
         """
-    def spriteTextureLimit(self, *args) -> Tuple[int, ...]:
+    def spriteTextureLimit(self) -> Sequence[int]:
         """
 
         spriteTextureLimit(self) -> tuple of int
@@ -38881,7 +38882,7 @@ class GeometryViewportSettings:
 
 
         """
-    def pointInstancing(self, *args) -> bool:
+    def pointInstancing(self) -> bool:
         """
 
         pointInstancing(self) -> bool
@@ -38890,7 +38891,7 @@ class GeometryViewportSettings:
 
 
         """
-    def pointInstancingPercent(self, *args) -> float:
+    def pointInstancingPercent(self) -> float:
         """
 
         pointInstancingPercent(self) -> double
@@ -38900,7 +38901,7 @@ class GeometryViewportSettings:
 
 
         """
-    def pointInstancingLimit(self, *args) -> int:
+    def pointInstancingLimit(self) -> int:
         """
 
         pointInstancingLimit(self) -> int
@@ -38909,7 +38910,7 @@ class GeometryViewportSettings:
 
 
         """
-    def instanceStandInGeometry(self, *args) -> EnumValue:
+    def instanceStandInGeometry(self) -> EnumValue:
         """
 
         instanceStandInGeometry(self) -> hou.viewportStandInGeometry
@@ -38927,7 +38928,7 @@ class GeometryViewportSettings:
 
 
         """
-    def autoGenerateVertexNormals(self, *args) -> bool:
+    def autoGenerateVertexNormals(self) -> bool:
         """
 
         autoGenerateVertexNormals(self) -> bool
@@ -38937,7 +38938,7 @@ class GeometryViewportSettings:
 
 
         """
-    def vertexNormalCuspAngle(self, *args) -> float:
+    def vertexNormalCuspAngle(self) -> float:
         """
 
         vertexNormalCuspAngle(self) -> double
@@ -38949,7 +38950,7 @@ class GeometryViewportSettings:
 
 
         """
-    def vertexNormalLimit(self, *args) -> int:
+    def vertexNormalLimit(self) -> int:
         """
 
         vertexNormalLimit(self) -> int
@@ -42894,7 +42895,7 @@ class Handle:
 
 
         """
-    def enableParms(self, *args) -> None:
+    def enableParms(self, parm_names: Sequence[str]) -> None:
         """
 
         enableParms(self, parm_names)
@@ -42926,7 +42927,7 @@ class Handle:
 
 
         """
-    def disableParms(self, *args) -> None:
+    def disableParms(self, parm_names: Sequence[str]) -> None:
         """
 
         disableParms(self, parm_names)
@@ -43606,7 +43607,7 @@ class HDADefinition:
     def __eq__(self, other: object) -> bool: ...
     def __ne__(self, other: object) -> bool: ...
     def __hash__(self) -> int: ...
-    def nodeType(self) -> NodeType:
+    def nodeType(category_or_name: Union[NodeTypeCategory, str], internal_name: Optional[str] = ...) -> Optional[NodeType]:
         """
 
         nodeType(self) -> hou.NodeType
@@ -43794,7 +43795,7 @@ class HDADefinition:
 
 
         """
-    def addSection(self, *args) -> HDASection:
+    def addSection(self, name: str, contents: str = ..., compression_type: EnumValue = ...) -> HDASection:
         '''
 
         addSection(self, name, contents=\\"\\",
@@ -44274,7 +44275,7 @@ class HDADefinition:
 
 
         """
-    def setExtraFileOption(self, *args) -> None:
+    def setExtraFileOption(self, name, value: Union[int, float, str, Vector2, Vecto3, Vector4, Quaternion, Matrix3, Matrix4, Sequence[float]], type_hint: EnumValue = ...) -> None:
         '''
 
         setExtraFileOption(self, name, value, type_hint =
@@ -44898,7 +44899,7 @@ class HDASection:
           >     return new_section
 
         """
-    def contents(self, *args, **kwargs) -> str:
+    def contents(self, compressionType: EnumValue = ...) -> str:
         '''
 
         contents(self, compressionType=hou.compressionType.NoCompression) -> str
@@ -44918,7 +44919,7 @@ class HDASection:
           >     section_file.close()
 
         '''
-    def binaryContents(self, *args, **kwargs) -> bytes:
+    def binaryContents(self, compressionType: EnumValue = ...) -> bytes:
         '''
 
         binaryContents(self, compressionType=hou.compressionType.NoCompression)
@@ -44936,7 +44937,7 @@ class HDASection:
           >     section_file.close()
 
         '''
-    def setContents(self, *args) -> None:
+    def setContents(self, contents: str, compressionType: EnumValue = ...) -> None:
         """
 
         setContents(self, contents,
@@ -45456,7 +45457,7 @@ class hipFile:
 
         """
     @staticmethod
-    def merge(*args, **kwargs) -> None:
+    def merge(file_name: str, node_pattern: str = ..., overwrite_on_conflict: bool = ..., ignore_load_warnings: bool = ...) -> None:
         '''
 
         merge(file_name, node_pattern=\\"*\\", overwrite_on_conflict=False,
@@ -45498,7 +45499,7 @@ class hipFile:
 
         '''
     @staticmethod
-    def collisionNodesIfMerged(*args, **kwargs) -> Tuple[Node, ...]:
+    def collisionNodesIfMerged(file_name: str, node_pattern: str = ...) -> Sequence[OpNode]:
         '''
 
         collisionNodesIfMerged(file_name, node_pattern=\\"*\\") -> tuple of
@@ -45611,7 +45612,7 @@ class hipFile:
 
         """
     @staticmethod
-    def importFBX(*args, **kwargs) -> tuple[Node, str]:
+    def importFBX(file_name: str, suppress_save_prompt: bool = ..., merge_into_scene: bool = ..., import_cameras: bool = ..., import_joints_and_skin: bool = ..., import_geometry: bool = ..., import_lights: bool = ..., import_animation: bool = ..., import_materials: bool = ..., resample_animation: bool = ..., resample_interval: float = ..., override_framerate: bool = ..., framerate: int = ..., hide_joints_attached_to_skin: bool = ..., convert_joints_to_zyx_rotation_order: bool = ..., material_mode: EnumValue = ..., compatibility_mode: EnumValue = ..., single_precision_vertex_caches: bool = ..., triangulate_nurbs: bool = ..., triangulate_patches: bool = ..., import_global_ambient_light: bool = ..., import_blend_deformers_as_blend_sops: bool = ..., segment_scale_already_baked_in: bool = ..., convert_file_paths_to_relative: bool = ..., unlock_geometry: bool = ..., unlock_deformations: bool = ..., import_nulls_as_subnets: bool = ..., import_into_object_subnet: bool = ..., convert_into_y_up_coordinate_system: bool = ..., create_sibling_bones: bool = ..., override_scene_frame_range: bool = ..., convert_units: bool = ...) -> Sequence[ObjNode]:
         """
 
         importFBX(file_name, suppress_save_prompt=False, merge_into_scene=True,
@@ -46283,7 +46284,7 @@ class hmath:
 
         """
     @staticmethod
-    def combineLocalTransform(*args, **kwargs) -> Matrix4:
+    def combineLocalTransform(local: Matrix4, world: Matrix4, parent_local: Optional[Matrix4] = ..., mode: EnumValue = ...) -> Matrix4:
         """
 
         combineLocalTransform(local, world, parent_local=None,
@@ -46295,7 +46296,7 @@ class hmath:
 
         """
     @staticmethod
-    def extractLocalTransform(*args, **kwargs) -> Matrix4:
+    def extractLocalTransform(local: Matrix4, world: Matrix4, parent_local: Matrix4, mode: EnumValue = ..., effective_local: Optional[Matrix4] = ...) -> Matrix4:
         """
 
         extractLocalTransform(world, parent_world, parent_local,
@@ -46345,7 +46346,7 @@ class hotkeys:
     def __init__(self, *args, **kwargs) -> None: ...
     __swig_destroy__: Incomplete
     @staticmethod
-    def assignments(hotkey_symbol: str) -> list[str]: ...
+    def assignments(hotkey_symbol: str) -> Sequence[str]: ...
     @staticmethod
     def hotkeyDescription(hotkey_symbol: str) -> str:
         '''
@@ -46415,7 +46416,7 @@ class hotkeys:
 
         """
     @staticmethod
-    def findConflicts(*args) -> Tuple[str, ...]:
+    def findConflicts(context: str, hotkey_symbol: str, key: Optional[str] = ...) -> Sequence[str]:
         '''
 
         findConflicts(context, symbol, key) -> tuple of str
@@ -46574,7 +46575,7 @@ class hotkeys:
 
         """
     @staticmethod
-    def addCommand(*args) -> bool:
+    def addCommand(hotkey_symbol: str, label: str, description: str, assignments: Sequence[str]) -> bool:
         '''
 
         addCommand(hotkey_symbol, label, description, assignments) -> bool
@@ -46777,7 +46778,7 @@ class hotkeys:
 
         '''
     @staticmethod
-    def clearAssignments(*args) -> bool:
+    def clearAssignments(context: str, hotkey_symbol: str) -> bool:
         '''
 
         clearAssignments(context, hotkey_symbol) -> bool
@@ -46804,7 +46805,7 @@ class hotkeys:
 
         '''
     @staticmethod
-    def addAssignment(*args) -> bool:
+    def addAssignment(context: str, hotkey_symbol: str, key: str) -> bool:
         '''
 
         addAssignment(context, hotkey_symbol, key) -> bool
@@ -46836,7 +46837,7 @@ class hotkeys:
 
         '''
     @staticmethod
-    def removeAssignment(*args) -> bool:
+    def removeAssignment(context: str, hotkey_symbol: str, key: str) -> bool:
         '''
 
         removeAssignment(context, hotkey_symbol, key) -> bool
@@ -46862,7 +46863,7 @@ class hotkeys:
 
         '''
     @staticmethod
-    def availableKeycodes(*args) -> Tuple[int, ...]:
+    def availableKeycodes(context: str, hotkey_symbol: str, layout_keys: Optional[Sequence[str]] = ..., modifiers: int = ...) -> Sequence[int]:
         """
 
         availableKeycodes(context, hotkey_symbol, layout_keys, modifiers=0) ->
@@ -46923,7 +46924,7 @@ class hotkeys:
 
         """
     @staticmethod
-    def revertToDefaults(*args) -> None:
+    def revertToDefaults(context: str, hotkey_symbol: str, one_level_only: bool) -> None:
         """
 
         revertToDefaults(context, hotkey_symbol, one_level_only)
@@ -47060,7 +47061,7 @@ class ik:
     def __init__(self, *args, **kwargs) -> None: ...
     __swig_destroy__: Incomplete
     @staticmethod
-    def solveFBIK(*args, **kwargs) -> None:
+    def solveFBIK(skeleton: Sequence[_ik_Skeleton], targets: Sequence[_ik_Target], iters: int = ..., tolerance: float = ..., pin_root: bool = ...) -> None:
         """
 
         hou.ik.solveFBIK
@@ -47099,7 +47100,7 @@ class ik:
 
         """
     @staticmethod
-    def solvePhysFBIK(*args, **kwargs) -> None:
+    def solvePhysFBIK(skeleton: Sequence[_ik_Skeleton], targets: Sequence[_ik_Target], com_target: Optional[_ik_Target] = ..., iters: int = ..., damping: float = ..., tolerance: float = ...) -> None:
         """
 
         hou.ik.solvePhysFBIK
@@ -47454,7 +47455,7 @@ class _ik_Skeleton:
     def __eq__(self, other: object) -> bool: ...
     def __ne__(self, other: object) -> bool: ...
     def __hash__(self) -> int: ...
-    def addJoint(self, *args, **kwargs) -> _ik_Joint:
+    def addJoint(self, world_transform: Matrix4 = ..., parent: Optional[_ik_Joint] = ..., rotation_weights: Vector3 = ..., translation_weights: Vector3 = ..., mass: float = ..., local_com: Vector3 = ...) -> _ik_Joint:
         """
 
         addJoint(self, world_transform=hou.Matrix4(1.0), parent=None,
@@ -49194,7 +49195,7 @@ class IPRViewer(PaneTab):
 
 
         """
-    def saveFrame(self, *args) -> bool:
+    def saveFrame(self, file_path: str, snapshot: int = ..., xres: int = ..., yres: int = ..., color: str = ..., alpha: str = ..., scope: str = ..., lut: str = ..., gamma: float = ..., convert: bool = ...) -> bool:
         """
 
         saveFrame(self, file_path, snapshot=0, xres=-1, yres=-1, color='C',
@@ -50462,7 +50463,7 @@ class LopNetwork(OpNode):
 
 
         """
-    def viewportOverridesLayer(self, *args, **kwargs) -> Any:
+    def viewportOverridesLayer(self, layer_id: EnumValue) -> pxr.Sdf.Layer:
         """
 
         viewportOverridesLayer(self, layer_id) -> pxr.Sdf.Layer
@@ -50942,7 +50943,7 @@ class LopNode(OpNode):
 
 
         """
-    def stagePrimStats(self, *args, **kwargs) -> Any:
+    def stagePrimStats(self, primpath: Optional[str] = ..., output_index: int = ..., apply_viewport_overrides: bool = ..., ignore_errors: bool = ..., do_geometry_counts: bool = ..., do_separate_purposes: bool = ..., use_last_cook_context_options: bool = ..., apply_post_layers: bool = ..., frame: Optional[float] = ..., context_options: Optional[Dict[str, Union[str, float]]] = ...) -> Dict[str, int]:
         """
 
         stagePrimStats(self, primpath = None, output_index = 0,
@@ -51031,7 +51032,7 @@ class LopNode(OpNode):
 
 
         """
-    def loadMasks(self, *args, **kwargs) -> LopViewportLoadMasks:
+    def loadMasks(self, output_index: int = ..., force_cook: bool = ..., use_last_cook_context_options: bool = ..., frame: Optional[float] = ..., context_options: Optional[Dict[str, Union[str, float]]] = ...) -> LopViewportLoadMasks:
         """
 
         loadMasks(self, output_index = 0, force_cook = False,
@@ -51063,7 +51064,7 @@ class LopNode(OpNode):
 
 
         """
-    def sourceLayerCount(self, *args, **kwargs) -> int:
+    def sourceLayerCount(self, output_index: int = ..., use_last_cook_context_options: bool = ..., frame: Optional[float] = ..., context_options: Optional[Dict[str, Union[str, float]]] = ...) -> LopViewportLoadMasks:
         """
 
         sourceLayerCount(self, output_index = 0, use_last_cook_context_options =
@@ -51088,7 +51089,7 @@ class LopNode(OpNode):
 
 
         """
-    def layersAboveLayerBreak(self, *args, **kwargs) -> Tuple[str, ...]:
+    def layersAboveLayerBreak(self, output_index: int = ..., use_last_cook_context_options: bool = ..., frame: Optional[float] = ..., context_options: Optional[Dict[str, Union[str, float]]] = ...) -> Sequence[str]:
         """
 
         layersAboveLayerBreak(self, output_index = 0,
@@ -51155,7 +51156,7 @@ class LopNode(OpNode):
 
 
         """
-    def addLockedGeometry(self, *args) -> str:
+    def addLockedGeometry(self, identifier: str, geo: Geometry, args: Optional[Dict[str, str]] = ...) -> str:
         """
 
         addLockedGeometry(self, identifier, geo, args = {}) -> str
@@ -51780,7 +51781,7 @@ class lop:
 
         """
     @staticmethod
-    def createParmsForProperty(*args) -> ParmTemplateGroup:
+    def createParmsForProperty(source: Union[LopNode, str], primpath: str, propertyname: str, parametername: Optional[str] = ..., prepend_control_parm: bool = ..., prefix_xform_parms: bool = ...) -> ParmTemplateGroup:
         """
 
         createParmsForProperty(source, primpath, propertyname, parametername,
@@ -51877,7 +51878,7 @@ class lop:
 
         """
     @staticmethod
-    def createConnectionParmsForProperty(*args) -> ParmTemplateGroup:
+    def createConnectionParmsForProperty(source: Union[LopNode, str], primpath: str, propertyname: str, parametername: Optional[str] = ..., prepend_control_parm: bool = ...) -> ParmTemplateGroup:
         """
 
         createConnectionParmsForProperty(source, primpath, propertyname,
@@ -51917,7 +51918,7 @@ class lop:
 
         """
     @staticmethod
-    def setParmTupleFromProperty(*args) -> None:
+    def setParmTupleFromProperty(parmtuple: ParmTuple, source: Union[LopNode, str], primpath: str, propertyname: str) -> None:
         """
 
         setParmTupleFromProperty(parmtuple, source, primpath, propertyname)
@@ -51983,7 +51984,7 @@ class lop:
 
         """
     @staticmethod
-    def translateShader(*args) -> str:
+    def translateShader(node: Node, node_output_name: str, material_prim_path: str, container_prim_path: str, shader_prim_name: Optional[str] = ..., frame: Optional[float] = ...) -> str:
         """
 
         translateShader(node, node_output_name, material_prim_path,
@@ -52159,7 +52160,7 @@ class lop:
 
         """
     @staticmethod
-    def addLockedGeometry(*args) -> str:
+    def addLockedGeometry(identifier: str, geo: Geometry, args: Optional[Dict[str, str]] = ...) -> str:
         """
 
         addLockedGeometry(self, identifier, geo, args = {}) -> str
@@ -53356,7 +53357,7 @@ class Matrix2:
 
 
         """
-    def setTo(self, *args) -> None:
+    def setTo(self, value: Sequence[float]) -> None:
         """
 
         setTo(self, tuple)
@@ -53415,7 +53416,7 @@ class Matrix2:
 
 
         """
-    def __mul__(self, *args) -> Matrix2:
+    def __mul__(self, matrix2_or_scalar: Union[Matrix2, float]) -> Matrix2:
         """
 
         __mul__(self, matrix2_or_scalar) -> hou.Matrix2
@@ -53578,7 +53579,7 @@ class Matrix3:
 
 
         """
-    def setTo(self, *args) -> None:
+    def setTo(self, value: Sequence[float]) -> None:
         """
 
         setTo(self, tuple)
@@ -53638,7 +53639,7 @@ class Matrix3:
 
 
         """
-    def __mul__(self, *args) -> Matrix3:
+    def __mul__(self, matrix3_or_scalar: Union[Matrix3, float]) -> Matrix4:
         """
 
         __mul__(self, matrix3_or_scalar) -> hou.Matrix3
@@ -53701,7 +53702,7 @@ class Matrix3:
 
 
         """
-    def extractRotates(self, *args, **kwargs) -> Vector3:
+    def extractRotates(self, rotate_order: str = ...) -> Vector3:
         '''
 
         extractRotates(self, rotate_order=\\"xyz\\") -> hou.Vector3
@@ -53733,7 +53734,7 @@ class Matrix3:
 
 
         '''
-    def removeScalesAndShears(self, *args, **kwargs) -> tuple[Vector3, Vector3]:
+    def removeScalesAndShears(self, transform_order: str = ...) -> Tuple[Vector3, Vector3]:
         '''
 
         removeScalesAndShears(self, transform_order=\\"srt\\") -> tuple of
@@ -53931,7 +53932,7 @@ class Matrix4:
 
 
         """
-    def setTo(self, *args) -> None:
+    def setTo(self, value: Sequence[float]) -> None:
         """
 
         setTo(self, sequence)
@@ -53992,7 +53993,7 @@ class Matrix4:
 
 
         """
-    def __mul__(self, *args) -> Matrix4:
+    def __mul__(self, matrix4_or_scalar: Union[Matrix4, float]) -> Matrix4:
         """
 
         __mul__(self, matrix4_or_scalar) -> hou.Matrix4
@@ -54064,7 +54065,7 @@ class Matrix4:
 
 
         """
-    def explode(self, *args, **kwargs) -> dict[str, Vector3]:
+    def explode(self, transform_order: str = ..., rotate_order: str = ..., pivot: Vector3 = ..., pivot_rotate: Vector3 = ...) -> dict[str, Vector3]:
         """
 
         explode(self, transform_order='srt', rotate_order='xyz',
@@ -54123,7 +54124,7 @@ class Matrix4:
 
 
         """
-    def extractTranslates(self, *args, **kwargs) -> Vector3:
+    def extractTranslates(self, transform_order: str = ..., pivot: Vector3 = ..., pivot_rotate: Vector3 = ...) -> Vector3:
         """
 
         extractTranslates(self, transform_order='srt',
@@ -54140,7 +54141,7 @@ class Matrix4:
           > <hou.Vector3 [0.707107, 0.707107, 0]>
 
         """
-    def extractRotates(self, *args, **kwargs) -> Vector3:
+    def extractRotates(self, transform_order: str = ..., rotate_order: str = ..., pivot: Vector3 = ..., pivot_rotate: Vector3 = ...) -> Vector3:
         """
 
         extractRotates(self, transform_order='srt', rotate_order='xyz',
@@ -54152,7 +54153,7 @@ class Matrix4:
 
 
         """
-    def extractScales(self, *args, **kwargs) -> Vector3:
+    def extractScales(self, transform_order: str = ..., pivot: Vector3 = ..., pivot_rotate: Vector3 = ...) -> Vector3:
         """
 
         extractScales(self, transform_order='srt', pivot=hou.Vector3(),
@@ -54164,7 +54165,7 @@ class Matrix4:
 
 
         """
-    def extractShears(self, *args, **kwargs) -> Vector3:
+    def extractShears(self, transform_order: str = ..., pivot: Vector3 = ..., pivot_rotate: Vector3 = ...) -> Vector3:
         """
 
         extractShears(self, transform_order='srt', pivot=hou.Vector3(),
@@ -55525,7 +55526,7 @@ class NetworkEditor(PathBasedPaneTab):
 
 
         """
-    def openTabMenu(self, *args, **kwargs) -> None:
+    def openTabMenu(self, key: Optional[str] = ..., auto_place: bool = ..., branch: bool = ..., src_item: Optional[NetworkMovableItem] = ..., src_connector_index: int = ..., dest_item: Optional[NetworkMovableItem] = ..., dest_connector_index: int = ..., node_position: Optional[Vector2] = ..., src_items: Optional[Sequence[NetworkMovableItem]] = ..., src_indexes: Optional[Sequence[int]] = ..., dest_items: Optional[Sequence[NetworkMovableItem]] = ..., dest_indexes: Optional[Sequence[int]] = ...) -> None:
         """
 
         openTabMenu(self, key=None, auto_place=False, branch=False,
@@ -55595,7 +55596,7 @@ class NetworkEditor(PathBasedPaneTab):
 
 
         """
-    def openNodeMenu(self, *args, **kwargs) -> None:
+    def openNodeMenu(self, node: Optional[Node] = ..., items: Optional[Sequence[NetworkMovableItem]] = ...) -> None:
         """
 
         openNodeMenu(self, node = None, items = [])
@@ -56053,7 +56054,7 @@ class NetworkEditor(PathBasedPaneTab):
 
 
         """
-    def setParmFilterMode(self, *args) -> None:
+    def setParmFilterMode(self, mode: EnumValue) -> None:
         """
 
         setParmFilterMode(self,mode)
@@ -56072,7 +56073,7 @@ class NetworkEditor(PathBasedPaneTab):
 
 
         """
-    def setParmFilterCriteria(self, *args) -> None:
+    def setParmFilterCriteria(self, mode: EnumValue) -> None:
         """
 
         setParmFilterCriteria(self,criteria)
@@ -59059,7 +59060,7 @@ class Parm:
 
 
         """
-    def keyframesRefit(self, *args, **kwargs) -> None:
+    def keyframesRefit(self, refit: bool, refit_tol: float, refit_preserve_extrema: bool, refit_bezier: bool, resample: bool, resample_rate: float, resample_tol: float, range_: bool, range_start: float, range_end: bool, bake_chop: EnumValue, refit_smooth: bool) -> None:
         """
 
         keyframesRefit(self, refit, refit_tol, refit_preserve_extrema,
@@ -59256,7 +59257,7 @@ class ParameterEditor(PathBasedPaneTab):
 
 
         """
-    def setFilterMode(self, *args) -> None:
+    def setFilterMode(self, mode: EnumValue) -> None:
         """
 
         setFilterMode(self,mode)
@@ -59275,7 +59276,7 @@ class ParameterEditor(PathBasedPaneTab):
 
 
         """
-    def setFilterCriteria(self, *args) -> None:
+    def setFilterCriteria(self, criteria: EnumValue) -> None:
         """
 
         setFilterCriteria(self,criteria)
@@ -59449,7 +59450,7 @@ class ParmTuple:
 
 
         """
-    def setPending(self, *args) -> None:
+    def setPending(self, values: Sequence[Union[float, str]]) -> None:
         """
 
         setPending(self, values)
@@ -59677,7 +59678,7 @@ class ParmTuple:
 
 
         """
-    def lock(self, *args) -> None:
+    def lock(self, bool_values: Sequence[bool]) -> None:
         """
 
         lock(self, bool_values)
@@ -60085,7 +60086,7 @@ class ParmTuple:
     def isConstrained(self) -> bool: ...
     def isShowingExpression(self) -> bool: ...
     def showExpression(self, value: bool) -> None: ...
-    def eval(self) -> Any:
+    def eval(self) -> Union[Sequence[int], Sequence[float], Sequence[str], Ramp]:
         """
 
         eval(self) -> tuple of int, float, str, or hou.Ramp
@@ -60098,7 +60099,7 @@ class ParmTuple:
 
 
         """
-    def evalAtFrame(self, frame: float) -> Any:
+    def evalAtFrame(self, frame: float) -> Union[Sequence[int], Sequence[float], Sequence[str], Ramp]:
         """
 
         evalAtFrame(self, frame) -> tuple of int, float, str, or hou.Ramp
@@ -60111,7 +60112,7 @@ class ParmTuple:
 
 
         """
-    def evalAtTime(self, time: float) -> Any:
+    def evalAtTime(self, frame: float) -> Union[Sequence[int], Sequence[float], Sequence[str], Ramp]:
         """
 
         evalAtTime(self, time) -> tuple of int, float, str, or hou.Ramp
@@ -62034,7 +62035,7 @@ class PluginHotkeyDefinitions:
 
 
         """
-    def addDefaultBinding(self, *args) -> None:
+    def addDefaultBinding(self, context: str, command: str, assignments: Sequence[str], apply_platform_modifier_mappings: bool = ...) -> Any:
         """
 
         addDefaultBinding(self, context, command, assignments, bool
@@ -62290,7 +62291,7 @@ class Point:
 
 
         """
-    def floatAttribValue(self, *args) -> float:
+    def floatAttribValue(self, name_or_attrib: Union[str, Attrib]) -> float:
         """
 
         floatAttribValue(self, name_or_attrib) -> float
@@ -62308,7 +62309,7 @@ class Point:
 
 
         """
-    def floatListAttribValue(self, *args) -> Tuple[float, ...]:
+    def floatListAttribValue(self, name_or_attrib: Union[str, Attrib]) -> Sequence[float]:
         """
 
         floatListAttribValue(self, name_or_attrib) -> tuple of float
@@ -62324,7 +62325,7 @@ class Point:
 
 
         """
-    def intAttribValue(self, *args) -> int:
+    def intAttribValue(self, name_or_attrib: Union[str, Attrib]) -> int:
         """
 
         intAttribValue(self, name_or_attrib) -> int
@@ -62335,7 +62336,7 @@ class Point:
 
 
         """
-    def intListAttribValue(self, *args) -> Tuple[int, ...]:
+    def intListAttribValue(self, name_or_attrib: Union[str, Attrib]) -> Sequence[int]:
         """
 
         intListAttribValue(self, name_or_attrib) -> tuple of int
@@ -62347,7 +62348,7 @@ class Point:
 
 
         """
-    def stringAttribValue(self, *args) -> str:
+    def stringAttribValue(self, name_or_attrib: Union[str, Attrib]) -> str:
         """
 
         stringAttribValue(self, name_or_attrib) -> str
@@ -62358,7 +62359,7 @@ class Point:
 
 
         """
-    def stringListAttribValue(self, *args) -> Tuple[str, ...]:
+    def stringListAttribValue(self, name_or_attrib: Union[str, Attrib]) -> Sequence[str]:
         """
 
         stringListAttribValue(self, name_or_attrib) -> tuple of str
@@ -62373,7 +62374,7 @@ class Point:
 
 
         """
-    def dictAttribValue(self, *args) -> dict[str, Any]:
+    def dictAttribValue(self, name_or_attrib: Union[str, Attrib]) -> dict[str, Any]:
         """
 
         dictAttribValue(self, name_or_attrib) -> dict
@@ -62384,7 +62385,7 @@ class Point:
 
 
         """
-    def dictListAttribValue(self, *args) -> Tuple[dict[str, Any], ...]:
+    def dictListAttribValue(self, name_or_attrib: Union[str, Attrib]) -> Sequence[dict[str, Any]]:
         """
 
         dictListAttribValue(self, name_or_attrib) -> tuple of str
@@ -62399,7 +62400,7 @@ class Point:
 
 
         """
-    def setAttribValue(self, *args) -> None:
+    def setAttribValue(self, name_or_attrib: Union[str, Attrib], attrib_value: Union[int, float, str, Dict[str, Any]]) -> None:
         """
 
         setAttribValue(self, name_or_attrib, attrib_value)
@@ -62434,7 +62435,7 @@ class Point:
 
 
         """
-    def attribValue(self, *args) -> Any:
+    def attribValue(self, attrib: Union[Attrib, str]) -> Union[int, float, str, Sequence[int], Sequence[float], Dict[str, Any]]:
         '''
 
         attribValue(self, name_or_attrib) -> int, float, str, tuple or dict
@@ -62592,7 +62593,7 @@ class PointGroup:
 
 
         """
-    def add(self, *args) -> None:
+    def add(self, point_or_list_or_point_group: Union[Point, Sequence[Point], PointGroup]) -> None:
         """
 
         add(self, point_or_list_or_point_group)
@@ -62613,7 +62614,7 @@ class PointGroup:
 
 
         """
-    def remove(self, *args) -> None:
+    def remove(self, point_or_list_or_point_group: Union[Point, Sequence[Point], PointGroup]) -> None:
         """
 
         remove(self, point_or_list_or_point_group)
@@ -62682,7 +62683,7 @@ class PointGroup:
 
 
         """
-    def setOption(self, *args) -> None:
+    def setOption(self, name: str, value: Union[bool, int, float, str, Vector2, Vector3, Vector4, Quaternion, Matrix3, Matrix4, Sequence[int], Sequence[float]], type_hint: EnumValue = ...) -> None:
         """
 
         setOption(self, name, value, type_hint = hou.fieldType::NoSuchField)
@@ -62738,7 +62739,7 @@ class PointGroup:
 
 
         """
-    def options(self) -> Any:
+    def options(self) -> Dict[str, Union[bool, int, float, str, Vector2, Vector3, Vector4, Quaternion, Matrix3, Matrix4, Sequence[int], Sequence[float]]]:
         """
 
         option(self, name) -> bool, int, float, str, hou.Vector2, hou.Vector3,
@@ -62753,7 +62754,7 @@ class PointGroup:
 
 
         """
-    def option(self, option_name: str) -> Any: ...
+    def option(self, option_name: str) -> Union[bool, int, float, str, Vector2, Vector3, Vector4, Quaternion, Matrix3, Matrix4, Sequence[int], Sequence[float]]: ...
 
 class Polygon(Face):
     """
@@ -62867,7 +62868,7 @@ class PrimGroup:
 
 
         """
-    def add(self, *args) -> None:
+    def add(self, prim_or_list_or_prim_group: Union[Prim, Sequence[Prim], PrimGroup]) -> None:
         """
 
         add(self, prim_or_list_or_prim_group)
@@ -62889,7 +62890,7 @@ class PrimGroup:
 
 
         """
-    def remove(self, *args) -> None:
+    def remove(self, prim_or_list_or_prim_group: Union[Prim, Sequence[Prim], PrimGroup]) -> None:
         """
 
         remove(self, prim_or_list_or_prim_group)
@@ -62959,7 +62960,7 @@ class PrimGroup:
 
 
         """
-    def setOption(self, *args) -> None:
+    def setOption(self, name: str, value: Union[bool, int, float, str, Vector2, Vector3, Vector4, Quaternion, Matrix3, Matrix4, Sequence[int], Sequence[float]], type_hint: EnumValue = ...) -> None:
         """
 
         setOption(self, name, value, type_hint = hou.fieldType::NoSuchField)
@@ -63015,7 +63016,7 @@ class PrimGroup:
 
 
         """
-    def options(self) -> Any:
+    def options(self) -> Dict[str, Union[bool, int, float, str, Vector2, Vector3, Vector4, Quaternion, Matrix3, Matrix4, Sequence[int], Sequence[float]]]:
         """
 
         option(self, name) -> bool, int, float, str, hou.Vector2, hou.Vector3,
@@ -63030,7 +63031,7 @@ class PrimGroup:
 
 
         """
-    def option(self, option_name: str) -> Any: ...
+    def option(self, option_name: str) -> Union[bool, int, float, str, Vector2, Vector3, Vector4, Quaternion, Matrix3, Matrix4, Sequence[int], Sequence[float]]: ...
 
 class properties:
     """
@@ -63050,7 +63051,7 @@ class properties:
     def __init__(self, *args, **kwargs) -> None: ...
     __swig_destroy__: Incomplete
     @staticmethod
-    def classes(*args) -> Tuple[str, ...]:
+    def classes(tags: Optional[Sequence[str]] = ...) -> Sequence[str]:
         """
 
         classes(tags=None) -> tuple of str
@@ -63660,7 +63661,7 @@ class Quaternion:
 
 
         """
-    def setToRotationMatrix(self, *args) -> None:
+    def setToRotationMatrix(self, matrix3_or_matrix4: Union[Matrix3, Matrix4]) -> None:
         """
 
         setToRotationMatrix(self, matrix3_or_matrix4)
@@ -63701,7 +63702,7 @@ class Quaternion:
 
 
         """
-    def setToEulerRotates(self, *args, **kwargs) -> None:
+    def setToEulerRotates(self, angles_in_deg: float, rotate_order: str = ...) -> None:
         '''
 
         setToEulerRotates(self, angles_in_deg, rotate_order=\\"xyz\\")
@@ -63778,7 +63779,7 @@ class Quaternion:
 
 
         """
-    def __mul__(self, *args) -> Quaternion:
+    def __mul__(self, quaternion_or_scalar: Union[Quaternion, float]) -> Quaternion:
         """
 
         __mul__(self, quaternion_or_scalar) -> hou.Quaternion
@@ -63890,7 +63891,7 @@ class Quaternion:
 
 
         """
-    def extractEulerRotates(self, *args) -> Vector3:
+    def extractEulerRotates(self, rotate_order: str = ...) -> Vector3:
         '''
 
         extractEulerRotates(self, rotate_order=\\"xyz\\") -> hou.Vector3
@@ -65171,7 +65172,7 @@ class RopNode(OpNode):
 
 
         """
-    def render(self, *args, **kwargs) -> None:
+    def render(self, frame_range: Optional[Sequence[float]] = ..., res: Optional[Sequence[int]] = ..., output_file: Optional[str] = ..., output_format=..., to_flipbook: bool = ..., quality: int = ..., ignore_inputs: bool = ..., method=..., ignore_bypass_flags: bool = ..., ignore_lock_flags: bool = ..., verbose: bool = ..., output_progress: bool = ...) -> None:
         """
 
         render(self, frame_range=(), res=(), output_file=None,
@@ -65809,7 +65810,7 @@ class SceneViewer(PathBasedPaneTab):
 
 
         """
-    def setCurrentState(self, *args, **kwargs) -> None:
+    def setCurrentState(self, state: EnumValue, wait_for_exit: bool = ..., generate: EnumValue = ..., request_new_on_generate: bool = ..., ex_situ_generate: bool = ...) -> None:
         """
 
         setCurrentState(self, state, wait_for_exit=False,
@@ -65917,7 +65918,7 @@ class SceneViewer(PathBasedPaneTab):
 
 
         """
-    def selectObjects(self, *args, **kwargs) -> Tuple[Node, ...]:
+    def selectObjects(self, prompt: str = ..., sel_index: int = ..., allow_drag: bool = ..., quick_select: bool = ..., use_existing_selection: bool = ..., allow_multisel: bool = ..., allowed_types: Sequence[str] = ..., icon: Optional[str] = ..., label: Optional[str] = ..., prior_selection_paths: Optional[Sequence[str]] = ..., prior_selection_ids: Optional[int] = ..., prior_selections: Sequence[str] = ..., toolbox_templategroup: Optional[str] = ..., toolbox1_templategroupOptional[str]=..., select_parm: str = ...) -> Sequence[Node]:
         '''
 
         selectObjects(self, prompt=\'Select objects\', sel_index=0,
@@ -65944,7 +65945,7 @@ class SceneViewer(PathBasedPaneTab):
 
 
         '''
-    def selectDynamics(self, *args, **kwargs) -> Tuple[DopData, ...]:
+    def selectDynamics(self, prompt: str = ..., sel_index: int = ..., allow_objects: bool = ..., allow_modifiers: bool = ..., quick_select: bool = ..., use_existing_selection: bool = ..., allow_multisel: bool = ..., icon: Optional[str] = ..., label: Optional[str] = ..., prior_selection_paths: Optional[Sequence[str]] = ..., prior_selection_ids: Optional[int] = ..., prior_selections: Sequence[str] = ..., toolbox_templategroup: Optional[str] = ..., toolbox1_templategroupOptional[str]=..., select_parm: str = ...) -> Sequence[DopData]:
         '''
 
         selectDynamics(self, prompt=\'Select dynamics objects\', sel_index=0,
@@ -65956,7 +65957,7 @@ class SceneViewer(PathBasedPaneTab):
 
 
         '''
-    def selectDynamicsPoints(self, *args, **kwargs) -> Tuple[tuple[DopData, GeometrySelection], ...]:
+    def selectDynamicsPoints(self, prompt: str = ..., sel_index: int = ..., quick_select: bool = ..., use_existing_selection: bool = ..., allow_multisel: bool = ..., only_select_points: bool = ..., object_based_point_selection: bool = ..., use_last_selected_object: bool = ..., icon: Optional[str] = ..., label: Optional[str] = ..., prior_selection_paths: Optional[Sequence[str]] = ..., prior_selection_ids: Optional[int] = ..., prior_selections: Sequence[str] = ..., toolbox_templategroup: Optional[str] = ..., toolbox1_templategroupOptional[str]=..., select_parm: str = ...) -> Sequence[tuple[DopData, GeometrySelection]]:
         '''
 
         selectDynamicsPoints(self, prompt=\'Select dynamics points\', sel_index=0,
@@ -65969,7 +65970,7 @@ class SceneViewer(PathBasedPaneTab):
 
 
         '''
-    def selectDynamicsPolygons(self, *args, **kwargs) -> Tuple[tuple[DopData, GeometrySelection], ...]:
+    def selectDynamicsPolygons(self, prompt: str = ..., sel_index: int = ..., quick_select: bool = ..., use_existing_selection: bool = ..., object_based_point_selection: bool = ..., use_last_selected_object: bool = ..., icon: Optional[str] = ..., label: Optional[str] = ..., prior_selection_paths: Optional[Sequence[str]] = ..., prior_selection_ids: Optional[int] = ..., prior_selections: Sequence[str] = ..., toolbox_templategroup: Optional[str] = ..., toolbox1_templategroupOptional[str]=..., select_parm: str = ...) -> Sequence[tuple[DopData, GeometrySelection]]:
         '''
 
         selectDynamicsPolygons(self, prompt=\'Select dynamics polygons\',
@@ -65982,7 +65983,7 @@ class SceneViewer(PathBasedPaneTab):
 
 
         '''
-    def selectSceneGraph(self, *args, **kwargs) -> Tuple[str, ...]:
+    def selectSceneGraph(self, prompt: str = ..., preselection: Sequence[str] = ..., prim_mask: EnumValue = ..., quick_select: bool = ..., use_existing_selection: bool = ..., confirm_existing: bool = ..., allow_multisel: bool = ..., allow_drag: bool = ..., propagate_selection: bool = ..., path_prefix_mask: str = ..., prim_kind: str = ..., validate_selection_for_node: Incomplete = ..., select_parm: str = ..., allow_kind_mismatch: EnumValue = ..., allow_instance_proxies: EnumValue = ..., fix_preselection_paths=...) -> Sequence[str]:
         """
 
         selectSceneGraph(self, prompt='Select primitives', preselection=[],
@@ -65996,7 +65997,7 @@ class SceneViewer(PathBasedPaneTab):
 
 
         """
-    def selectSceneGraphInstances(self, *args, **kwargs) -> Tuple[str, ...]:
+    def selectSceneGraphInstances(self, prompt: str = ..., preselection: Sequence[str] = ..., quick_select: bool = ..., use_existing_selection: bool = ..., confirm_existing: bool = ..., allow_multisel: bool = ..., allow_drag: bool = ..., path_prefix_mask: str = ..., instance_level: int = ..., instance_indices_only: bool = ..., validate_selection_for_node: Incomplete = ..., select_parm: str = ...) -> Sequence[str]:
         '''
 
         selectSceneGraphInstances(self, prompt=\'Select point instances\',
@@ -66007,7 +66008,7 @@ class SceneViewer(PathBasedPaneTab):
 
 
         '''
-    def selectPositions(self, *args, **kwargs) -> Tuple[Vector3, ...]:
+    def selectPositions(self, prompt: str = ..., number_of_positions: int = ..., min_number_of_positions: int = ..., connect_positions: bool = ..., show_coordinates: bool = ..., bbox: BoundingBox = ..., position_type: EnumValue = ..., icon: Optional[str] = ..., label: Optional[str] = ..., toolbox_templategroup: Optional[str] = ..., toolbox1_templategroup: Optional[str] = ..., select_parm: str = ...) -> Sequence[Vector3]:
         '''
 
         selectPositions(self, prompt=\'Click to specify a position\',
@@ -66019,7 +66020,7 @@ class SceneViewer(PathBasedPaneTab):
 
 
         '''
-    def selectOrientedPositions(self, *args, **kwargs) -> Tuple[tuple[Vector3, Matrix3], ...]:
+    def selectOrientedPositions(self, prompt: str = ..., number_of_positions: int = ..., min_number_of_positions: int = ..., connect_positions: bool = ..., show_coordinates: bool = ..., bbox: BoundingBox = ..., icon: Optional[str] = ..., label: Optional[str] = ..., toolbox_templategroup: Optional[str] = ..., toolbox1_templategroup: Optional[str] = ..., select_parm: str = ...) -> Sequence[tuple[Vector3, Matrix3]]:
         '''
 
         selectOrientedPositions(self, prompt=\'Click to specify a position\',
@@ -66039,7 +66040,7 @@ class SceneViewer(PathBasedPaneTab):
 
 
         '''
-    def selectDrawableGeometry(self, *args, **kwargs) -> None:
+    def selectDrawableGeometry(self, drawable_selection: Dict[str, Incomplete], selection_modifier: EnumValue = ...) -> None:
         """
 
         selectDrawableGeometry(self, drawable_selection,
@@ -66139,7 +66140,7 @@ class SceneViewer(PathBasedPaneTab):
 
 
         """
-    def locateSceneGraphPrim(self, *args) -> Tuple[float, str]:
+    def locateSceneGraphPrim(self, x: int, y: int) -> Tuple[float, str]:
         """
 
         locateSceneGraphPrim(self, x, y) -> (float, string)
@@ -66876,7 +66877,7 @@ class SceneViewer(PathBasedPaneTab):
 
 
         """
-    def setPromptMessage(self, *args) -> None:
+    def setPromptMessage(self, msg: str, msg_type: EnumValue = ...) -> None:
         """
 
         setPromptMessage(self, msg, msg_type=promptMessageType.Prompt)
@@ -66967,7 +66968,7 @@ class SceneViewer(PathBasedPaneTab):
 
 
         """
-    def triggerStateSelector(self, *args, **kwargs) -> None:
+    def triggerStateSelector(self, action: EnumValue, name: Optional[str] = ...) -> None:
         """
 
         triggerStateSelector(self, action, name=None)
@@ -68023,7 +68024,7 @@ class SceneViewer(PathBasedPaneTab):
 
 
         """
-    def bindViewerHandle(self, *args, **kwargs) -> None:
+    def bindViewerHandle(self, handle_type: str, name: str, settings: Optional[str] = ..., cache_previous_parms: bool = ..., handle_parms: Optional[Sequence[str]] = ...) -> None:
         """
 
         bindViewerHandle(self, handle_type, name, settings=None,
@@ -68075,7 +68076,7 @@ class SceneViewer(PathBasedPaneTab):
 
 
         """
-    def bindViewerHandleStatic(self, *args, **kwargs) -> None:
+    def bindViewerHandleStatic(self, handle_type: str, name: str, bindings: Sequence[str], settings: Optional[str] = ...) -> None:
         '''
 
         bindViewerHandleStatic(self, handle_type, name, bindings, settings=None)
@@ -68528,7 +68529,7 @@ class Selector:
 
 
         """
-    def nodeType(self) -> NodeType:
+    def nodeType(category_or_name: Union[NodeTypeCategory, str], internal_name: Optional[str] = ...) -> Optional[NodeType]:
         """
 
         nodeType(self) -> hou.NodeType
@@ -69261,7 +69262,7 @@ class shelves:
 
         """
     @staticmethod
-    def newTool(*args, **kwargs) -> Tool:
+    def newTool(file_path: Optional[str] = ..., name: Optional[str] = ..., label: Optional[str] = ..., script: Optional[str] = ..., language: EnumValue = ..., icon: Optional[str] = ..., help: Optional[str] = ..., help_url: Optional[str] = ..., network_categories: Sequence[NodeTypeCategory] = ..., viewer_categories: Sequence[NodeTypeCategory] = ..., cop_viewer_categories: Sequence[NodeTypeCategory] = ..., network_op_type: Optional[str] = ..., viewer_op_type: Optional[str] = ..., locations: Sequence[str] = ..., hda_definition: Optional[HDADefinition] = ...) -> Tool:
         """
 
         newTool(file_path=None, name=None, label=None, script=None,
@@ -69302,7 +69303,7 @@ class ShopNode(OpNode):
     thisown: Incomplete
     def __init__(self, *args, **kwargs) -> None: ...
     __swig_destroy__: Incomplete
-    def shaderString(self, *args) -> str:
+    def shaderString(self, render_type: Optional[str] = ...) -> str:
         '''
 
         shaderString(self, render_type=None) -> str
@@ -69353,7 +69354,7 @@ class ShopNode(OpNode):
           >     shader_string: /shop/ri_matte1
 
         '''
-    def shaderCode(self, *args) -> str: ...
+    def shaderCode(self, shader_type: Optional[EnumValue] = ...) -> str: ...
     def shaderName(self, as_otl_path: bool = True, shader_type_name: Optional[str] = None) -> str:
         """
 
@@ -70058,7 +70059,7 @@ class SopNodeType(OpNodeType):
     thisown: Incomplete
     def __init__(self, *args, **kwargs) -> None: ...
     __swig_destroy__: Incomplete
-    def selectors(self, *args) -> Tuple[Selector, ...]:
+    def selectors(self, selector_indices: Sequence[int] = ...) -> Sequence[Selector]:
         """
 
         selectors(self, selector_indices=()) -> tuple of hou.Selector
@@ -70098,7 +70099,7 @@ class SopNodeType(OpNodeType):
           >     return result
 
         """
-    def addSelector(self, *args, **kwargs) -> Selector:
+    def addSelector(self, name: str, selector_type: str, prompt: str = ..., primitive_types: Sequence[EnumValue] = ..., group_parm_name: Optional[str] = ..., group_type_parm_name: Optional[str] = ..., input_index: int = ..., input_required: bool = ..., allow_dragging: bool = ..., empty_string_selects_all: bool = ...) -> Selector:
         '''
 
         addSelector(self, name, selector_type, prompt=\'Select components\',
@@ -70936,7 +70937,7 @@ class StyleSheet:
 
 
         """
-    def cloneWithAddedStyleSheet(self, *args, **kwargs) -> StyleSheet:
+    def cloneWithAddedStyleSheet(self, stylesheet: StyleSheet, target: Optional[str] = ...) -> StyleSheet:
         """
 
         cloneWithAddedStyleSheet(self, stylesheet, target) -> hou.StyleSheet
@@ -71190,7 +71191,7 @@ class Surface(Prim):
 
 
         """
-    def attribValueAt(self, *args) -> Any:
+    def attribValueAt(self, attrib_or_name: Union[Attrib, str], u: float, v: float, du: float = ..., dv: float = ...) -> Union[int, float, str, Sequence[int], Sequence[float]]:
         """
 
         attribValueAt(self, attrib_or_name, u, v, du=0, dv=0) -> int, float, str
@@ -71513,7 +71514,7 @@ class Take:
 
 
         """
-    def loadChildTakeFromFile(self, filename: str) -> Optional[Take]:
+    def loadChildTakeFromFile(self, filename: str) -> Sequence[Take]:
         """
 
         loadChildTakeFromFile(self, filename) -> tuple of hou.Take
@@ -72003,7 +72004,7 @@ class text:
 
         """
     @staticmethod
-    def collapseCommonVars(*args, **kwargs) -> str:
+    def collapseCommonVars(path: str, vars: Sequence[str] = ...) -> str:
         """
 
         collapseCommonVars(path, vars = ['$HIP', '$JOB']) -> str
@@ -72657,7 +72658,7 @@ class Tool(ShelfElement):
 
 
         """
-    def setData(self, *args, **kwargs) -> None:
+    def setData(self, script: str = ..., language: EnumValue = ..., icon: str = ..., help: str = ..., help_url: str = ..., network_categories: Sequence[NodeTypeCategory] = ..., viewer_categories: Sequence[NodeTypeCategory] = ..., cop_viewer_categories: Sequence[NodeTypeCategory] = ..., network_op_type: str = ..., viewer_op_type: str = ..., locations: Sequence[str] = ...) -> None:
         '''
 
         setData(self, script=\'\', language=hou.scriptLanguage.Python, icon=\'\',
@@ -72785,7 +72786,7 @@ class TopNode(OpNode):
 
         """
     def topParent(self) -> Optional[Node]: ...
-    def cookWorkItems(self, *args, **kwargs) -> None:
+    def cookWorkItems(self, block: bool = ..., generate_only: bool = ..., tops_only: bool = ..., save_prompt: bool = ..., nodes: Sequence[TopNode] = ...) -> None:
         """
 
         cookWorkItems(self, block=False, generate_only=False, tops_only=False,
@@ -72838,7 +72839,7 @@ class TopNode(OpNode):
 
         """
     def cookAllOutputWorkItems(self, include_display_node: bool, block: bool = False, generate_only: bool = False, tops_only: bool = False, save_prompt: bool = False) -> None: ...
-    def generateStaticWorkItems(self, *args, **kwargs) -> None:
+    def generateStaticWorkItems(self, block: bool = ..., nodes: Sequence[TopNode] = ...) -> None:
         """
 
         generateStaticWorkItems(self, block=False, nodes=[])
@@ -73651,9 +73652,9 @@ class ui:
 
         """
     @staticmethod
-    def displayConfirmation(*args, **kwargs) -> bool: ...
+    def displayConfirmation(text: str, severity_type: EnumValue = ..., help: Optional[str] = ..., title: Optional[str] = ..., details: Optional[str] = ..., details_label: Optional[str] = ..., details_expanded: bool = ..., suppress: EnumValue = ...) -> bool: ...
     @staticmethod
-    def displayCustomConfirmation(*args, **kwargs) -> int:
+    def displayCustomConfirmation(text: str, buttons: Sequence[str] = ..., severity_type: EnumValue = ..., default_choice: int = ..., close_choice: int = ..., help: Optional[str] = ..., title: Optional[str] = ..., details: Optional[str] = ..., details_label: Optional[str] = ..., details_expanded: bool = ..., suppress: EnumValue = ...) -> int:
         '''
 
         displayCustomConfirmation(text, buttons=(),
@@ -73727,7 +73728,7 @@ class ui:
 
         '''
     @staticmethod
-    def displayMessage(*args, **kwargs) -> int:
+    def displayMessage(text: str, buttons: Sequence[str] = ..., severity_type: EnumValue = ..., default_choice: int = ..., close_choice: int = ..., help: Optional[str] = ..., title: Optional[str] = ..., details: Optional[str] = ..., details_label: Optional[str] = ..., details_expanded: bool = ..., suppress: EnumValue = ...) -> int:
         '''
 
         displayMessage(text, buttons=(\'OK\',), severity=hou.severityType.Message,
@@ -73793,7 +73794,7 @@ class ui:
 
         '''
     @staticmethod
-    def readInput(*args, **kwargs) -> tuple[int, str]:
+    def readInput(text: str, buttons: Sequence[str] = ..., severity_type: EnumValue = ..., default_choice: int = ..., close_choice: int = ..., help: Optional[str] = ..., title: Optional[str] = ..., initial_contents: Optional[str] = ...) -> Tuple[int, str]:
         """
 
         readInput(message, buttons=('OK',), severity=hou.severityType.Message,
@@ -73848,7 +73849,7 @@ class ui:
 
         """
     @staticmethod
-    def readMultiInput(*args, **kwargs) -> tuple[int, Tuple[str, ...]]:
+    def readMultiInput(text: str, input_labels: Sequence[str], password_input_indices: Sequence[int] = ..., buttons: Sequence[str] = ..., severity_type: EnumValue = ..., default_choice: int = ..., close_choice: int = ..., help: Optional[str] = ..., title: Optional[str] = ..., initial_contents: Sequence[str] = ...) -> Tuple[int, Sequence[str]]:
         '''
 
         readMultiInput(message, input_labels, password_input_indices=(),
@@ -73934,7 +73935,7 @@ class ui:
 
         '''
     @staticmethod
-    def selectFromList(*args, **kwargs) -> Tuple[int, ...]:
+    def selectFromList(choices: Sequence[str], default_choices: Sequence[int] = ..., exclusive: bool = ..., message: Optional[str] = ..., title: Optional[str] = ..., column_header: str = ..., num_visible_rows: int = ..., clear_on_cancel: bool = ..., width: int = ..., height: int = ..., sort: bool = ..., condense_paths: bool = ...) -> Sequence[int]:
         '''
 
         selectFromList(choices, default_choices=(), exclusive=False,
@@ -74003,7 +74004,7 @@ class ui:
 
         '''
     @staticmethod
-    def selectFromTree(*args, **kwargs) -> Tuple[str, ...]:
+    def selectFromTree(choices: Sequence[str], picked: Sequence[int] = ..., exclusive: bool = ..., message: Optional[str] = ..., title: Optional[str] = ..., clear_on_cancel: bool = ..., width: int = ..., height: int = ...) -> Sequence[str]:
         """
 
         selectFromTree(choices, picked=(), exclusive=False, message=None,
@@ -74081,7 +74082,7 @@ class ui:
 
         """
     @staticmethod
-    def selectParm(*args, **kwargs) -> Tuple[str, ...]:
+    def selectParm(category: NodeTypeCategory = ..., bound_parms_only: bool = ..., relative_to_node: Optional[OpNode] = ..., message: Optional[str] = ..., title: Optional[str] = ..., initial_parms: Sequence[Parm] = ..., multiple_select: bool = ..., width: int = ..., height: int = ...) -> Sequence[str]:
         """
 
         selectParm(category=None, bound_parms_only=False, relative_to_node=None,
@@ -74119,7 +74120,7 @@ class ui:
 
         """
     @staticmethod
-    def selectParmTuple(*args, **kwargs) -> Tuple[str, ...]:
+    def selectParmTuple(category: NodeTypeCategory = ..., bound_parms_only: bool = ..., relative_to_node: Optional[OpNode] = ..., message: Optional[str] = ..., title: Optional[str] = ..., initial_parm_tuples: Sequence[ParmTuple] = ..., multiple_select: bool = ..., width: int = ..., height: int = ...) -> Sequence[str]:
         """
 
         selectParmTuple(category=None, bound_parms_only=False,
@@ -74226,7 +74227,7 @@ class ui:
 
         """
     @staticmethod
-    def displayFileDependencyDialog(*args, **kwargs) -> Tuple[bool, Tuple[tuple[Parm, str], ...]]:
+    def displayFileDependencyDialog(rop_node: Optional[RopNode] = ..., uploaded_files: Sequence[str] = ..., forced_unselected_patterns: Sequence[str] = ..., project_dir_variable: str = ..., is_standalone: bool = ...) -> Tuple[bool, Sequence[Tuple[Parm, str]]]:
         """
 
         displayFileDependencyDialog(rop_node=None, uploaded_files=(),
@@ -74507,7 +74508,7 @@ class ui:
 
         """
     @staticmethod
-    def setStatusMessage(*args, **kwargs) -> None:
+    def setStatusMessage(message: str, severity: EnumValue = ...) -> None:
         '''
 
         setStatusMessage(message, severity=hou.severityType.Message)
@@ -74901,9 +74902,9 @@ class ui:
 
         """
     @staticmethod
-    def reloadViewerStates(*args, **kwargs) -> None: ...
+    def reloadViewerStates(state_names: Optional[Sequence[str]] = ...) -> None: ...
     @staticmethod
-    def viewerStateInfo(*args, **kwargs) -> str:
+    def viewerStateInfo(state_names: Sequence[str] = ...) -> str:
         '''
 
         viewerStateInfo(state_names) -> str
@@ -75165,7 +75166,7 @@ class ui:
 
         '''
     @staticmethod
-    def viewerHandleInfo(*args, **kwargs) -> str:
+    def viewerHandleInfo(handle_names: Sequence[str] = ...) -> str:
         '''
 
         viewerHandleInfo(handle_names) -> string
@@ -75498,7 +75499,7 @@ class ui:
 
         '''
     @staticmethod
-    def printResourceMessage(*args, **kwargs) -> None:
+    def printResourceMessage(resource_type: EnumValue, message: str, message_type: EnumValue = ...) -> None:
         """
 
         printResourceMessage(resource_type, message,
@@ -75991,7 +75992,7 @@ class ui:
 
         """
     @staticmethod
-    def loadPackageArchive(*args, **kwargs) -> Tuple[str, ...]:
+    def loadPackageArchive(file_path: str, extract_path: Optional[str] = ...) -> Sequence[str]:
         """
 
         loadPackageArchive(file_path, extract_path=None) -> list of string
@@ -76079,7 +76080,7 @@ class ui:
 
         """
     @staticmethod
-    def packageInfo(*args) -> str:
+    def packageInfo(file_paths: Sequence[str]) -> str:
         """
 
         packageInfo(file_paths) -> string
@@ -76222,7 +76223,7 @@ class ui:
 
         '''
     @staticmethod
-    def openValueLadder(*args, **kwargs) -> None:
+    def openValueLadder(initial_value: float, value_changed_callback: Callable[[float], None], type: EnumValue = ..., data_type: EnumValue = ...) -> None:
         """
 
         openValueLadder(initial_value, value_changed_callback,
@@ -76555,7 +76556,7 @@ class ui:
 
         """
     @staticmethod
-    def openFileEditor(*args, **kwargs) -> None:
+    def openFileEditor(title: str, file_path: str, action_callback: Optional[Callable[[Dict[str, Union[int, float, bool, str]]], None]] = ..., params: Optional[Dict[str, Union[int, float, bool, str]]] = ...) -> None:
         """
 
         openFileEditor(title, file_path, action_callback=None, params=None)
@@ -76634,7 +76635,7 @@ class ui:
 
         """
     @staticmethod
-    def openViewerStateCodeGenDialog(*args, **kwargs) -> None:
+    def openViewerStateCodeGenDialog(category: NodeTypeCategory, action_callback: Callable[[Dict[str, Union[int, float, bool, str]]], None], operator_name: Optional[str] = ...) -> None:
         """
 
         openViewerStateCodeGenDialog(category, action_callback,
@@ -77960,7 +77961,7 @@ class Vector2:
 
 
         """
-    def __mul__(self, *args) -> Vector2:
+    def __mul__(self, scalar_or_matrix2: Union[float, Matrix2]) -> Vector2:
         """
 
         __mul__(self, scalar_or_matrix2) -> hou.Vector2
@@ -78234,7 +78235,7 @@ class Vector3:
           > <hou.Vector3 [2, 4, 6]>
 
         """
-    def __mul__(self, *args) -> Vector3:
+    def __mul__(self, scalar_or_matrix3_or_matrix4: Union[float, Matrix3, Matrix4]) -> Vector3:
         """
 
         __mul__(self, scalar_or_matrix3_or_matrix4) -> hou.Vector3
@@ -78364,7 +78365,7 @@ class Vector3:
 
 
         """
-    def smoothRotation(self, *args, **kwargs) -> Vector3:
+    def smoothRotation(self, reference: Vector3, rotate_order: str = ...) -> Vector3:
         '''
 
         smoothRotation(self, reference, rotate_order=\\"xyz\\") -> hou.Vector3
@@ -78651,7 +78652,7 @@ class Vector4:
           > <hou.Vector4 [2, 4, 6, 8]>
 
         """
-    def __mul__(self, *args) -> Vector4:
+    def __mul__(self, scalar_or_matrix4: Union[float, Matrix4]) -> Vector4:
         """
 
         __mul__(self, scalar_or_matrix4) -> hou.Vector4
@@ -78889,7 +78890,7 @@ class Vertex:
 
 
         """
-    def floatAttribValue(self, *args) -> float:
+    def floatAttribValue(self, name_or_attrib: Union[str, Attrib]) -> float:
         """
 
         floatAttribValue(self, name_or_attrib) -> float
@@ -78907,7 +78908,7 @@ class Vertex:
 
 
         """
-    def floatListAttribValue(self, *args) -> Tuple[float, ...]:
+    def floatListAttribValue(self, name_or_attrib: Union[str, Attrib]) -> Sequence[float]:
         """
 
         floatListAttribValue(self, name_or_attrib) -> tuple of float
@@ -78923,7 +78924,7 @@ class Vertex:
 
 
         """
-    def intAttribValue(self, *args) -> int:
+    def intAttribValue(self, name_or_attrib: Union[str, Attrib]) -> int:
         """
 
         intAttribValue(self, name_or_attrib) -> int
@@ -78934,7 +78935,7 @@ class Vertex:
 
 
         """
-    def intListAttribValue(self, *args) -> Tuple[int, ...]:
+    def intListAttribValue(self, name_or_attrib: Union[str, Attrib]) -> Sequence[int]:
         """
 
         intListAttribValue(self, name_or_attrib) -> tuple of int
@@ -78946,7 +78947,7 @@ class Vertex:
 
 
         """
-    def stringAttribValue(self, *args) -> str:
+    def stringAttribValue(self, name_or_attrib: Union[str, Attrib]) -> str:
         """
 
         stringAttribValue(self, name_or_attrib) -> str
@@ -78957,7 +78958,7 @@ class Vertex:
 
 
         """
-    def stringListAttribValue(self, *args) -> Tuple[str, ...]:
+    def stringListAttribValue(self, name_or_attrib: Union[str, Attrib]) -> Sequence[str]:
         """
 
         stringListAttribValue(self, name_or_attrib) -> tuple of str
@@ -78973,7 +78974,7 @@ class Vertex:
 
 
         """
-    def dictAttribValue(self, *args) -> dict[str, Any]:
+    def dictAttribValue(self, name_or_attrib: Union[str, Attrib]) -> dict[str, Any]:
         """
 
         dictAttribValue(self, name_or_attrib) -> dict
@@ -78984,7 +78985,7 @@ class Vertex:
 
 
         """
-    def dictListAttribValue(self, *args) -> Tuple[dict[str, Any], ...]:
+    def dictListAttribValue(self, name_or_attrib: Union[str, Attrib]) -> Sequence[dict[str, Any]]:
         """
 
         dictListAttribValue(self, name_or_attrib) -> tuple of str
@@ -78999,7 +79000,7 @@ class Vertex:
 
 
         """
-    def setAttribValue(self, *args) -> None:
+    def setAttribValue(self, name_or_attrib: Union[str, Attrib], attrib_value: Union[int, float, str, Dict[str, Any]]) -> None:
         """
 
         setAttribValue(self, name_or_attrib, attrib_value)
@@ -79024,7 +79025,7 @@ class Vertex:
 
 
         """
-    def attribValue(self, *args) -> Any:
+    def attribValue(self, attrib: Union[Attrib, str]) -> Union[int, float, str, Sequence[int], Sequence[float], Dict[str, Any]]:
         """
 
         attribValue(self, name_or_attrib) -> int, float, str, tuple or dict
@@ -79136,7 +79137,7 @@ class VertexGroup:
 
 
         """
-    def add(self, *args) -> None:
+    def add(self, vertex_or_list_or_vertex_group: Union[Vertex, Sequence[Vertex], VertexGroup]) -> None:
         """
 
         add(self, vertex_or_list_or_vertex_group)
@@ -79158,7 +79159,7 @@ class VertexGroup:
 
 
         """
-    def remove(self, *args) -> None:
+    def remove(self, vertex_or_list_or_vertex_group: Union[Vertex, Sequence[Vertex], VertexGroup]) -> None:
         """
 
         remove(self, vertex_or_list_or_vertex_group)
@@ -79228,7 +79229,7 @@ class VertexGroup:
 
 
         """
-    def setOption(self, *args) -> None:
+    def setOption(self, name: str, value: Union[bool, int, float, str, Vector2, Vector3, Vector4, Quaternion, Matrix3, Matrix4, Sequence[int], Sequence[float]], type_hint: EnumValue = ...) -> None:
         """
 
         setOption(self, name, value, type_hint = hou.fieldType::NoSuchField)
@@ -79284,7 +79285,7 @@ class VertexGroup:
 
 
         """
-    def options(self) -> Any:
+    def options(self) -> Dict[str, Union[bool, int, float, str, Vector2, Vector3, Vector4, Quaternion, Matrix3, Matrix4, Sequence[int], Sequence[float]]]:
         """
 
         option(self, name) -> bool, int, float, str, hou.Vector2, hou.Vector3,
@@ -79299,7 +79300,7 @@ class VertexGroup:
 
 
         """
-    def option(self, option_name: str) -> Any: ...
+    def option(self, option_name: str) -> Union[bool, int, float, str, Vector2, Vector3, Vector4, Quaternion, Matrix3, Matrix4, Sequence[int], Sequence[float]]: ...
 
 class VexContext:
     """
@@ -80075,7 +80076,7 @@ class ViewerHandleContext(GadgetContext):
 
 
         """
-    def scaleFactor(self, *args) -> float:
+    def scaleFactor(self, ref_position: Sequence[float] = ...) -> float:
         """
 
         scaleFactor(ref_position) -> double
@@ -80256,7 +80257,7 @@ class ViewerHandleTemplate:
                   > template.bindIcon(\\"$HOUDINI_USER_PREF_DIR/config/Icons/myicon.pic\\")
 
         '''
-    def bindGadget(self, *args, **kwargs) -> None:
+    def bindGadget(self, drawable_type: EnumValue, gadget_name: str, gadget_label: Optional[str] = ..., parms: Optional[Sequence[str]] = ...) -> None:
         """
 
         bindGadget(self, drawable_type, gadget_name, gadget_label=None,
@@ -80301,7 +80302,7 @@ class ViewerHandleTemplate:
 
 
         """
-    def bindParameter(self, *args, **kwargs) -> None:
+    def bindParameter(self, param_type: EnumValue, name: str, label: Optional[str] = ..., default_value: Optional[Union[int, float, str]] = ..., num_components: int = ..., min_limit: int = ..., max_limit: int = ..., visible: bool = ...) -> None:
         """
 
         bindParameter(self, param_type, name, label=None, default_value=None,
@@ -80397,7 +80398,7 @@ class ViewerHandleTemplate:
 
 
         """
-    def bindSetting(self, *args, **kwargs) -> None:
+    def bindSetting(self, param_type: EnumValue, name: str, label: Optional[str] = ..., menu_as_button_strip: bool = ..., menu_items: Optional[Sequence[Union[Tuple[str, str], Tuple[str, str, str]]]] = ..., num_components: int = ..., default_value: Optional[Union[int, float, str]] = ..., min_limit: int = ..., max_limit: int = ..., align: bool = ...) -> None:
         """
 
         bindSetting(self, param_type, name, label=None,
@@ -80616,7 +80617,7 @@ class ViewerState:
 
 
         """
-    def nodeType(self) -> NodeType:
+    def nodeType(category_or_name: Union[NodeTypeCategory, str], internal_name: Optional[str] = ...) -> Optional[NodeType]:
         """
 
         nodeType(self) -> hou.NodeType or None
@@ -80874,7 +80875,7 @@ class ViewerStateMenu:
 
         '''
     __swig_destroy__: Incomplete
-    def addToggleItem(self, *args, **kwargs) -> None:
+    def addToggleItem(self, id, default: bool, hotkey: str = ...) -> None:
         '''
 
         addToggleItem(self, id, label, default, hotkey=\'\' )
@@ -80901,7 +80902,7 @@ class ViewerStateMenu:
           > menu.addToggleItem(\\"show_point_nums\\", \\"Show Point Numbers\\", False
 
         '''
-    def addActionItem(self, *args, **kwargs) -> None:
+    def addActionItem(self, id, hotkey: str = ...) -> None:
         '''
 
         addActionItem(self, id, label, hotkey=\'\')
@@ -80967,7 +80968,7 @@ class ViewerStateMenu:
           > menu.addRadioStripItem(\\"deform_type\\", \\"squash\\", \\"Squash\\")
 
         '''
-    def addRadioStripItem(self, *args, **kwargs) -> None:
+    def addRadioStripItem(self, strip_id: str, id, hotkey: str = ...) -> None:
         '''
 
         addRadioStripItem(self, strip_id, id, label, hotkey=\'\')
@@ -81178,7 +81179,7 @@ class ViewerStateTemplate:
 
 
         """
-    def bindParameter(self, *args, **kwargs) -> None:
+    def bindParameter(self, param_type: EnumValue, name: Optional[str] = ..., label: Optional[str] = ..., menu_as_button_strip: bool = ..., menu_items: Optional[Sequence[Union[Tuple[str, str], Tuple[str, str, str]]]] = ..., num_components: int = ..., default_value=..., min_limit: int = ..., max_limit: int = ..., align: bool = ..., toolbox: bool = ...) -> None:
         """
 
         bindParameter(self, param_type, name=None, label=None,
@@ -81302,7 +81303,7 @@ class ViewerStateTemplate:
 
 
         """
-    def bindHandle(self, *args, **kwargs) -> None:
+    def bindHandle(self, handle_type: str, name: str, settings: Optional[str] = ...) -> None:
         '''
 
         bindHandleStatic(self, handle_type, name, bindings, settings=None)
@@ -81346,8 +81347,8 @@ class ViewerStateTemplate:
 
 
         '''
-    def bindHandleStatic(self, *args, **kwargs) -> None: ...
-    def bindGadget(self, *args, **kwargs) -> None:
+    def bindHandleStatic(self, handle_type: str, name: str, bindings: Sequence[str], settings: Optional[str] = ...) -> None: ...
+    def bindGadget(self, drawable_type: EnumValue, gadget_name: str, gadget_label: Optional[str] = ...) -> None:
         '''
 
         bindGadget(self, drawable_type, gadget_name, gadget_label=None)
@@ -81467,7 +81468,7 @@ class ViewerStateTemplate:
 
 
         '''
-    def bindGeometrySelector(self, *args, **kwargs) -> None:
+    def bindGeometrySelector(self, prompt: str, allow_drag: bool = ..., quick_select: bool = ..., auto_start: bool = ..., toolbox: bool = ..., use_existing_selection: bool = ..., consume_selection: bool = ..., secure_selection: EnumValue = ..., initial_selection: str = ..., initial_selection_type: EnumValue = ..., ordered: bool = ..., geometry_types: Sequence[EnumValue] = ..., primitive_types: Sequence[EnumValue] = ..., allow_other_sops: bool = ..., hotkey: str = ..., name: str = ...) -> None:
         '''
 
         bindGeometrySelector(self, prompt, allow_drag=False, quick_select=True,
@@ -81581,7 +81582,7 @@ class ViewerStateTemplate:
 
 
         '''
-    def bindObjectSelector(self, *args, **kwargs) -> None:
+    def bindObjectSelector(self, prompt: str, quick_select: bool = ..., auto_start: bool = ..., toolbox: bool = ..., use_existing_selection: bool = ..., allow_multisel: bool = ..., secure_selection: EnumValue = ..., allowed_types: Sequence[str] = ..., hotkey: str = ..., name: str = ...) -> None:
         '''
 
         bindObjectSelector(self, prompt, quick_select=True, auto_start=True,
@@ -81659,7 +81660,7 @@ class ViewerStateTemplate:
 
 
         '''
-    def bindSceneGraphSelector(self, *args, **kwargs) -> None:
+    def bindSceneGraphSelector(self, prompt: str, allow_drag: bool = ..., quick_select: bool = ..., auto_start: bool = ..., toolbox: bool = ..., use_existing_selection: bool = ..., secure_selection: EnumValue = ..., consume_selection: bool = ..., allow_multisel: bool = ..., prior_selection_paths=..., prim_mask=..., path_prefix_mask=..., prim_kind=..., hotkey: str = ..., name: str = ...) -> None:
         '''
 
         bindSceneGraphSelector(self, prompt, allow_drag=True, quick_select=True,
@@ -81752,7 +81753,7 @@ class ViewerStateTemplate:
 
 
         '''
-    def bindDynamicsSelector(self, *args, **kwargs) -> None:
+    def bindDynamicsSelector(self, prompt: str, allow_objects: bool = ..., allow_modifiers: bool = ..., quick_select: bool = ..., auto_start: bool = ..., toolbox: bool = ..., use_existing_selection: bool = ..., secure_selection: EnumValue = ..., allow_multisel: bool = ..., hotkey: str = ..., name: str = ...) -> None:
         '''
 
         bindDynamicsSelector(self, prompt, allow_objects=True,
@@ -81834,7 +81835,7 @@ class ViewerStateTemplate:
 
 
         '''
-    def bindDynamicsPointSelector(self, *args, **kwargs) -> None:
+    def bindDynamicsPointSelector(self, prompt: str, allow_objects: bool = ..., allow_modifiers: bool = ..., quick_select: bool = ..., auto_start: bool = ..., toolbox: bool = ..., use_existing_selection: bool = ..., secure_selection: EnumValue = ..., allow_multisel: bool = ..., only_select_points: bool = ..., object_based_point_selection: bool = ..., use_last_selected_object: bool = ..., hotkey: str = ..., name: str = ...) -> None:
         '''
 
         bindDynamicsPointSelector(self, prompt, allow_objects=True,
@@ -81928,7 +81929,7 @@ class ViewerStateTemplate:
 
 
         '''
-    def bindDynamicsPolygonSelector(self, *args, **kwargs) -> None:
+    def bindDynamicsPolygonSelector(self, prompt: str, quick_select: bool = ..., auto_start: bool = ..., toolbox: bool = ..., use_existing_selection: bool = ..., object_based_point_selection: bool = ..., secure_selection: EnumValue = ..., use_last_selected_object: bool = ..., hotkey: str = ..., name: str = ...) -> None:
         '''
 
         bindDynamicsPolygonSelector(self, prompt, quick_select=True,
@@ -82008,7 +82009,7 @@ class ViewerStateTemplate:
 
 
         '''
-    def bindDrawableSelector(self, *args, **kwargs) -> None:
+    def bindDrawableSelector(self, prompt: str, auto_start: bool = ..., toolbox: bool = ..., drawable_mask=..., hotkey: str = ..., name: str = ...) -> None:
         '''
 
         bindDrawableSelector(self, prompt, auto_start=True, toolbox=True,
@@ -82062,7 +82063,7 @@ class ViewerStateTemplate:
 
 
         '''
-    def bindSelector(self, *args, **kwargs) -> None:
+    def bindSelector(self, name, selector_type, prompt: str, primitive_types=..., group_parm_name=..., input_index=..., input_required: bool = ..., allow_dragging: bool = ...) -> None:
         """
 
         bindSelector(self, name, selector_type, prompt, primitive_types=None,
@@ -82727,7 +82728,7 @@ class viewportVisualizers:
     def __init__(self, *args, **kwargs) -> None: ...
     __swig_destroy__: Incomplete
     @staticmethod
-    def visualizers(*args, **kwargs) -> Tuple[ViewportVisualizer, ...]:
+    def visualizers(category: EnumValue = ..., node: Optional[Node] = ...) -> Sequence[ViewportVisualizer]:
         """
 
         visualizers(category=hou.viewportVisualizerCategory.Common, node=None)
@@ -82747,7 +82748,7 @@ class viewportVisualizers:
 
         """
     @staticmethod
-    def createVisualizer(*args, **kwargs) -> Optional[ViewportVisualizer]:
+    def createVisualizer(type: EnumValue, category: EnumValue = ..., node: Optional[Node] = ...) -> ViewportVisualizer:
         """
 
         createVisualizer(type, category=hou.viewportVisualizerCategory.Common,
@@ -82857,7 +82858,7 @@ class viewportVisualizers:
 
         """
     @staticmethod
-    def removeAllEventCallbacks(*args, **kwargs) -> None:
+    def removeAllEventCallbacks(self, category: EnumValue = ..., node: Optional[Node] = ...) -> None:
         """
 
         removeAllEventCallbacks(self,
@@ -82870,7 +82871,7 @@ class viewportVisualizers:
 
         """
     @staticmethod
-    def addEventCallback(*args, **kwargs) -> None:
+    def addEventCallback(self, event_types: EnumValue, callback: Callable, category: EnumValue = ..., node: Optional[Node] = ...) -> None:
         '''
 
         addEventCallback(self, event_types, callback,
@@ -82935,7 +82936,7 @@ class viewportVisualizers:
 
         '''
     @staticmethod
-    def removeEventCallback(*args, **kwargs) -> None:
+    def removeEventCallback(self, event_types: Sequence[EnumValue], callback: Callable, category: EnumValue = ..., node: Optional[Node] = ...) -> None:
         """
 
         removeEventCallback(self, event_types, callback,
@@ -82955,7 +82956,7 @@ class viewportVisualizers:
 
         """
     @staticmethod
-    def eventCallbacks(*args) -> Tuple[tuple[Tuple[EnumValue, ...], Any], ...]:
+    def eventCallbacks(category=..., node=...) -> Sequence[tuple[Sequence[EnumValue], Callable]]:
         """
 
         eventCallbacks(category=hou.viewportVisualizerCategory.Common,
@@ -83920,7 +83921,7 @@ class VopNode(OpNode):
 
 
         """
-    def shaderString(self, *args) -> str:
+    def shaderString(self, render_type: Optional[str] = ..., shader_type: EnumValue = ..., as_encapsulated: bool = ...) -> str:
         """
 
         shaderString(self, render_type=None, shader_type=hou.shaderType.Surface,
@@ -83937,7 +83938,7 @@ class VopNode(OpNode):
 
 
         """
-    def shaderCode(self, *args) -> str:
+    def shaderCode(self, shader_type: Optional[EnumValue] = ...) -> str:
         """
 
         shaderCode(self, shader_type=hou.shaderType.Surface) -> str
@@ -84231,7 +84232,7 @@ def applicationName() -> str:
 
 
     """
-def applicationVersion(include_patch: bool = ...) -> Tuple[int, int, int]:
+def applicationVersion(include_patch: bool = ...) -> Sequence[int, int]:
     """
 
     hou.vdbVersionInfo
@@ -86425,7 +86426,7 @@ def updateProgressAndCheckForInterrupt(percentage: int = -1) -> bool:
 
 
     """
-def runVex(vex_file: str, inputs: dict[str, Any], precision=...) -> dict[str, Any]:
+def runVex(vex_file: str, inputs: dict[str, Any], precision: str = ...) -> dict[str, Any]:
     '''
 
     hou.runVex
@@ -86564,7 +86565,7 @@ def runVex(vex_file: str, inputs: dict[str, Any], precision=...) -> dict[str, An
 
 
     '''
-def saveImageDataToFile(*args) -> None:
+def saveImageDataToFile(color_and_alpha_data: Union[Sequence[float], bytes], width: int, height: int, file_name: str) -> None:
     '''
 
     hou.saveImageDataToFile
@@ -86630,7 +86631,7 @@ def saveImageDataToFile(*args) -> None:
 
 
     '''
-def loadImageDataFromFile(*args, **kwargs) -> bytes: ...
+def loadImageDataFromFile(file_name: str, arg: EnumValue = ...) -> bytes: ...
 def imageResolution(image_file_name: str) -> Tuple[int, ...]:
     '''
 
@@ -86878,7 +86879,7 @@ def setChopExportConflictResolutionPattern(pattern: str) -> None:
 
 
     """
-def nodeType(*args) -> Optional[NodeType]:
+def nodeType(category_or_name: Union[NodeTypeCategory, str], internal_name: Optional[str] = ...) -> Optional[NodeType]:
     '''
 
     hou.nodeType
@@ -89577,7 +89578,7 @@ def almostEqual(x: float, y: float) -> bool:
 
 
     """
-def fileReferences(*args, **kwargs) -> Tuple[tuple[Parm, str], ...]:
+def fileReferences(project_dir_variable: str = ..., include_all_refs: bool = ...) -> Sequence[Tuple[Parm, str]]:
     '''
 
     hou.fileReferences
@@ -90242,7 +90243,7 @@ def contextOptionNames() -> Tuple[str, ...]:
 
 
     """
-def setContextOption(*args) -> None:
+def setContextOption(option: str, value: Optional[Union[str, float]]) -> None:
     """
 
     hou.setContextOption
@@ -90972,7 +90973,7 @@ def createAnimationClip(path: str = ..., set_export: bool = ...) -> ChopNode:
 
 
     '''
-def registerOpdefPath(*args, **kwargs) -> None:
+def registerOpdefPath(path: str, server_name: str, port: str = ...) -> Any:
     '''
 
     hou.registerOpdefPath

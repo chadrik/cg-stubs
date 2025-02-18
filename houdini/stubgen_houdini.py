@@ -365,9 +365,10 @@ class ASTStubGenerator(mypy.stubgen.ASTStubGenerator):
         imports += super().get_imports() + "\n"
         imports += "import datetime\n"
         imports += "import typing\n"
-        imports += ("from typing import Any, Dict, Iterator, Iterable, Literal, Optional, "
+        imports += ("from typing import Any, Callable, Dict, Iterator, Iterable, Literal, Optional, "
                     "Sequence, Self, Union, Tuple\n\n")
         imports += "import pxr.Sdf\n"
+        imports += "import pxr.Usd\n"
         imports += f"from {pyside} import QtGui, QtWidgets\n\n"
         return imports
 
