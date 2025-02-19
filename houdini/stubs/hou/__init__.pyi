@@ -44275,7 +44275,7 @@ class HDADefinition:
 
 
         """
-    def setExtraFileOption(self, name, value: Union[int, float, str, Vector2, Vecto3, Vector4, Quaternion, Matrix3, Matrix4, Sequence[float]], type_hint: EnumValue = ...) -> None:
+    def setExtraFileOption(self, name, value: Union[int, float, str, Vector2, Vector3, Vector4, Quaternion, Matrix3, Matrix4, Sequence[float]], type_hint: EnumValue = ...) -> None:
         '''
 
         setExtraFileOption(self, name, value, type_hint =
@@ -65918,7 +65918,7 @@ class SceneViewer(PathBasedPaneTab):
 
 
         """
-    def selectObjects(self, prompt: str = ..., sel_index: int = ..., allow_drag: bool = ..., quick_select: bool = ..., use_existing_selection: bool = ..., allow_multisel: bool = ..., allowed_types: Sequence[str] = ..., icon: Optional[str] = ..., label: Optional[str] = ..., prior_selection_paths: Optional[Sequence[str]] = ..., prior_selection_ids: Optional[int] = ..., prior_selections: Sequence[str] = ..., toolbox_templategroup: Optional[str] = ..., toolbox1_templategroupOptional[str]=..., select_parm: str = ...) -> Sequence[Node]:
+    def selectObjects(self, prompt: str = ..., sel_index: int = ..., allow_drag: bool = ..., quick_select: bool = ..., use_existing_selection: bool = ..., allow_multisel: bool = ..., allowed_types: Sequence[str] = ..., icon: Optional[str] = ..., label: Optional[str] = ..., prior_selection_paths: Optional[Sequence[str]] = ..., prior_selection_ids: Optional[int] = ..., prior_selections: Sequence[str] = ..., toolbox_templategroup: Optional[str] = ..., toolbox1_templategroup: Optional[str] = ..., select_parm: str = ...) -> Sequence[Node]:
         '''
 
         selectObjects(self, prompt=\'Select objects\', sel_index=0,
@@ -65945,7 +65945,7 @@ class SceneViewer(PathBasedPaneTab):
 
 
         '''
-    def selectDynamics(self, prompt: str = ..., sel_index: int = ..., allow_objects: bool = ..., allow_modifiers: bool = ..., quick_select: bool = ..., use_existing_selection: bool = ..., allow_multisel: bool = ..., icon: Optional[str] = ..., label: Optional[str] = ..., prior_selection_paths: Optional[Sequence[str]] = ..., prior_selection_ids: Optional[int] = ..., prior_selections: Sequence[str] = ..., toolbox_templategroup: Optional[str] = ..., toolbox1_templategroupOptional[str]=..., select_parm: str = ...) -> Sequence[DopData]:
+    def selectDynamics(self, prompt: str = ..., sel_index: int = ..., allow_objects: bool = ..., allow_modifiers: bool = ..., quick_select: bool = ..., use_existing_selection: bool = ..., allow_multisel: bool = ..., icon: Optional[str] = ..., label: Optional[str] = ..., prior_selection_paths: Optional[Sequence[str]] = ..., prior_selection_ids: Optional[int] = ..., prior_selections: Sequence[str] = ..., toolbox_templategroup: Optional[str] = ..., toolbox1_templategroup: Optional[str] = ..., select_parm: str = ...) -> Sequence[DopData]:
         '''
 
         selectDynamics(self, prompt=\'Select dynamics objects\', sel_index=0,
@@ -65957,7 +65957,7 @@ class SceneViewer(PathBasedPaneTab):
 
 
         '''
-    def selectDynamicsPoints(self, prompt: str = ..., sel_index: int = ..., quick_select: bool = ..., use_existing_selection: bool = ..., allow_multisel: bool = ..., only_select_points: bool = ..., object_based_point_selection: bool = ..., use_last_selected_object: bool = ..., icon: Optional[str] = ..., label: Optional[str] = ..., prior_selection_paths: Optional[Sequence[str]] = ..., prior_selection_ids: Optional[int] = ..., prior_selections: Sequence[str] = ..., toolbox_templategroup: Optional[str] = ..., toolbox1_templategroupOptional[str]=..., select_parm: str = ...) -> Sequence[tuple[DopData, GeometrySelection]]:
+    def selectDynamicsPoints(self, prompt: str = ..., sel_index: int = ..., quick_select: bool = ..., use_existing_selection: bool = ..., allow_multisel: bool = ..., only_select_points: bool = ..., object_based_point_selection: bool = ..., use_last_selected_object: bool = ..., icon: Optional[str] = ..., label: Optional[str] = ..., prior_selection_paths: Optional[Sequence[str]] = ..., prior_selection_ids: Optional[int] = ..., prior_selections: Sequence[str] = ..., toolbox_templategroup: Optional[str] = ..., toolbox1_templategroup: Optional[str] = ..., select_parm: str = ...) -> Sequence[tuple[DopData, GeometrySelection]]:
         '''
 
         selectDynamicsPoints(self, prompt=\'Select dynamics points\', sel_index=0,
@@ -65970,7 +65970,7 @@ class SceneViewer(PathBasedPaneTab):
 
 
         '''
-    def selectDynamicsPolygons(self, prompt: str = ..., sel_index: int = ..., quick_select: bool = ..., use_existing_selection: bool = ..., object_based_point_selection: bool = ..., use_last_selected_object: bool = ..., icon: Optional[str] = ..., label: Optional[str] = ..., prior_selection_paths: Optional[Sequence[str]] = ..., prior_selection_ids: Optional[int] = ..., prior_selections: Sequence[str] = ..., toolbox_templategroup: Optional[str] = ..., toolbox1_templategroupOptional[str]=..., select_parm: str = ...) -> Sequence[tuple[DopData, GeometrySelection]]:
+    def selectDynamicsPolygons(self, prompt: str = ..., sel_index: int = ..., quick_select: bool = ..., use_existing_selection: bool = ..., object_based_point_selection: bool = ..., use_last_selected_object: bool = ..., icon: Optional[str] = ..., label: Optional[str] = ..., prior_selection_paths: Optional[Sequence[str]] = ..., prior_selection_ids: Optional[int] = ..., prior_selections: Sequence[str] = ..., toolbox_templategroup: Optional[str] = ..., toolbox1_templategroup: Optional[str] = ..., select_parm: str = ...) -> Sequence[tuple[DopData, GeometrySelection]]:
         '''
 
         selectDynamicsPolygons(self, prompt=\'Select dynamics polygons\',
