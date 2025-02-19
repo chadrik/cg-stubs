@@ -13887,7 +13887,7 @@ class ChannelGraphSelection:
 
     """
     thisown: Incomplete
-    def __init__(self, *args) -> None:
+    def __init__(self, path: Optional[str] = ..., flags: Sequence[int] = ...) -> None:
         """
 
         hou.ChannelGraphSelection
@@ -15757,7 +15757,7 @@ class ParmTemplateGroup:
 
     """
     thisown: Incomplete
-    def __init__(self, *args) -> None:
+    def __init__(self, parm_templates: Sequence[ParmTemplate] = ...) -> None:
         '''
 
         __init__(self, parm_templates=())
@@ -17920,7 +17920,7 @@ class AgentClip:
 
     """
     thisown: Incomplete
-    def __init__(self, *args) -> None:
+    def __init__(name: str, stage: pxr.Usd.Stage, prim_path: str, rig: AgentRig) -> None:
         """
 
         __init__(name, stage, prim_path, rig)
@@ -18537,7 +18537,7 @@ class AgentLayer:
 
     """
     thisown: Incomplete
-    def __init__(self, *args) -> None:
+    def __init__(name: str, rig: AgentRig, shapelib: AgentShapeLibrary, shape_bindings: Sequence[AgentShapeBinding], source_layer: Optional[AgentLayer] = ...) -> None:
         """
 
         __init__(name, rig, shapelib, shape_bindings, source_layer = None)
@@ -18654,7 +18654,7 @@ class AgentMetadata:
 
     """
     thisown: Incomplete
-    def __init__(self, *args) -> None:
+    def __init__(data: Dict[str, Any]) -> None:
         """
 
         __init__(data)
@@ -18750,7 +18750,7 @@ class AgentRig:
 
     """
     thisown: Incomplete
-    def __init__(self, *args) -> None:
+    def __init__(name: str, transform_names: Sequence[str], hierarchy: Sequence[int]) -> None:
         '''
 
         __init__(name, transform_names, hierarchy)
@@ -19113,7 +19113,7 @@ class AgentShapeBinding:
 
     """
     thisown: Incomplete
-    def __init__(self, *args) -> None:
+    def __init__(shape: AgentShape, deformer: AgentShapeDeformer, bounds_scale: float = ...) -> None:
         """
 
         __init__(shape, deformer, bounds_scale = 1.0)
@@ -19225,7 +19225,7 @@ class AgentShapeDeformer:
 
     """
     thisown: Incomplete
-    def __init__(self, *args) -> None:
+    def __init__(name: Union[str, EnumValue]) -> None:
         """
 
         __init__(name)
@@ -19274,7 +19274,7 @@ class AgentShapeLibrary:
 
     """
     thisown: Incomplete
-    def __init__(self, *args) -> None:
+    def __init__(filename: str, keep_external_ref: bool = ...) -> None:
         """
 
         __init__(filename, keep_external_ref = True)
@@ -19410,7 +19410,7 @@ class AgentTransformGroup:
 
     """
     thisown: Incomplete
-    def __init__(self, *args) -> None:
+    def __init__(name: str, transforms: Sequence[int], rig: AgentRig, weights: Sequence[float], channels: Sequence[int]) -> None:
         """
 
         __init__(name, transforms, rig, weights, channels)
@@ -21650,7 +21650,7 @@ class BoundingBox:
 
     """
     thisown: Incomplete
-    def __init__(self, *args) -> None:
+    def __init__(self, bbox_or_xmin: Union[float, BoundingBox] = ..., ymin: float = ..., zmin: float = ..., xmax: float = ..., ymax: float = ..., zmax: float = ...) -> None:
         """
 
         __init__(self, xmin=0.0, ymin=0.0, zmin=0.0, xmax=0.0, ymax=0.0,
@@ -21793,7 +21793,7 @@ class BoundingRect:
 
     """
     thisown: Incomplete
-    def __init__(self, *args) -> None:
+    def __init__(self, brect_or_p1_or_xmin: Union[BoundingRect, Vector2, float], p2_or_ymin: Union[Vector2, float], xmax: float = ..., ymax: float = ...) -> None:
         """
 
         __init__(self, p1, p2)
@@ -22077,7 +22077,7 @@ class ButtonParmTemplate(ParmTemplate):
 
     """
     thisown: Incomplete
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, name: str, label: str, disable_when: Optional[str] = ..., is_hidden: bool = ..., is_label_hidden: bool = ..., join_with_next: bool = ..., help=..., script_callback: Optional[str] = ..., script_callback_language: EnumValue = ..., tags: Dict[str, str] = ...) -> None:
         """
 
         __init__(self, name, label, disable_when=None, is_hidden=False,
@@ -24870,7 +24870,7 @@ class Color:
 
     """
     thisown: Incomplete
-    def __init__(self, *args) -> None:
+    def __init__(self, rgb_tuple: Sequence[float] = ...) -> None:
         """
 
         __init__(self, rgb_tuple=(0.0, 0.0, 0.0)) -> Color
@@ -28542,7 +28542,7 @@ class SimpleDrawable(Drawable):
 
     '''
     thisown: Incomplete
-    def __init__(self, *args) -> None:
+    def __init__(self, scene_viewer: SceneViewer, geometry: Union[Geometry, EnumValue], name: str) -> None:
         '''
 
         __init__(self, scene_viewer, geometry, name)
@@ -29975,7 +29975,7 @@ class FloatParmTemplate(ParmTemplate):
 
     """
     thisown: Incomplete
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, name: str, label: str, num_components: int, default_value: Sequence[float] = ..., min: float = ..., max: float = ..., min_is_strict: bool = ..., max_is_strict: bool = ..., look: EnumValue = ..., naming_scheme: EnumValue = ..., disable_when: Optional[str] = ..., is_hidden: bool = ..., is_label_hidden: bool = ..., join_with_next: bool = ..., help: Optional[str] = ..., script_callback: Optional[str] = ..., script_callback_language: EnumValue = ..., tags: Dict[str, str] = ..., default_expression: Sequence[str] = ..., default_expression_language: Sequence[EnumValue] = ...) -> None:
         """
 
         __init__(self, name, label, num_components, default_value=(), min=0.0,
@@ -30287,7 +30287,7 @@ class FolderParmTemplate(ParmTemplate):
 
     """
     thisown: Incomplete
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, name: str, label: str, parm_templates: Sequence[ParmTemplate] = ..., folder_type: EnumValue = ..., is_hidden: bool = ..., ends_tab_group: bool = ..., tags: Dict[str, str] = ..., conditionals: Dict[EnumValue, str] = ..., tab_conditionals: Dict[EnumValue, str] = ...) -> None:
         """
 
         __init__(name, label, parm_templates=(),
@@ -30549,7 +30549,7 @@ class FolderSetParmTemplate(ParmTemplate):
 
     """
     thisown: Incomplete
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, name: str, folder_names: Sequence[str], folder_type: EnumValue, tags: Dict[str, str] = ...) -> None:
         """
 
         hou.FolderSetParmTemplate
@@ -35185,7 +35185,7 @@ class GeometryDrawable(AdvancedDrawable):
 
     """
     thisown: Incomplete
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, scene_viewer: SceneViewer, geo_type: EnumValue, name: str, label: Optional[str] = ..., geometry: Optional[Geometry] = ..., params: Optional[Dict[str, Any]] = ...) -> None:
         """
 
         __init__(self, scene_viewer, geo_type, name, label=None, geometry=None,
@@ -35542,7 +35542,7 @@ class GeometryDrawableGroup(AdvancedDrawable):
 
     '''
     thisown: Incomplete
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, name: str, label: Optional[str] = ...) -> None:
         """
 
         __init__(self, name, label=None)
@@ -35794,7 +35794,7 @@ class GeometrySelection:
 
     """
     thisown: Incomplete
-    def __init__(self, *args) -> None:
+    def __init__(self) -> None:
         """
 
         hou.GeometrySelection
@@ -47525,7 +47525,7 @@ class _ik_Target:
 
     """
     thisown: Incomplete
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(joint: Optional[_ik_Joint] = ..., goal_transform: Matrix4 = ..., joint_offset: Matrix4 = ..., target_type: EnumValue = ..., weight: float = ..., priority: int = ..., depth: int = ...) -> None:
         """
 
         __init__(joint=None, goal_transform=hou.Matrix4(1.0),
@@ -48123,7 +48123,7 @@ class IntParmTemplate(ParmTemplate):
 
     """
     thisown: Incomplete
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, name: str, label: str, num_components: int, default_value: Sequence[int] = ..., min: int = ..., max: int = ..., min_is_strict=..., max_is_strict: bool = ..., look: EnumValue = ..., naming_scheme: EnumValue = ..., menu_items: Sequence[str] = ..., menu_labels: Sequence[str] = ..., icon_names: Sequence[str] = ..., item_generator_script: Optional[str] = ..., item_generator_script_language: Optional[EnumValue] = ..., menu_type: EnumValue = ..., disable_when: Optional[str] = ..., is_hidden: bool = ..., is_label_hidden: bool = ..., join_with_next: bool = ..., help: Optional[str] = ..., script_callback: Optional[str] = ..., script_callback_language: EnumValue = ..., tags: Dict[str, str] = ..., default_expression: Sequence[str] = ..., default_expression_language: Sequence[str] = ...) -> None:
         """
 
         __init__(self, name, label, num_components, default_value=(), min=0,
@@ -49700,7 +49700,7 @@ class LabelParmTemplate(ParmTemplate):
 
     """
     thisown: Incomplete
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, name: str, label: str, column_labels: Sequence[str] = ..., is_hidden: bool = ..., is_label_hidden: bool = ..., join_with_next: bool = ..., help: Optional[str] = ..., tags: Dict[str, str] = ...) -> None:
         """
 
         __init__(self, name, label, column_labels=(), is_hidden=False,
@@ -54219,7 +54219,7 @@ class MenuParmTemplate(ParmTemplate):
 
     """
     thisown: Incomplete
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, name: str, label: str, menu_items: Sequence[str], menu_labels: Sequence[str] = ..., default_value: int = ..., icon_names: Sequence[str] = ..., item_generator_script: str = ..., item_generator_script_language: Optional[EnumValue] = ..., disable_when: Optional[str] = ..., menu_type: EnumValue = ..., is_hidden: bool = ..., is_label_hidden: bool = ..., join_with_next: bool = ..., help: Optional[str] = ..., script_callback: Optional[str] = ..., script_callback_language: EnumValue = ..., tags: Dict[str, str] = ..., default_expression: str = ..., default_expression_language: EnumValue = ..., store_default_value_as_string: bool = ..., menu_use_token: bool = ..., is_button_strip: bool = ..., strip_uses_icons: bool = ...) -> None:
         '''
 
         __init__(self, name, label, menu_items, menu_labels=(), default_value=0,
@@ -56154,7 +56154,7 @@ class NetworkAnimValue:
 
     """
     thisown: Incomplete
-    def __init__(self, *args) -> None:
+    def __init__(self, duration: Union[float, Vector2, Vector3, Vector4, NetworkAnimValue], value_start: Union[float, Vector2, Vector3, Vector4] = ..., value_end: Union[float, Vector2, Vector3, Vector4] = ...) -> None:
         """
 
         __init__(self, duration, value_start, value_end)
@@ -56223,7 +56223,7 @@ class NetworkFootprint:
 
     """
     thisown: Incomplete
-    def __init__(self, *args) -> None:
+    def __init__(self, condition: Union[EnumValue, str], color: Color, ring: int, use_minimum_size: bool) -> None:
         """
 
         __init__(self, condition, color, ring, use_minimum_size)
@@ -56290,7 +56290,7 @@ class NetworkImage:
 
     """
     thisown: Incomplete
-    def __init__(self, *args) -> None:
+    def __init__(self, path: str, rect: BoundingRect) -> None:
         """
 
         __init__(self, path, rect)
@@ -56434,7 +56434,7 @@ class NetworkShapeLine(NetworkShape):
 
     """
     thisown: Incomplete
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, start: Vector2, end: Vector2, color: Color = ..., alpha: float = ..., width: float = ..., screen_space: bool = ..., smooth: bool = ..., dashed: bool = ...) -> None:
         """
 
         __init__(self, start, end, color = hou.Color((1.0, 1.0, 1.0)), alpha =
@@ -56499,7 +56499,7 @@ class NetworkShapeBox(NetworkShape):
 
     """
     thisown: Incomplete
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, rect: BoundingRect, color: Color = ..., alpha: float = ..., fill: bool = ..., screen_space: bool = ..., smooth: bool = ...) -> None:
         """
 
         __init__(self, rect, color = hou.Color((1.0, 1.0, 1.0)), alpha = 1.0,
@@ -56557,7 +56557,7 @@ class NetworkShapeNodeShape(NetworkShape):
 
     """
     thisown: Incomplete
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, rect: BoundingRect, shape: str, color: Color = ..., alpha: float = ..., fill: bool = ..., screen_space: bool = ..., smooth: bool = ...) -> None:
         """
 
         __init__(self, rect, shape, color = hou.Color((1.0, 1.0, 1.0)), alpha =
@@ -56620,7 +56620,7 @@ class NetworkShapeConnection(NetworkShape):
 
     """
     thisown: Incomplete
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, input_pos: Vector2, input_dir: Vector2, output_pos: Vector2, output_dir: Vector2, color: Color = ..., alpha: float = ..., fade_factor: float = ..., smooth: bool = ..., dashed: bool = ...) -> None:
         """
 
         __init__(self, input_pos, input_dir, output_pos, output_dir, color =
@@ -57349,7 +57349,7 @@ class OrientedBoundingBox:
 
     """
     thisown: Incomplete
-    def __init__(self, *args) -> None:
+    def __init__(self, oriented_bbox: OrientedBoundingBox = ...) -> None:
         """
 
         __init__(self)
@@ -63538,7 +63538,7 @@ class Quaternion:
 
     """
     thisown: Incomplete
-    def __init__(self, *args) -> None:
+    def __init__(self, x: Union[Sequence[float], float, Matrix3, Matrix4], y: Union[Sequence[float], float], z: float = ..., w: float = ...) -> None:
         '''
 
         __init__(self)
@@ -64528,7 +64528,7 @@ class Ramp:
 
     """
     thisown: Incomplete
-    def __init__(self, *args) -> None:
+    def __init__(self, basis: Sequence[EnumValue], keys: Sequence[float], values: Union[Sequence[float], Sequence[Tuple[float, float, float]]]) -> None:
         """
 
         __init__(self, basis, keys, values) -> float
@@ -64674,7 +64674,7 @@ class RampParmTemplate(ParmTemplate):
 
     """
     thisown: Incomplete
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, name: str, label: str, ramp_parm_type: EnumValue, default_value: int = ..., default_basis: Optional[EnumValue] = ..., show_controls: bool = ..., color_type: Optional[EnumValue] = ..., disable_when: Optional[str] = ..., is_hidden: bool = ..., help: Optional[str] = ..., script_callback: Optional[str] = ..., script_callback_language: EnumValue = ..., tags: Dict[str, str] = ..., default_expression_language: EnumValue = ...) -> None:
         '''
 
         __init__(self, name, label, ramp_parm_type, default_value=2,
@@ -68281,7 +68281,7 @@ class Selection:
 
     """
     thisown: Incomplete
-    def __init__(self, *args) -> None:
+    def __init__(self, selection: Union[EnumValue, Geometry, Sequence[Prim], Sequence[Point], Sequence[Vertex], Sequence[Edge]], geometry_type: Union[EnumValue, Sequence[EnumValue]] = ..., selection_string: str = ...) -> None:
         """
 
         __init__(self, edges)
@@ -68777,7 +68777,7 @@ class SeparatorParmTemplate(ParmTemplate):
 
     """
     thisown: Incomplete
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, name: str, is_hidden: bool = ..., tags: Dict[str, str] = ...) -> None:
         """
 
         __init__(self, name, is_hidden=False, tags={})
@@ -70332,7 +70332,7 @@ class StringParmTemplate(ParmTemplate):
 
     """
     thisown: Incomplete
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, name: str, label: str, num_components: int, default_value: Sequence[str] = ..., naming_scheme: EnumValue = ..., string_type: EnumValue = ..., file_type: EnumValue = ..., menu_items: Sequence[str] = ..., menu_labels: Sequence[str] = ..., icon_names: Sequence[str] = ..., item_generator_script: Optional[str] = ..., item_generator_script_language: Optional[EnumValue] = ..., menu_type: EnumValue = ..., disable_when: Optional[str] = ..., is_hidden: bool = ..., is_label_hidden: bool = ..., join_with_next: bool = ..., help: Optional[str] = ..., script_callback: Optional[str] = ..., script_callback_language: EnumValue = ..., tags: Dict[str, str] = ..., default_expression: Sequence[str] = ..., default_expression_language: Sequence[EnumValue] = ...) -> None:
         """
 
         __init__(self, name, label, num_components, default_value=(),
@@ -70884,7 +70884,7 @@ class StyleSheet:
 
     """
     thisown: Incomplete
-    def __init__(self, *args) -> None:
+    def __init__(self, json_text: str = ...) -> None:
         """
 
         __init__(self, json_text)
@@ -72195,7 +72195,7 @@ class TextDrawable(AdvancedDrawable):
 
     '''
     thisown: Incomplete
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, scene_viewer: SceneViewer, name: str, label: Optional[str] = ..., params: Optional[Dict[str, Any]] = ...) -> None:
         """
 
         __init__(self, scene_viewer, name, label=None, params=None)
@@ -72293,7 +72293,7 @@ class ToggleParmTemplate(ParmTemplate):
 
     """
     thisown: Incomplete
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, name: str, label: str, default_value: bool = ..., disable_when: Optional[str] = ..., is_hidden: bool = ..., is_label_hidden: bool = ..., join_with_next: bool = ..., help: Optional[str] = ..., script_callback: Optional[str] = ..., script_callback_language: EnumValue = ..., tags: Dict[str, str] = ..., default_expression: str = ..., default_expression_language: EnumValue = ...) -> None:
         '''
 
         __init__(self, name, label, default_value=False, disable_when=None,
@@ -77818,7 +77818,7 @@ class Vector2:
 
     """
     thisown: Incomplete
-    def __init__(self, *args) -> None:
+    def __init__(self, x: Union[Sequence[float], float] = ..., y: float = ...) -> None:
         """
 
         __init__(self, values=(0.0, 0.0))
@@ -78085,7 +78085,7 @@ class Vector3:
 
     """
     thisown: Incomplete
-    def __init__(self, *args) -> None:
+    def __init__(self, x: Union[Sequence[float], float] = ..., y: float = ..., z: float = ...) -> None:
         """
 
         __init__(self, values=(0.0, 0.0, 0.0))
@@ -78522,7 +78522,7 @@ class Vector4:
 
     """
     thisown: Incomplete
-    def __init__(self, *args) -> None:
+    def __init__(self, x: Union[Sequence[float], float] = ..., y: float = ..., z: float = ..., w: float = ...) -> None:
         """
 
         __init__(self, values=(0.0, 0.0, 0.0, 0.0))
@@ -80148,7 +80148,7 @@ class ViewerHandleTemplate:
 
     """
     thisown: Incomplete
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, name: str, label: str, categories: Sequence[EnumValue]) -> None:
         """
 
         __init__(self, name, label, categories)
@@ -80663,7 +80663,7 @@ class ViewerStateDragger(ViewerDragger):
 
     """
     thisown: Incomplete
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, name: str, xform: Matrix4 = ..., inv_xform: Matrix4 = ...) -> None:
         """
 
         __init__(self, name, xform=hou.Matrix4(1.0), inv_xform=hou.Matrix4(1.0))
@@ -81059,7 +81059,7 @@ class ViewerStateTemplate:
 
     '''
     thisown: Incomplete
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, state_name: str, state_label: str, node_type_category: NodeTypeCategory, contexts: Optional[Sequence[NodeTypeCategory]] = ...) -> Any:
         '''
 
         __init__(self, state_name, state_label, node_type_category,

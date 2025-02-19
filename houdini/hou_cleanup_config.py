@@ -660,17 +660,40 @@ EXPLICIT_DEFINITIONS = {
     "_ik_Skeleton": {
         "addJoint": "(self, world_transform: Matrix4 = ..., parent: Optional[_ik_Joint] = None, rotation_weights: Vector3 = ..., translation_weights: Vector3 = ..., mass: float = 1.0, local_com: Vector3 = ...) -> _ik_Joint",
     },
+    "_ik_Target": {
+        "__init__": "(joint: Optional[_ik_Joint] = None, goal_transform: Matrix4 = ..., joint_offset: Matrix4 = ..., target_type: EnumValue = _ik_targetType.Position, weight: float = 1.0, priority: int = 0, depth: int = -1) -> None",
+    },
     "AdvancedDrawable": {
         "draw": "(self, handle: Incomplete, params: Optional[Dict[str, Any]] = None) -> None",
         "setParams": "(self, params: Optional[Dict[str, Any]] = None) -> None",
     },
+    "AgentClip": {
+        "__init__": "(name: str, stage: pxr.Usd.Stage, prim_path: str, rig: AgentRig) -> None",
+    },
     "AgentLayer": {
+        "__init__": "(name: str, rig: AgentRig, shapelib: AgentShapeLibrary, shape_bindings: Sequence[AgentShapeBinding], source_layer: Optional[AgentLayer] = None) -> None",
         "bindings": "(self, transform: Optional[int] = None) -> Sequence[AgentShapeBinding]",
     },
     "AgentMetadata": {
+        "__init__": "(data: Dict[str, Any]) -> None",
         "data": "(self) -> dict[str, Any]",
         "setData": "(self, data: dict[str, Any]) -> None",
         "setMetadata": "(self, item_id: str, metadata: dict[str, Any]) -> None",
+    },
+    "AgentRig": {
+        "__init__": "(name: str, transform_names: Sequence[str], hierarchy: Sequence[int]) -> None",
+    },
+    "AgentShapeBinding": {
+        "__init__": "(shape: AgentShape, deformer: AgentShapeDeformer, bounds_scale: float = 1.0) -> None",
+    },
+    "AgentShapeDeformer": {
+        "__init__": "(name: Union[str, EnumValue]) -> None",
+    },
+    "AgentShapeLibrary": {
+        "__init__": "(filename: str, keep_external_ref: bool = True) -> None",
+    },
+    "AgentTransformGroup": {
+        "__init__": "(name: str, transforms: Sequence[int], rig: AgentRig, weights: Sequence[float], channels: Sequence[int]) -> None",
     },
     "AssetGalleryDataSource": {
         "addItem": "(self, label: str, file_path: Optional[str] = None, thumbnail: bytes = b'', type_name: str = 'asset', blind_data: bytes = b'', creation_date: int = 0) -> str",
@@ -687,15 +710,23 @@ EXPLICIT_DEFINITIONS = {
         "setStartFrame": "(self, start: float) -> None",
     },
     "BoundingBox": {
+        "__init__": "(self, bbox_or_xmin: Union[float, BoundingBox] = 0.0, ymin: float = 0.0, zmin: float = 0.0, xmax: float = 0.0, ymax: float = 0.0, zmax: float = 0.0) -> None",
         "enlargeToContain": "(self, point_or_bbox: Union[Sequence[float], BoundingBox]) -> None",
     },
     "BoundingRect": {
+        "__init__": "(self, brect_or_p1_or_xmin: Union[BoundingRect, Vector2, float], p2_or_ymin: Union[Vector2, float], xmax: float = 0.0, ymax: float = 0.0) -> None",
         "enlargeToContain": "(self, point_or_rect: Union[Sequence[float], BoundingRect]) -> None",
         "intersects": "(self, rect: BoundingRect) -> bool",
         "contains": "(self, rect: BoundingRect) -> bool",
     },
+    "ButtonParmTemplate": {
+        "__init__": "(self, name: str, label: str, disable_when: Optional[str] = None, is_hidden: bool = False, is_label_hidden: bool = False, join_with_next: bool = False, help=None, script_callback: Optional[str] = None, script_callback_language: EnumValue = scriptLanguage.Hscript, tags: Dict[str, str] = ...) -> None",
+    },
     "ChannelGraph": {
         "selectedKeyframes": "(self) -> dict[Parm, Sequence[BaseKeyframe]]",
+    },
+    "ChannelGraphSelection": {
+        "__init__": "(self, path: Optional[str] = None, flags: Sequence[int] = ...) -> None",
     },
     "ChannelList": {
         "addGeometryChannels": "(self, geometry: Geometry, collection_name: Optional[str] = None, pattern: Optional[str] = None, selected: bool = True, pinned: bool = False, valueselected: bool = False) -> str",
@@ -719,6 +750,9 @@ EXPLICIT_DEFINITIONS = {
     "ChopNode": {
         "clipData": "(self, binary: Any) -> bytes",
         "saveClip": "(self, file_name: str) -> bool",
+    },
+    "Color": {
+        "__init__": "(self, rgb_tuple: Sequence[float] = ...) -> None",
     },
     "Cop2Node": {
         "allPixels": "(self, plane: str = 'C', component: Optional[str] = None, interleaved: bool = True, time: float = -1.0) -> Sequence[float]",
@@ -750,10 +784,6 @@ EXPLICIT_DEFINITIONS = {
     },
     "Face": {
         "attribValueAt": "(self, attrib_or_name: Union[Attrib, str], u: float, du: float = 0) -> Union[int, float, str, Sequence[int], Sequence[float]]"
-    },
-    "FolderSetParmTemplate": {
-        "folderNames": "(self) -> list[str]",
-        "setFolderNames": "(self, folder_names: Sequence[str]) -> None",
     },
     "FlipbookSettings": {
         # FIXME: Most of these methods are both setters and getters, where it will set the value if
@@ -800,6 +830,17 @@ EXPLICIT_DEFINITIONS = {
         "useSheetSize": "(self, value: Optional[bool] = None) -> Optional[bool]",
         "visibleObjects": "(self, value: Optional[str] = None) -> Optional[str]",
         "visibleTypes": "(self, value: Optional[EnumValue] = None) -> Optional[EnumValue]",
+    },
+    "FloatParmTemplate": {
+        "__init__": "(self, name: str, label: str, num_components: int, default_value: Sequence[float] = ..., min: float = 0.0, max: float = 10.0, min_is_strict: bool = False, max_is_strict: bool = False, look: EnumValue = parmLook.Regular, naming_scheme: EnumValue = parmNamingScheme.XYZW, disable_when: Optional[str] = None, is_hidden: bool = False, is_label_hidden: bool = False, join_with_next: bool = False, help: Optional[str] = None, script_callback: Optional[str] = None, script_callback_language: EnumValue = scriptLanguage.Hscript, tags: Dict[str, str] = ..., default_expression: Sequence[str] = ..., default_expression_language: Sequence[EnumValue] = ...) -> None",
+    },
+    "FolderParmTemplate": {
+        "__init__": "(self, name: str, label: str, parm_templates: Sequence[ParmTemplate] = ..., folder_type: EnumValue = folderType.Tabs, is_hidden: bool = False, ends_tab_group: bool = False, tags: Dict[str, str] = ..., conditionals: Dict[EnumValue, str] = ..., tab_conditionals: Dict[EnumValue, str] = ...) -> None",
+    },
+    "FolderSetParmTemplate": {
+        "__init__": "(self, name: str, folder_names: Sequence[str], folder_type: EnumValue, tags: Dict[str, str] = ...) -> None",
+        "folderNames": "(self) -> list[str]",
+        "setFolderNames": "(self, folder_names: Sequence[str]) -> None",
     },
     "Geometry": {
         "addAttrib": "(self, type: EnumValue, name: str, default_value: Any, transform_as_normal: bool = True, create_local_variable: bool = True) -> Attrib",
@@ -856,6 +897,15 @@ EXPLICIT_DEFINITIONS = {
     "GeometryDelta": {
         "setPointPositionsFromString": "(self, positions: bytes, float_type: EnumValue = numericData.Float32) -> None",
     },
+    "GeometryDrawable": {
+        "__init__": "(self, scene_viewer: SceneViewer, geo_type: EnumValue, name: str, label: Optional[str] = None, geometry: Optional[Geometry] = None, params: Optional[Dict[str, Any]] = None) -> None",
+    },
+    "GeometryDrawableGroup": {
+        "__init__": "(self, name: str, label: Optional[str] = None) -> None",
+    },
+    "GeometrySelection": {
+        "__init__": "(self) -> None",
+    },
     "GeometryViewport": {
         "changeType": "(self, type: EnumValue) -> None",
         "setCamera": "(self, camera_node: ObjNode) -> None",
@@ -906,11 +956,17 @@ EXPLICIT_DEFINITIONS = {
         "contents": "(self, compressionType: EnumValue = compressionType.NoCompression) -> str",
         "setContents": "(self, contents: str, compressionType: EnumValue = compressionType.NoCompression) -> None",
     },
+    "IntParmTemplate": {
+        "__init__": "(self, name: str, label: str, num_components: int, default_value: Sequence[int] = ..., min: int = 0, max: int = 10, min_is_strict=False, max_is_strict: bool = False, look: EnumValue = parmLook.Regular, naming_scheme: EnumValue = parmNamingScheme.XYZW, menu_items: Sequence[str] = ..., menu_labels: Sequence[str] = ..., icon_names: Sequence[str] = ..., item_generator_script: Optional[str] = None, item_generator_script_language: Optional[EnumValue] = None, menu_type: EnumValue = menuType.Normal, disable_when: Optional[str] = None, is_hidden: bool = False, is_label_hidden: bool = False, join_with_next: bool = False, help: Optional[str] = None, script_callback: Optional[str] = None, script_callback_language: EnumValue = scriptLanguage.Hscript, tags: Dict[str, str] = ..., default_expression: Sequence[str] = ..., default_expression_language: Sequence[str] = ...) -> None",
+    },
     "IPRViewer": {
         "saveFrame": "(self, file_path: str, snapshot: int = 0, xres: int = -1, yres: int = -1, color: str = 'C', alpha: str = 'C', scope: str = '*', lut: str = '', gamma: float = 1.0, convert: bool = True) -> bool",
     },
     "Keyframe": {
         "__init__": "(self, value: Optional[float] = None, time: Optional[float] = None) -> None",
+    },
+    "LabelParmTemplate": {
+        "__init__": "(self, name: str, label: str, column_labels: Sequence[str] = ..., is_hidden: bool = False, is_label_hidden: bool = False, join_with_next: bool = False, help: Optional[str] = None, tags: Dict[str, str] = ...) -> None",
     },
     "LopNetwork": {
         "viewportOverridesLayer": "(self, layer_id: EnumValue) -> pxr.Sdf.Layer",
@@ -926,7 +982,7 @@ EXPLICIT_DEFINITIONS = {
         "sourceLayerCount": "(self, output_index: int = 0, use_last_cook_context_options: bool = True, frame: Optional[float] = None, context_options: Optional[Dict[str, Union[str, float]]] = None) -> LopViewportLoadMasks",
         "stage": "(self, output_index: int = 0, apply_viewport_overrides: bool = False, ignore_errors: bool = False, use_last_cook_context_options: bool = True, apply_post_layers: bool = True, frame: Optional[float] = None, context_options: Dict[str, Any] = ...) -> pxr.Sdf.Stage",
         "stagePrimStats": "(self, primpath: Optional[str] = None, output_index: int = 0, apply_viewport_overrides: bool = False, ignore_errors: bool = False, do_geometry_counts: bool = False, do_separate_purposes: bool = False, use_last_cook_context_options: bool = True, apply_post_layers: bool = True, frame: Optional[float] = None, context_options: Optional[Dict[str, Union[str, float]]] = None) -> Dict[str, int]",
-},
+    },
     "Matrix2": {
         "__init__": "(self, values: Union[int, float, Iterable[Union[int, float]], Iterable[Iterable[Union[int, float]]]] = 0) -> Matrix2",
         "__mul__": "(self, matrix2_or_scalar: Union[Matrix2, float]) -> Matrix2",
@@ -950,7 +1006,13 @@ EXPLICIT_DEFINITIONS = {
         "setTo": "(self, value: Sequence[float]) -> None",
     },
     "MenuParmTemplate": {
+        "__init__": "(self, name: str, label: str, menu_items: Sequence[str], menu_labels: Sequence[str] = ..., default_value: int = 0, icon_names: Sequence[str] = ..., item_generator_script: str = '', item_generator_script_language: Optional[EnumValue] = None, disable_when: Optional[str] = None, menu_type: EnumValue = menuType.Normal, is_hidden: bool = False, is_label_hidden: bool = False, join_with_next: bool = False, help: Optional[str] = None, script_callback: Optional[str] = None, script_callback_language: EnumValue = scriptLanguage.Hscript, tags: Dict[str, str] = ..., default_expression: str = '', default_expression_language: EnumValue = scriptLanguage.Hscript, store_default_value_as_string: bool = False, menu_use_token: bool = False, is_button_strip: bool = False, strip_uses_icons: bool = False) -> None",
         "setDefaultExpressionLanguage": "(self, default_expression_language: EnumValue) -> None",
+    },
+    "NetworkAnimValue": {
+        # FIXME: The value_start and value_end types must be the same, so some overloads are
+        #  in order to make this type annotation correct.
+        "__init__": "(self, duration: Union[float, Vector2, Vector3, Vector4, NetworkAnimValue], value_start: Union[float, Vector2, Vector3, Vector4] = ..., value_end: Union[float, Vector2, Vector3, Vector4] = ...) -> None",
     },
     "NetworkEditor": {
         "flashMessage": "(self, image: Optional[str], message: Optional[str], duration: float) -> None",
@@ -960,11 +1022,29 @@ EXPLICIT_DEFINITIONS = {
         "setParmFilterCriteria": "(self, mode: EnumValue) -> None",
         "setParmFilterMode": "(self, mode: EnumValue) -> None",
     },
+    "NetworkFootprint": {
+        "__init__": "(self, condition: Union[EnumValue, str], color: Color, ring: int, use_minimum_size: bool) -> None",
+    },
+    "NetworkImage": {
+        "__init__": "(self, path: str, rect: BoundingRect) -> None",
+    },
     "NetworkMovableItem": {
         "shiftPosition": "(self, vector2: Union[Sequence[float], Vector2]) -> None",
     },
     "NetworkDot": {
         "setInput": "(self, input_index: int, item_to_become_input: Optional[NetworkMovableItem], output_index: int = 0) -> None",
+    },
+    "NetworkShapeConnection": {
+        "__init__": "(self, input_pos: Vector2, input_dir: Vector2, output_pos: Vector2, output_dir: Vector2, color: Color = ..., alpha: float = 1.0, fade_factor: float = 0.0, smooth: bool = True, dashed: bool = False) -> None",
+    },
+    "NetworkShapeLine": {
+        "__init__": "(self, start: Vector2, end: Vector2, color: Color = ..., alpha: float = 1.0, width: float = 1.0, screen_space: bool = True, smooth: bool = True, dashed: bool = False) -> None",
+    },
+    "NetworkShapeBox": {
+        "__init__": "(self, rect: BoundingRect, color: Color = ..., alpha: float = 1.0, fill: bool = True, screen_space: bool = True, smooth: bool = True) -> None",
+    },
+    "NetworkShapeNodeShape": {
+        "__init__": "(self, rect: BoundingRect, shape: str, color: Color = ..., alpha: float = 1.0, fill: bool = True, screen_space: bool = True, smooth: bool = True) -> None",
     },
     "Node": {
         "copyItemsToClipboard": "(self, items: Iterable[NetworkMovableItem]) -> None",
@@ -999,6 +1079,9 @@ EXPLICIT_DEFINITIONS = {
     "OperationFailed": {
         "__init__": "(self, message: Optional[str] = ...) -> None",
     },
+    "OrientedBoundingBox": {
+        "__init__": "(self, oriented_bbox: OrientedBoundingBox = ...) -> None",
+    },
     "PaneTab": {
         "displayRadialMenu": "(self, menu: Union[str, RadialScriptItem]) -> None",
     },
@@ -1019,6 +1102,7 @@ EXPLICIT_DEFINITIONS = {
         "setTags": "(self, tags: dict[str, str]) -> None",
     },
     "ParmTemplateGroup": {
+        "__init__": "(self, parm_templates: Sequence[ParmTemplate] = ...) -> None",
         "appendToFolder": "(self, label_or_labels_or_parm_template_or_indices: Union[str, Sequence[str], ParmTemplate, Sequence[int]], parm_template: ParmTemplate) -> None",
         "asDialogScript": "(self, rename_conflicting_parms: bool = False, full_info: bool = False, script_name: Optional[str] = None, script_label: Optional[str] = None, script_tags: Dict[str, str] = ...) -> str",
         "containingFolder": "(self, name_or_parm_template: Union[str, ParmTemplate]) -> FolderParmTemplate",
@@ -1093,10 +1177,17 @@ EXPLICIT_DEFINITIONS = {
         "setOption": "(self, name: str, value: Union[bool, int, float, str, Vector2, Vector3, Vector4, Quaternion, Matrix3, Matrix4, Sequence[int], Sequence[float]], type_hint: EnumValue = fieldType.NoSuchField) -> None",
     },
     "Quaternion": {
+        "__init__": "(self, x: Union[Sequence[float], float, Matrix3, Matrix4], y: Union[Sequence[float], float], z: float = ..., w: float = ...) -> None",
         "__mul__": "(self, quaternion_or_scalar: Union[Quaternion, float]) -> Quaternion",
         "extractEulerRotates": "(self, rotate_order: str = 'xyz') -> Vector3",
         "setToEulerRotates": "(self, angles_in_deg: float, rotate_order: str = 'xyz') -> None",
         "setToRotationMatrix": "(self, matrix3_or_matrix4: Union[Matrix3, Matrix4]) -> None",
+    },
+    "Ramp": {
+        "__init__": "(self, basis: Sequence[EnumValue], keys: Sequence[float], values: Union[Sequence[float], Sequence[Tuple[float, float, float]]]) -> None",
+    },
+    "RampParmTemplate": {
+        "__init__": "(self, name: str, label: str, ramp_parm_type: EnumValue, default_value: int = 2, default_basis: Optional[EnumValue] = None, show_controls: bool = True, color_type: Optional[EnumValue] = None, disable_when: Optional[str] = None, is_hidden: bool = False, help: Optional[str] = None, script_callback: Optional[str] = None, script_callback_language: EnumValue = scriptLanguage.Hscript, tags: Dict[str, str] = ..., default_expression_language: EnumValue = scriptLanguage.Hscript) -> None",
     },
     "RopNode": {
         "render": "(self, frame_range: Optional[Sequence[float]] = None, res: Optional[Sequence[int]] = None, output_file: Optional[str] = None, output_format=None, to_flipbook: bool = False, quality: int = 2, ignore_inputs: bool = False, method=RopByRop, ignore_bypass_flags: bool = False, ignore_lock_flags: bool = False, verbose: bool = False, output_progress: bool = False) -> None",
@@ -1125,13 +1216,18 @@ EXPLICIT_DEFINITIONS = {
         "__init__": "(self, node_or_parm: Union[OpNode, Parm]) -> None"
     },
     "Selection": {
+        "__init__": "(self, selection: Union[EnumValue, Geometry, Sequence[Prim], Sequence[Point], Sequence[Vertex], Sequence[Edge]], geometry_type: Union[EnumValue, Sequence[EnumValue]] = ..., selection_string: str = ...) -> None",
         "numSelected": "(self) -> int",
+    },
+    "SeparatorParmTemplate": {
+        "__init__": "(self, name: str, is_hidden: bool = False, tags: Dict[str, str] = ...) -> None",
     },
     "ShopNode": {
         "shaderCode": "(self, shader_type: Optional[EnumValue] = None) -> str",
         "shaderString": "(self, render_type: Optional[str] = None) -> str",
     },
     "SimpleDrawable": {
+        "__init__": "(self, scene_viewer: SceneViewer, geometry: Union[Geometry, EnumValue], name: str) -> None",
         "setOutlineColor": "(self, color: Union[Color, Vector4]) -> None",
     },
     "SopNodeType": {
@@ -1144,7 +1240,11 @@ EXPLICIT_DEFINITIONS = {
     "StringKeyframe": {
         "__init__": "(self, expression: Optional[str] = None, time: Optional[float] = None, language: Optional[EnumValue] = exprLanguage.Python) -> None",
     },
+    "StringParmTemplate": {
+        "__init__": "(self, name: str, label: str, num_components: int, default_value: Sequence[str] = ..., naming_scheme: EnumValue = parmNamingScheme.Base1, string_type: EnumValue = stringParmType.Regular, file_type: EnumValue = fileType.Any, menu_items: Sequence[str] = ..., menu_labels: Sequence[str] = ..., icon_names: Sequence[str] = ..., item_generator_script: Optional[str] = None, item_generator_script_language: Optional[EnumValue] = None, menu_type: EnumValue = menuType.Normal, disable_when: Optional[str] = None, is_hidden: bool = False, is_label_hidden: bool = False, join_with_next: bool = False, help: Optional[str] = None, script_callback: Optional[str] = None, script_callback_language: EnumValue = scriptLanguage.Hscript, tags: Dict[str, str] = ..., default_expression: Sequence[str] = ..., default_expression_language: Sequence[EnumValue] = ...) -> None",
+    },
     "StyleSheet": {
+        "__init__": "(self, json_text: str = ...) -> None",
         "cloneWithAddedStyleSheet": "(self, stylesheet: StyleSheet, target: Optional[str] = ...) -> StyleSheet",
     },
     "Surface": {
@@ -1157,6 +1257,12 @@ EXPLICIT_DEFINITIONS = {
         "loadChildTakeFromFile": "(self, filename: str) -> Sequence[Take]",
         "name": "(self) -> str",
     },
+    "TextDrawable": {
+        "__init__": "(self, scene_viewer: SceneViewer, name: str, label: Optional[str] = None, params: Optional[Dict[str, Any]] = None) -> None",
+    },
+    "ToggleParmTemplate": {
+        "__init__": "(self, name: str, label: str, default_value: bool = False, disable_when: Optional[str]  =None, is_hidden: bool = False, is_label_hidden: bool = False, join_with_next: bool = False, help: Optional[str] = None, script_callback: Optional[str] = None, script_callback_language: EnumValue = scriptLanguage.Hscript, tags: Dict[str, str] = ..., default_expression: str = '', default_expression_language: EnumValue = scriptLanguage.Hscript) -> None",
+    },
     "Tool": {
         "setData": "(self, script: str = '', language: EnumValue = scriptLanguage.Python, icon: str = '', help: str = '', help_url: str = '', network_categories: Sequence[NodeTypeCategory] = ..., viewer_categories: Sequence[NodeTypeCategory] = ..., cop_viewer_categories: Sequence[NodeTypeCategory] = ..., network_op_type: str = '', viewer_op_type: str = '', locations: Sequence[str] = ...) -> None",
     },
@@ -1165,13 +1271,16 @@ EXPLICIT_DEFINITIONS = {
         "generateStaticWorkItems": "(self, block: bool = False, nodes: Sequence[TopNode] = ...) -> None",
     },
     "Vector2": {
+        "__init__": "(self, x: Union[Sequence[float], float] = ..., y: float = ...) -> None",
         "__mul__": "(self, scalar_or_matrix2: Union[float, Matrix2]) -> Vector2",
     },
     "Vector3": {
+        "__init__": "(self, x: Union[Sequence[float], float] = ..., y: float = ..., z: float = ...) -> None",
         "__mul__": "(self, scalar_or_matrix3_or_matrix4: Union[float, Matrix3, Matrix4]) -> Vector3",
         "smoothRotation": "(self, reference: Vector3, rotate_order: str = 'xyz') -> Vector3",
     },
     "Vector4": {
+        "__init__": "(self, x: Union[Sequence[float], float] = ..., y: float = ..., z: float = ..., w: float = ...) -> None",
         "__mul__": "(self, scalar_or_matrix4: Union[float,  Matrix4]) -> Vector4",
     },
     "Vertex": {
@@ -1197,6 +1306,7 @@ EXPLICIT_DEFINITIONS = {
         "scaleFactor": "(self, ref_position: Sequence[float] = ...) -> float",
     },
     "ViewerHandleTemplate": {
+        "__init__": "(self, name: str, label: str, categories: Sequence[EnumValue]) -> None",
         "bindGadget": "(self, drawable_type: EnumValue, gadget_name: str , gadget_label: Optional[str] = None, parms: Optional[Sequence[str]] = None) -> None",
         "bindParameter": "(self, param_type: EnumValue, name: str , label: Optional[str] = None, default_value: Optional[Union[int, float, str]] = None, num_components: int = 1, min_limit: int = 0, max_limit: int = 1, visible: bool = True) -> None",
         "bindSetting": "(self, param_type: EnumValue, name: str , label: Optional[str] = None, menu_as_button_strip: bool = False, menu_items: Optional[Sequence[Union[Tuple[str, str], Tuple[str, str, str]]]] = None, num_components: int = 1, default_value: Optional[Union[int, float, str]] = None, min_limit: int = 0, max_limit: int = 1, align: bool = False) -> None",
@@ -1204,12 +1314,16 @@ EXPLICIT_DEFINITIONS = {
     "ViewerState": {
         "parmTemplates": "(self) -> ParmTemplateGroup",
     },
+    "ViewerStateDragger": {
+        "__init__": "(self, name: str, xform: Matrix4 = ..., inv_xform: Matrix4 = ...) -> None",
+    },
     "ViewerStateMenu": {
         "addActionItem": "(self, id,: str label: str, hotkey: str = '') -> None",
         "addRadioStripItem": "(self, strip_id: str, id: str label: str, hotkey: str = '') -> None",
         "addToggleItem": "(self, id,: str label: str, default: bool, hotkey: str = '') -> None",
     },
     "ViewerStateTemplate": {
+        "__init__": "(self, state_name: str, state_label: str, node_type_category: NodeTypeCategory, contexts: Optional[Sequence[NodeTypeCategory]] = None)",
         "bindDrawableSelector": "(self, prompt: str, auto_start: bool = True, toolbox: bool = True, drawable_mask=[], hotkey: str = '', name: str = '') -> None",
         "bindDynamicsPointSelector": "(self, prompt: str, allow_objects: bool = True, allow_modifiers: bool = False, quick_select: bool = True, auto_start: bool = True, toolbox: bool = True, use_existing_selection: bool = True, secure_selection: EnumValue = secureSelectionOption.Obey, allow_multisel: bool = True, only_select_points: bool = True, object_based_point_selection: bool = False, use_last_selected_object: bool = False, hotkey: str = '', name: str = '') -> None",
         "bindDynamicsPolygonSelector": "(self, prompt: str, quick_select: bool = True, auto_start: bool = True, toolbox: bool = True, use_existing_selection: bool = True, object_based_point_selection: bool = False, secure_selection: EnumValue = secureSelectionOption.Obey, use_last_selected_object: bool = False, hotkey: str = '', name: str = '') -> None",
