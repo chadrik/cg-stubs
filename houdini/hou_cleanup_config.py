@@ -28,8 +28,14 @@ MISSING_DEFINITIONS = {
         "def modificationTime(self) -> datetime.datetime",
     ],
     "OpNode": [
+        "def createNode(self, node_type_name: str, node_name: Optional[str] = None, run_init_scripts: bool = True, load_contents: bool = True, exact_type_name: bool = False, force_valid_node_name: bool = False) -> OpNode",
+        "def inputConnections(self) -> Sequence[OpNodeConnection]",
+        "def node(self, node_path: str) -> Optional[OpNode]",
+        "def outputConnections(self) -> Sequence[OpNodeConnection]",
         "def setParmExpressions(self, parm_dict: Dict[str, Any], language: Optional[EnumValue] = None, replace_expressions: bool = True) -> None",
-    ],
+        "def setParms(self, parm_dict: Dict[str, Any]) -> None",
+        "def type(self) -> OpNodeType",
+],
     "Parm": [
         "def set(self, value: Union[int, float, str, Parm, Ramp], language: Optional[EnumValue] = None, follow_parm_reference: bool = True) -> None",
     ],
@@ -44,19 +50,25 @@ MISSING_DEFINITIONS = {
         "def voxelRangeAsVector3(self, range: BoundingBox) -> Sequence[Vector3]",
     ],
     "Geometry": [
-        "def pointAttribs(self, scope: EnumValue) -> Sequence[Attrib]",
-        "def primAttribs(self, scope: EnumValue) -> Sequence[Attrib]",
-        "def vertexAttribs(self, scope: EnumValue) -> Sequence[Attrib]",
-        "def globalAttribs(self, scope: EnumValue) -> Sequence[Attrib]",
+        "def pointAttribs(self, scope: EnumValue = ...) -> Sequence[Attrib]",
+        "def primAttribs(self, scope: EnumValue = ...) -> Sequence[Attrib]",
+        "def vertexAttribs(self, scope: EnumValue = ...) -> Sequence[Attrib]",
+        "def globalAttribs(self, scope: EnumValue = ...) -> Sequence[Attrib]",
     ],
     "Vector2": [
+        "def __contains__(self, other: float) -> bool",
         "def __iter__(self) -> Iterator[float]",
+        "def __reversed__(self) -> Iterator[float]",
     ],
     "Vector3": [
+        "def __contains__(self, other: float) -> bool",
         "def __iter__(self) -> Iterator[float]",
+        "def __reversed__(self) -> Iterator[float]",
     ],
     "Vector4": [
+        "def __contains__(self, other: float) -> bool",
         "def __iter__(self) -> Iterator[float]",
+        "def __reversed__(self) -> Iterator[float]",
     ],
     "hda": [
         "@staticmethod\ndef reloadHDAModule(hda_module: HDAModule) -> None",
@@ -66,7 +78,6 @@ MISSING_DEFINITIONS = {
         "@staticmethod\ndef Icon(icon_name: str, width: Optional[int] = None, height: Optional[int] = None) -> QtGui.QIcon",
     ],
     "ui": [
-        "@staticmethod\ndef displayConfirmation(text: str, severity: EnumValue = severityType.Message, help: Optional[str] = None, title: Optional[str] = None, details: Optional[str] = None, destails_label: Optional[str] = None, destails_expanded: bool = False) -> bool",
         "@staticmethod\ndef selectFile(start_directory: Optional[str] = None, title: Optional[str] = None, collapse_sequences: bool = False, file_type: EnumValue = fileType.Any, pattern: Optional[str] = None, default_value: Optional[str] = None, multiple_select: bool = False, image_chooser: bool = False, chooser_mode: EnumValue = fileChooserMode.ReadAndWrite, width: int = 0, height: int = 0) -> str",
     ],
 }
@@ -570,26 +581,52 @@ NON_OPTIONAL_RETURN_FUNCTIONS = {
 
 # Functions for which we want to declare a specific return type.
 EXPLICIT_RETURN_TYPES = {
-    None: {},
+    None: {
+        "shopNodeTypeCategory": "OpNodeTypeCategory",
+        "ropNodeTypeCategory": "OpNodeTypeCategory",
+        "dataNodeTypeCategory": "OpNodeTypeCategory",
+        "apexNodeTypeCategory": "ApexNodeTypeCategory",
+        "chopNetNodeTypeCategory": "OpNodeTypeCategory",
+        "chopNodeTypeCategory": "OpNodeTypeCategory",
+        "dopNodeTypeCategory": "OpNodeTypeCategory",
+        "cop2NetNodeTypeCategory": "OpNodeTypeCategory",
+        "cop2NodeTypeCategory": "OpNodeTypeCategory",
+        "copNodeTypeCategory": "OpNodeTypeCategory",
+        "objNodeTypeCategory": "OpNodeTypeCategory",
+        "rootNodeTypeCategory": "OpNodeTypeCategory",
+        "lopNodeTypeCategory": "OpNodeTypeCategory",
+        "managerNodeTypeCategory": "OpNodeTypeCategory",
+        "sopNodeTypeCategory": "OpNodeTypeCategory",
+        "topNodeTypeCategory": "OpNodeTypeCategory",
+        "vopNetNodeTypeCategory": "OpNodeTypeCategory",
+        "vopNodeTypeCategory": "OpNodeTypeCategory",
+    },
     "DopData": {
         "creator": "OpNode",
         "dopNetNode": "OpNode",
     },
     "DopNode": {
-        "dopNetNode": "OpNode",
+        "createdObjects": "Tuple[DopObject, ...]",
         "displayNode": "Optional[OpNode]",
+        "dopNetNode": "OpNode",
+        "objectsToProcess": "Tuple[DopObject, ...]",
+        "processedObjects": "Tuple[DopObject, ...]",
         "renderNode": "Optional[OpNode]",
     },
     "GeometrySelection": {
         "mergedNode": "SopNode",
     },
+    "HDADefinition": {
+        "nodeType": "OpNodeType",
+        "nodeTypeCategory": "OpNodeTypeCategory",
+    },
     "LopNode": {
         "editableLayer": "pxr.Sdf.Layer",
-        "editableStage": "pxr.Sdf.Stage",
+        "editableStage": "pxr.Usd.Stage",
         "inputPrims": "Tuple[pxr.Sdf.Path, ...]",
         "lastModifiedPrims": "Tuple[pxr.Sdf.Path, ...]",
         "network": "OpNode",
-        "uneditableStage": "pxr.Sdf.Stage",
+        "uneditableStage": "pxr.Usd.Stage",
     },
     "LopSelectionRule": {
         "sourceNode": "Optional[LopNode]",
@@ -602,6 +639,8 @@ EXPLICIT_RETURN_TYPES = {
     "Parm": {
         "createClip": "ChopNode",
         "node": "OpNode",
+        "evalAsNode": "Optional[OpNode]",
+        "evalAsNodeAtFrame": "Optional[OpNode]",
     },
     "ParmTuple": {
         "createClip": "ChopNode",
@@ -638,8 +677,11 @@ EXPLICIT_DEFINITIONS = {
         "__le__": "(self, other: object) -> bool",
         "__gt__": "(self, other: object) -> bool",
         "__ge__": "(self, other: object) -> bool",
+    },
+    "__hou__": {
         "addAnimationLayer": "(layermixer: ChopNode, layername: str = "") -> ChopNode",
-        "applicationVersion": "(include_patch: bool = False) -> Sequence[int, int]",
+        "applicationVersion": "(include_patch: bool = False) -> Tuple[int, int]",
+        "contextOption": "(opt: str) -> Union[float, str]",
         "createAnimationClip": "(path: str = ..., set_export: bool = False) -> ChopNode",
         "createAnimationLayers": "(path: str = ...) -> ChopNode",
         "fileReferences": "(project_dir_variable: str = 'HIP', include_all_refs: bool = true) -> Sequence[Tuple[Parm, str]]",
@@ -752,7 +794,7 @@ EXPLICIT_DEFINITIONS = {
         "saveClip": "(self, file_name: str) -> bool",
     },
     "Color": {
-        "__init__": "(self, rgb_tuple: Sequence[float] = ...) -> None",
+        "__init__": "(self, rgb_tuple: Union[Sequence[float], float] = ..., g: float = ..., b: float = ...) -> None",
     },
     "Cop2Node": {
         "allPixels": "(self, plane: str = 'C', component: Optional[str] = None, interleaved: bool = True, time: float = -1.0) -> Sequence[float]",
@@ -980,7 +1022,7 @@ EXPLICIT_DEFINITIONS = {
         "setLastModifiedPrims": "(self, primPaths: Sequence[str]) -> None",
         "sourceLayer": "(self, layer_index: int = 0, output_index: int = 0, use_last_cook_context_options: bool = True, frame: Optional[float] = None, context_options: Dict[str, Any] = ...) -> pxr.Sdf.Layer",
         "sourceLayerCount": "(self, output_index: int = 0, use_last_cook_context_options: bool = True, frame: Optional[float] = None, context_options: Optional[Dict[str, Union[str, float]]] = None) -> LopViewportLoadMasks",
-        "stage": "(self, output_index: int = 0, apply_viewport_overrides: bool = False, ignore_errors: bool = False, use_last_cook_context_options: bool = True, apply_post_layers: bool = True, frame: Optional[float] = None, context_options: Dict[str, Any] = ...) -> pxr.Sdf.Stage",
+        "stage": "(self, output_index: int = 0, apply_viewport_overrides: bool = False, ignore_errors: bool = False, use_last_cook_context_options: bool = True, apply_post_layers: bool = True, frame: Optional[float] = None, context_options: Dict[str, Any] = ...) -> pxr.Usd.Stage",
         "stagePrimStats": "(self, primpath: Optional[str] = None, output_index: int = 0, apply_viewport_overrides: bool = False, ignore_errors: bool = False, do_geometry_counts: bool = False, do_separate_purposes: bool = False, use_last_cook_context_options: bool = True, apply_post_layers: bool = True, frame: Optional[float] = None, context_options: Optional[Dict[str, Union[str, float]]] = None) -> Dict[str, int]",
     },
     "Matrix2": {
@@ -1029,7 +1071,9 @@ EXPLICIT_DEFINITIONS = {
         "__init__": "(self, path: str, rect: BoundingRect) -> None",
     },
     "NetworkMovableItem": {
-        "shiftPosition": "(self, vector2: Union[Sequence[float], Vector2]) -> None",
+        "move": "(self, amount: Union[Sequence[float], Vector2]) -> None",
+        "setPosition": "(self, position: Union[Sequence[float], Vector2]) -> None",
+        "shiftPosition": "(self, amount: Union[Sequence[float], Vector2]) -> None",
     },
     "NetworkDot": {
         "setInput": "(self, input_index: int, item_to_become_input: Optional[NetworkMovableItem], output_index: int = 0) -> None",
@@ -1123,7 +1167,7 @@ EXPLICIT_DEFINITIONS = {
         "eval": "(self) -> Union[Sequence[int], Sequence[float], Sequence[str], Ramp]",
         "evalAtFrame": "(self, frame: float) -> Union[Sequence[int], Sequence[float], Sequence[str], Ramp]",
         "evalAtTime": "(self, frame: float) -> Union[Sequence[int], Sequence[float], Sequence[str], Ramp]",
-        "lock": "(self, bool_values: Sequence[bool]) -> None",
+        "lock": "(self, bool_values: Union[bool, Sequence[bool]]) -> None",
         "node": "(self) -> OpNode",
         "setPending": "(self, values: Sequence[Union[float, str]]) -> None",
     },
@@ -1221,6 +1265,9 @@ EXPLICIT_DEFINITIONS = {
     },
     "SeparatorParmTemplate": {
         "__init__": "(self, name: str, is_hidden: bool = False, tags: Dict[str, str] = ...) -> None",
+    },
+    "Shelf": {
+        "setTools": "(self, tools: Sequence[Tool]) -> None",
     },
     "ShopNode": {
         "shaderCode": "(self, shader_type: Optional[EnumValue] = None) -> str",
@@ -1406,10 +1453,10 @@ EXPLICIT_DEFINITIONS = {
         "collapseCommonVars": "(path: str, vars: Sequence[str] = ...) -> str",
     },
     "ui": {
-        "displayConfirmation": "(text: str, severity_type: EnumValue = ..., help: Optional[str] = None, title: Optional[str] = None, details: Optional[str] = None, details_label: Optional[str] = None, details_expanded: bool = False, suppress: EnumValue = ...) -> bool",
-        "displayCustomConfirmation": "(text: str, buttons: Sequence[str] = ..., severity_type: EnumValue = ..., default_choice: int = 0, close_choice: int = -1, help: Optional[str] = None, title: Optional[str] = None, details: Optional[str] = None, details_label: Optional[str] = None, details_expanded: bool = False, suppress: EnumValue = ...) -> int",
+        "displayConfirmation": "(text: str, severity: EnumValue = ..., help: Optional[str] = None, title: Optional[str] = None, details: Optional[str] = None, details_label: Optional[str] = None, details_expanded: bool = False, suppress: EnumValue = ...) -> bool",
+        "displayCustomConfirmation": "(text: str, buttons: Sequence[str] = ..., severity: EnumValue = ..., default_choice: int = 0, close_choice: int = -1, help: Optional[str] = None, title: Optional[str] = None, details: Optional[str] = None, details_label: Optional[str] = None, details_expanded: bool = False, suppress: EnumValue = ...) -> int",
         "displayFileDependencyDialog": "(rop_node: Optional[RopNode] = None, uploaded_files: Sequence[str] = ..., forced_unselected_patterns: Sequence[str] = ..., project_dir_variable: str = 'HIP', is_standalone: bool = true) -> Tuple[bool, Sequence[Tuple[Parm, str]]]",
-        "displayMessage": "(text: str, buttons: Sequence[str] = ..., severity_type: EnumValue = ..., default_choice: int = 0, close_choice: int = -1, help: Optional[str] = None, title: Optional[str] = None, details: Optional[str] = None, details_label: Optional[str] = None, details_expanded: bool = False, suppress: EnumValue = ...) -> int",
+        "displayMessage": "(text: str, buttons: Sequence[str] = ..., severity: EnumValue = ..., default_choice: int = 0, close_choice: int = -1, help: Optional[str] = None, title: Optional[str] = None, details: Optional[str] = None, details_label: Optional[str] = None, details_expanded: bool = False, suppress: EnumValue = ...) -> int",
         "getDragSourceData": "(label: str, index: int = 0) -> Any",
         "hasDragSourceData": "(label: str, index: int) -> bool",
         "loadPackageArchive": "(file_path: str, extract_path: Optional[str] = None) -> Sequence[str]",

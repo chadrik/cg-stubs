@@ -295,6 +295,8 @@ def get_signature_overrides() -> dict[str, str]:
         for function_name, function_spec in functions.items():
             if cls is not None:
                 key = f"*.{cls}.{function_name}"
+            elif cls == "__hou__":
+                key = f"hou.{function_name}"
             else:
                 key = f"*.{function_name}"
             overrides[key] = function_spec

@@ -8151,7 +8151,7 @@ class NetworkMovableItem(NetworkItem):
 
 
         """
-    def setPosition(self, position: Sequence[float]) -> None:
+    def setPosition(self, position: Union[Sequence[float], Vector2]) -> None:
         """
 
         setPosition(self, vector2)
@@ -8161,7 +8161,7 @@ class NetworkMovableItem(NetworkItem):
 
 
         """
-    def move(self, amount: Sequence[float]) -> None:
+    def move(self, amount: Union[Sequence[float], Vector2]) -> None:
         """
 
         move(self, vector2)
@@ -10767,7 +10767,7 @@ class OpNode(Node):
 
 
         """
-    def fileReferences(project_dir_variable: str = ..., include_all_refs: bool = ...) -> Sequence[Tuple[Parm, str]]:
+    def fileReferences(self, recurse: bool = ..., project_dir_variable: str = ..., include_all_refs: bool = ...) -> Sequence[Tuple[Parm, str]]:
         '''
 
         fileReferences(self, recurse = True, project_dir_variable = \\"HIP\\",
@@ -12023,7 +12023,13 @@ class OpNode(Node):
 
         """
     def eventCallbacks(self) -> Tuple[tuple[Tuple[EnumValue, ...], Any], ...]: ...
+    def createNode(self, node_type_name: str, node_name: Optional[str] = None, run_init_scripts: bool = True, load_contents: bool = True, exact_type_name: bool = False, force_valid_node_name: bool = False) -> OpNode: ...
+    def inputConnections(self) -> Sequence[OpNodeConnection]: ...
+    def node(self, node_path: str) -> Optional[OpNode]: ...
+    def outputConnections(self) -> Sequence[OpNodeConnection]: ...
     def setParmExpressions(self, parm_dict: Dict[str, Any], language: Optional[EnumValue] = None, replace_expressions: bool = True) -> None: ...
+    def setParms(self, parm_dict: Dict[str, Any]) -> None: ...
+    def type(self) -> OpNodeType: ...
 
 class NodeGroup:
     """
@@ -14942,7 +14948,7 @@ class NodeTypeCategory:
 
 
         """
-    def nodeType(category_or_name: Union[NodeTypeCategory, str], internal_name: Optional[str] = ...) -> Optional[NodeType]:
+    def nodeType(self, type_name: str) -> Optional[NodeType]:
         """
 
         nodeType(self, type_name) -> hou.NodeType or None
@@ -24870,7 +24876,7 @@ class Color:
 
     """
     thisown: Incomplete
-    def __init__(self, rgb_tuple: Sequence[float] = ...) -> None:
+    def __init__(self, rgb_tuple: Union[Sequence[float], float] = ..., g: float = ..., b: float = ...) -> None:
         """
 
         __init__(self, rgb_tuple=(0.0, 0.0, 0.0)) -> Color
@@ -27365,7 +27371,7 @@ class DopNode(OpNode):
 
 
         """
-    def processedObjects(self) -> Tuple[DopData, ...]:
+    def processedObjects(self) -> Tuple[DopObject, ...]:
         """
 
         processedObjects(self) -> tuple of hou.DopObject
@@ -27374,7 +27380,7 @@ class DopNode(OpNode):
 
 
         """
-    def createdObjects(self) -> Tuple[DopData, ...]:
+    def createdObjects(self) -> Tuple[DopObject, ...]:
         """
 
         createdObjects(self) -> tuple of hou.DopObject
@@ -27454,7 +27460,7 @@ class DopNode(OpNode):
 
         """
     def renderNode(self) -> Optional[OpNode]: ...
-    def objectsToProcess(self) -> Tuple[DopData, ...]:
+    def objectsToProcess(self) -> Tuple[DopObject, ...]:
         """
 
         objectsToProcess(self) -> tuple of hou.DopObject
@@ -35104,10 +35110,10 @@ class Geometry:
 
 
         """
-    def pointAttribs(self, scope: EnumValue) -> Sequence[Attrib]: ...
-    def primAttribs(self, scope: EnumValue) -> Sequence[Attrib]: ...
-    def vertexAttribs(self, scope: EnumValue) -> Sequence[Attrib]: ...
-    def globalAttribs(self, scope: EnumValue) -> Sequence[Attrib]: ...
+    def pointAttribs(self, scope: EnumValue = ...) -> Sequence[Attrib]: ...
+    def primAttribs(self, scope: EnumValue = ...) -> Sequence[Attrib]: ...
+    def vertexAttribs(self, scope: EnumValue = ...) -> Sequence[Attrib]: ...
+    def globalAttribs(self, scope: EnumValue = ...) -> Sequence[Attrib]: ...
 
 class GeometryDelta:
     """
@@ -43607,7 +43613,7 @@ class HDADefinition:
     def __eq__(self, other: object) -> bool: ...
     def __ne__(self, other: object) -> bool: ...
     def __hash__(self) -> int: ...
-    def nodeType(category_or_name: Union[NodeTypeCategory, str], internal_name: Optional[str] = ...) -> Optional[NodeType]:
+    def nodeType(self) -> OpNodeType:
         """
 
         nodeType(self) -> hou.NodeType
@@ -43617,7 +43623,7 @@ class HDADefinition:
 
 
         """
-    def nodeTypeCategory(self) -> NodeTypeCategory:
+    def nodeTypeCategory(self) -> OpNodeTypeCategory:
         """
 
         nodeTypeCategory(self) -> hou.NodeTypeCategory
@@ -50847,7 +50853,7 @@ class LopNode(OpNode):
 
 
         """
-    def editableStage(self) -> pxr.Sdf.Stage:
+    def editableStage(self) -> pxr.Usd.Stage:
         """
 
         editableStage(self) -> pxr.Usd.Stage
@@ -50857,7 +50863,7 @@ class LopNode(OpNode):
 
 
         """
-    def uneditableStage(self) -> pxr.Sdf.Stage:
+    def uneditableStage(self) -> pxr.Usd.Stage:
         """
 
         uneditableStage(self) -> pxr.Usd.Stage
@@ -50880,7 +50886,7 @@ class LopNode(OpNode):
 
 
         """
-    def stage(self, output_index: int = ..., apply_viewport_overrides: bool = ..., ignore_errors: bool = ..., use_last_cook_context_options: bool = ..., apply_post_layers: bool = ..., frame: Optional[float] = ..., context_options: Dict[str, Any] = ...) -> pxr.Sdf.Stage:
+    def stage(self, output_index: int = ..., apply_viewport_overrides: bool = ..., ignore_errors: bool = ..., use_last_cook_context_options: bool = ..., apply_post_layers: bool = ..., frame: Optional[float] = ..., context_options: Dict[str, Any] = ...) -> pxr.Usd.Stage:
         """
 
         stage(self, output_index = 0, apply_viewport_overrides = False,
@@ -58165,7 +58171,7 @@ class Parm:
 
 
         """
-    def evalAsNode(self) -> Optional[Node]:
+    def evalAsNode(self) -> Optional[OpNode]:
         """
 
         evalAsNode(self) -> hou.OpNode
@@ -58180,7 +58186,7 @@ class Parm:
 
 
         """
-    def evalAsNodeAtFrame(self, frame: float) -> Optional[Node]:
+    def evalAsNodeAtFrame(self, frame: float) -> Optional[OpNode]:
         """
 
         evalAsNodeAtFrame(self, frame) -> hou.OpNode
@@ -59678,7 +59684,7 @@ class ParmTuple:
 
 
         """
-    def lock(self, bool_values: Sequence[bool]) -> None:
+    def lock(self, bool_values: Union[bool, Sequence[bool]]) -> None:
         """
 
         lock(self, bool_values)
@@ -68529,7 +68535,7 @@ class Selector:
 
 
         """
-    def nodeType(category_or_name: Union[NodeTypeCategory, str], internal_name: Optional[str] = ...) -> Optional[NodeType]:
+    def nodeType(self) -> NodeType:
         """
 
         nodeType(self) -> hou.NodeType
@@ -68822,7 +68828,7 @@ class Shelf(ShelfElement):
 
 
         """
-    def setTools(self, tools: Tuple[Tool, ...]) -> None:
+    def setTools(self, tools: Sequence[Tool]) -> None:
         """
 
         setTools(self, tools)
@@ -73652,9 +73658,9 @@ class ui:
 
         """
     @staticmethod
-    def displayConfirmation(text: str, severity_type: EnumValue = ..., help: Optional[str] = ..., title: Optional[str] = ..., details: Optional[str] = ..., details_label: Optional[str] = ..., details_expanded: bool = ..., suppress: EnumValue = ...) -> bool: ...
+    def displayConfirmation(text: str, severity: EnumValue = ..., help: Optional[str] = ..., title: Optional[str] = ..., details: Optional[str] = ..., details_label: Optional[str] = ..., details_expanded: bool = ..., suppress: EnumValue = ...) -> bool: ...
     @staticmethod
-    def displayCustomConfirmation(text: str, buttons: Sequence[str] = ..., severity_type: EnumValue = ..., default_choice: int = ..., close_choice: int = ..., help: Optional[str] = ..., title: Optional[str] = ..., details: Optional[str] = ..., details_label: Optional[str] = ..., details_expanded: bool = ..., suppress: EnumValue = ...) -> int:
+    def displayCustomConfirmation(text: str, buttons: Sequence[str] = ..., severity: EnumValue = ..., default_choice: int = ..., close_choice: int = ..., help: Optional[str] = ..., title: Optional[str] = ..., details: Optional[str] = ..., details_label: Optional[str] = ..., details_expanded: bool = ..., suppress: EnumValue = ...) -> int:
         '''
 
         displayCustomConfirmation(text, buttons=(),
@@ -73728,7 +73734,7 @@ class ui:
 
         '''
     @staticmethod
-    def displayMessage(text: str, buttons: Sequence[str] = ..., severity_type: EnumValue = ..., default_choice: int = ..., close_choice: int = ..., help: Optional[str] = ..., title: Optional[str] = ..., details: Optional[str] = ..., details_label: Optional[str] = ..., details_expanded: bool = ..., suppress: EnumValue = ...) -> int:
+    def displayMessage(text: str, buttons: Sequence[str] = ..., severity: EnumValue = ..., default_choice: int = ..., close_choice: int = ..., help: Optional[str] = ..., title: Optional[str] = ..., details: Optional[str] = ..., details_label: Optional[str] = ..., details_expanded: bool = ..., suppress: EnumValue = ...) -> int:
         '''
 
         displayMessage(text, buttons=(\'OK\',), severity=hou.severityType.Message,
@@ -76783,8 +76789,6 @@ class ui:
 
         """
     @staticmethod
-    def displayConfirmation(text: str, severity: EnumValue = severityType.Message, help: Optional[str] = None, title: Optional[str] = None, details: Optional[str] = None, destails_label: Optional[str] = None, destails_expanded: bool = False) -> bool: ...
-    @staticmethod
     def selectFile(start_directory: Optional[str] = None, title: Optional[str] = None, collapse_sequences: bool = False, file_type: EnumValue = fileType.Any, pattern: Optional[str] = None, default_value: Optional[str] = None, multiple_select: bool = False, image_chooser: bool = False, chooser_mode: EnumValue = fileChooserMode.ReadAndWrite, width: int = 0, height: int = 0) -> str: ...
 
 class UIEvent:
@@ -78067,7 +78071,9 @@ class Vector2:
 
 
         """
+    def __contains__(self, other: float) -> bool: ...
     def __iter__(self) -> Iterator[float]: ...
+    def __reversed__(self) -> Iterator[float]: ...
 
 class Vector3:
     """
@@ -78494,7 +78500,9 @@ class Vector3:
         """
     def distance2ToSegment(self, point1: Vector3, point2: Vector3) -> float: ...
     def pointOnSegment(self, point1: Vector3, point2: Vector3) -> Vector3: ...
+    def __contains__(self, other: float) -> bool: ...
     def __iter__(self) -> Iterator[float]: ...
+    def __reversed__(self) -> Iterator[float]: ...
 
 class Vector4:
     """
@@ -78778,7 +78786,9 @@ class Vector4:
 
 
         """
+    def __contains__(self, other: float) -> bool: ...
     def __iter__(self) -> Iterator[float]: ...
+    def __reversed__(self) -> Iterator[float]: ...
 
 class Vertex:
     """
@@ -80617,7 +80627,7 @@ class ViewerState:
 
 
         """
-    def nodeType(category_or_name: Union[NodeTypeCategory, str], internal_name: Optional[str] = ...) -> Optional[NodeType]:
+    def nodeType(self) -> NodeType:
         """
 
         nodeType(self) -> hou.NodeType or None
@@ -84232,7 +84242,7 @@ def applicationName() -> str:
 
 
     """
-def applicationVersion(include_patch: bool = ...) -> Sequence[int, int]:
+def applicationVersion(include_patch: bool = False) -> Tuple[int, ...]:
     """
 
     hou.vdbVersionInfo
@@ -86426,7 +86436,7 @@ def updateProgressAndCheckForInterrupt(percentage: int = -1) -> bool:
 
 
     """
-def runVex(vex_file: str, inputs: dict[str, Any], precision: str = ...) -> dict[str, Any]:
+def runVex(*args, **kwargs) -> dict[str, Any]:
     '''
 
     hou.runVex
@@ -86565,7 +86575,7 @@ def runVex(vex_file: str, inputs: dict[str, Any], precision: str = ...) -> dict[
 
 
     '''
-def saveImageDataToFile(color_and_alpha_data: Union[Sequence[float], bytes], width: int, height: int, file_name: str) -> None:
+def saveImageDataToFile(*args) -> None:
     '''
 
     hou.saveImageDataToFile
@@ -86631,7 +86641,7 @@ def saveImageDataToFile(color_and_alpha_data: Union[Sequence[float], bytes], wid
 
 
     '''
-def loadImageDataFromFile(file_name: str, arg: EnumValue = ...) -> bytes: ...
+def loadImageDataFromFile(*args, **kwargs) -> bytes: ...
 def imageResolution(image_file_name: str) -> Tuple[int, ...]:
     '''
 
@@ -86879,7 +86889,7 @@ def setChopExportConflictResolutionPattern(pattern: str) -> None:
 
 
     """
-def nodeType(category_or_name: Union[NodeTypeCategory, str], internal_name: Optional[str] = ...) -> Optional[NodeType]:
+def nodeType(*args) -> Optional[NodeType]:
     '''
 
     hou.nodeType
@@ -87009,7 +87019,7 @@ def preferredNodeType(name: str, parent_node: Optional[Node] = None) -> Optional
 
 
     '''
-def objNodeTypeCategory() -> NodeTypeCategory:
+def objNodeTypeCategory() -> OpNodeTypeCategory:
     """
 
     hou.objNodeTypeCategory
@@ -87023,7 +87033,7 @@ def objNodeTypeCategory() -> NodeTypeCategory:
 
 
     """
-def sopNodeTypeCategory() -> NodeTypeCategory:
+def sopNodeTypeCategory() -> OpNodeTypeCategory:
     """
 
     hou.sopNodeTypeCategory
@@ -87035,7 +87045,7 @@ def sopNodeTypeCategory() -> NodeTypeCategory:
 
 
     """
-def dopNodeTypeCategory() -> NodeTypeCategory:
+def dopNodeTypeCategory() -> OpNodeTypeCategory:
     """
 
     hou.dopNodeTypeCategory
@@ -87047,7 +87057,7 @@ def dopNodeTypeCategory() -> NodeTypeCategory:
 
 
     """
-def cop2NodeTypeCategory() -> NodeTypeCategory:
+def cop2NodeTypeCategory() -> OpNodeTypeCategory:
     """
 
     hou.cop2NodeTypeCategory
@@ -87059,7 +87069,7 @@ def cop2NodeTypeCategory() -> NodeTypeCategory:
 
 
     """
-def copNodeTypeCategory() -> NodeTypeCategory:
+def copNodeTypeCategory() -> OpNodeTypeCategory:
     """
 
     hou.copNodeTypeCategory
@@ -87071,7 +87081,7 @@ def copNodeTypeCategory() -> NodeTypeCategory:
 
 
     """
-def shopNodeTypeCategory() -> NodeTypeCategory:
+def shopNodeTypeCategory() -> OpNodeTypeCategory:
     """
 
     hou.shopNodeTypeCategory
@@ -87086,7 +87096,7 @@ def shopNodeTypeCategory() -> NodeTypeCategory:
 
 
     """
-def vopNodeTypeCategory() -> NodeTypeCategory:
+def vopNodeTypeCategory() -> OpNodeTypeCategory:
     """
 
     hou.vopNodeTypeCategory
@@ -87099,7 +87109,7 @@ def vopNodeTypeCategory() -> NodeTypeCategory:
 
 
     """
-def ropNodeTypeCategory() -> NodeTypeCategory:
+def ropNodeTypeCategory() -> OpNodeTypeCategory:
     """
 
     hou.ropNodeTypeCategory
@@ -87111,7 +87121,7 @@ def ropNodeTypeCategory() -> NodeTypeCategory:
 
 
     """
-def chopNodeTypeCategory() -> NodeTypeCategory:
+def chopNodeTypeCategory() -> OpNodeTypeCategory:
     """
 
     hou.chopNodeTypeCategory
@@ -87123,7 +87133,7 @@ def chopNodeTypeCategory() -> NodeTypeCategory:
 
 
     """
-def cop2NetNodeTypeCategory() -> NodeTypeCategory:
+def cop2NetNodeTypeCategory() -> OpNodeTypeCategory:
     """
 
     hou.cop2NetNodeTypeCategory
@@ -87136,7 +87146,7 @@ def cop2NetNodeTypeCategory() -> NodeTypeCategory:
 
 
     """
-def vopNetNodeTypeCategory() -> NodeTypeCategory:
+def vopNetNodeTypeCategory() -> OpNodeTypeCategory:
     """
 
     hou.vopNetNodeTypeCategory
@@ -87149,7 +87159,7 @@ def vopNetNodeTypeCategory() -> NodeTypeCategory:
 
 
     """
-def chopNetNodeTypeCategory() -> NodeTypeCategory:
+def chopNetNodeTypeCategory() -> OpNodeTypeCategory:
     """
 
     hou.chopNetNodeTypeCategory
@@ -87162,7 +87172,7 @@ def chopNetNodeTypeCategory() -> NodeTypeCategory:
 
 
     """
-def topNodeTypeCategory() -> NodeTypeCategory:
+def topNodeTypeCategory() -> OpNodeTypeCategory:
     """
 
     hou.topNodeTypeCategory
@@ -87174,7 +87184,7 @@ def topNodeTypeCategory() -> NodeTypeCategory:
 
 
     """
-def lopNodeTypeCategory() -> NodeTypeCategory:
+def lopNodeTypeCategory() -> OpNodeTypeCategory:
     """
 
     hou.lopNodeTypeCategory
@@ -87186,7 +87196,7 @@ def lopNodeTypeCategory() -> NodeTypeCategory:
 
 
     """
-def managerNodeTypeCategory() -> NodeTypeCategory:
+def managerNodeTypeCategory() -> OpNodeTypeCategory:
     """
 
     hou.managerNodeTypeCategory
@@ -87206,7 +87216,7 @@ def managerNodeTypeCategory() -> NodeTypeCategory:
 
 
     """
-def rootNodeTypeCategory() -> NodeTypeCategory:
+def rootNodeTypeCategory() -> OpNodeTypeCategory:
     """
 
     hou.rootNodeTypeCategory
@@ -87220,7 +87230,7 @@ def rootNodeTypeCategory() -> NodeTypeCategory:
 
 
     """
-def dataNodeTypeCategory() -> NodeTypeCategory:
+def dataNodeTypeCategory() -> OpNodeTypeCategory:
     """
 
     hou.dataNodeTypeCategory
@@ -87247,7 +87257,7 @@ def nodeTypeCategories() -> dict[str, NodeTypeCategory]:
 
 
     """
-def apexNodeTypeCategory() -> NodeTypeCategory:
+def apexNodeTypeCategory() -> ApexNodeTypeCategory:
     """
 
     hou.apexNodeTypeCategory
@@ -89578,7 +89588,7 @@ def almostEqual(x: float, y: float) -> bool:
 
 
     """
-def fileReferences(project_dir_variable: str = ..., include_all_refs: bool = ...) -> Sequence[Tuple[Parm, str]]:
+def fileReferences(*args, **kwargs) -> Tuple[tuple[Parm, str], ...]:
     '''
 
     hou.fileReferences
@@ -90243,7 +90253,7 @@ def contextOptionNames() -> Tuple[str, ...]:
 
 
     """
-def setContextOption(option: str, value: Optional[Union[str, float]]) -> None:
+def setContextOption(*args) -> None:
     """
 
     hou.setContextOption
@@ -90778,7 +90788,7 @@ def refreshPreferences() -> None:
 
 
     """
-def startHoudiniEngineDebugger(portOrPipeName: Union[int, str]) -> None:
+def startHoudiniEngineDebugger(*args) -> None:
     '''
 
     hou.startHoudiniEngineDebugger
@@ -90855,7 +90865,7 @@ def machineName(alpha: bool = True) -> str:
 
 
     """
-def createAnimationLayers(path: str = ...) -> ChopNode:
+def createAnimationLayers(*args) -> Optional[Node]:
     '''
 
     hou.createAnimationLayers
@@ -90884,7 +90894,7 @@ def createAnimationLayers(path: str = ...) -> ChopNode:
 
 
     '''
-def addAnimationLayer(layermixer: ChopNode, layername: str) -> ChopNode:
+def addAnimationLayer(*args) -> Optional[Node]:
     '''
 
     hou.addAnimationLayer
@@ -90914,7 +90924,7 @@ def addAnimationLayer(layermixer: ChopNode, layername: str) -> ChopNode:
 
 
     '''
-def removeAnimationLayer(layermixer: ChopNode, layername: str, merge_down: bool = ...) -> bool:
+def removeAnimationLayer(layermixer: Node, layername: str, merge_down: bool = False) -> bool:
     """
 
     hou.removeAnimationLayer
@@ -90943,7 +90953,7 @@ def removeAnimationLayer(layermixer: ChopNode, layername: str, merge_down: bool 
 
 
     """
-def createAnimationClip(path: str = ..., set_export: bool = ...) -> ChopNode:
+def createAnimationClip(*args) -> Optional[Node]:
     '''
 
     hou.createAnimationClip
@@ -90973,7 +90983,7 @@ def createAnimationClip(path: str = ..., set_export: bool = ...) -> ChopNode:
 
 
     '''
-def registerOpdefPath(path: str, server_name: str, port: str = ...) -> Any:
+def registerOpdefPath(*args, **kwargs) -> None:
     '''
 
     hou.registerOpdefPath
