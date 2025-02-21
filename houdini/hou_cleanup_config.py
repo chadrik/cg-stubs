@@ -4,6 +4,34 @@ The constants in this module act as overrides for the automatic type annotations
 the C++ type analysis.
 """
 
+
+ADDITIONAL_ENUM_NAMES = {
+    "fbxMaterialMode": {
+        "FBXShaderNodes",
+        "PrincipledShaders",
+        "VopNetworks",
+    },
+    "fbxCompatibilityMode": {
+        "FBXStandard",
+        "Maya",
+    },
+    "_ik_targetType": {
+        "All",
+        "Orientation",
+        "Position",
+    },
+    "parmTemplateType": {
+        "Folder",
+        "Data",
+    },
+    "optionalBool": {
+        "Yes",
+        "No",
+        "NoOpinion",
+    },
+}
+
+
 # Define functions that are missing entirely from hou.py
 # WARNING: Try not to redefine functions that are deprecated and have been removed from hou.py
 MISSING_DEFINITIONS = {

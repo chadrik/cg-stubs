@@ -10,6 +10,7 @@ import mypy.stubgenc
 from mypy.stubgenc import FunctionContext, FunctionSig, SignatureGenerator
 
 from hou_cleanup_config import (
+    ADDITIONAL_ENUM_NAMES,
     EXPLICIT_DEFINITIONS,
     EXPLICIT_RETURN_TYPES,
     MISSING_DEFINITIONS,
@@ -27,33 +28,6 @@ from stubgenlib import (
 
 tupleTypeRegex = re.compile("^_([a-zA-Z0-9]+)Tuple$")
 tupleGenTypeRegex = re.compile("^_([a-zA-Z0-9]+)TupleGenerator$")
-
-
-ADDITIONAL_ENUM_NAMES = {
-    "fbxMaterialMode": {
-        "FBXShaderNodes",
-        "PrincipledShaders",
-        "VopNetworks",
-    },
-    "fbxCompatibilityMode": {
-        "FBXStandard",
-        "Maya",
-    },
-    "_ik_targetType": {
-        "All",
-        "Orientation",
-        "Position",
-    },
-    "parmTemplateType": {
-        "Folder",
-        "Data",
-    },
-    "optionalBool": {
-        "Yes",
-        "No",
-        "NoOpinion",
-    },
-}
 
 
 def is_std(node: ast.AST, attr: str) -> bool:
@@ -227,7 +201,6 @@ class HoudiniCppTypeConverter(CppTypeConverter):
 
         typestr = "".join(parts)
         typestr = typestr.replace("::", ".")
-
         typestr = typestr.replace(" ", "")
         typestr = typestr.replace(",", ", ")
 
@@ -293,11 +266,14 @@ def get_signature_overrides() -> dict[str, str]:
 
     for cls, functions in EXPLICIT_DEFINITIONS.items():
         for function_name, function_spec in functions.items():
-            if cls is not None:
-                key = f"*.{cls}.{function_name}"
-            elif cls == "__hou__":
+            if cls == "__hou__":
+                # Modules at the root hou level
                 key = f"hou.{function_name}"
+            elif cls is not None:
+                # Specific class overrides
+                key = f"*.{cls}.{function_name}"
             else:
+                # Overrides that should apply to all classes
                 key = f"*.{function_name}"
             overrides[key] = function_spec
 
