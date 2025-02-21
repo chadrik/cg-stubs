@@ -9084,7 +9084,7 @@ class Node(NetworkMovableItem):
 
 
         '''
-    def recursiveGlob(self, pattern: str, filter: EnumValue = ..., include_subnets: bool = ...) -> Sequence[Node]:
+    def recursiveGlob(self, pattern: str, filter: EnumValue = ..., include_subnets: bool = ...) -> Tuple[Node,...]:
         """
 
         recursiveGlob(self, pattern, filter=hou.nodeTypeFilter.NoFilter,
@@ -9323,7 +9323,7 @@ class Node(NetworkMovableItem):
 
 
         """
-    def inputs(self) -> Sequence[Self]:
+    def inputs(self) -> Tuple[Self,...]:
         """
 
         inputs(self) -> tuple of hou.Node
@@ -9479,7 +9479,7 @@ class Node(NetworkMovableItem):
 
 
         """
-    def outputs(self) -> Sequence[Self]:
+    def outputs(self) -> Tuple[Self,...]:
         """
 
         outputs(self) -> tuple of hou.Node
@@ -12024,9 +12024,9 @@ class OpNode(Node):
         """
     def eventCallbacks(self) -> Tuple[tuple[Tuple[EnumValue, ...], Any], ...]: ...
     def createNode(self, node_type_name: str, node_name: Optional[str] = None, run_init_scripts: bool = True, load_contents: bool = True, exact_type_name: bool = False, force_valid_node_name: bool = False) -> OpNode: ...
-    def inputConnections(self) -> Sequence[OpNodeConnection]: ...
+    def inputConnections(self) -> Tuple[OpNodeConnection, ...]: ...
     def node(self, node_path: str) -> Optional[OpNode]: ...
-    def outputConnections(self) -> Sequence[OpNodeConnection]: ...
+    def outputConnections(self) -> Tuple[OpNodeConnection, ...]: ...
     def setParmExpressions(self, parm_dict: Dict[str, Any], language: Optional[EnumValue] = None, replace_expressions: bool = True) -> None: ...
     def setParms(self, parm_dict: Dict[str, Any]) -> None: ...
     def type(self) -> OpNodeType: ...
@@ -12912,7 +12912,7 @@ class ObjNode(OpNode):
 
 
         """
-    def material(self, operation: str, parameter: Optional[Sequence[str]] = ...) -> None:
+    def material(self, operation: Literal['override','select','remove','rmdefault','sync','revert','addlist'], parameter: Optional[Sequence[str]] = ...) -> None:
         '''
 
         material(self, operation, parameter)
@@ -13089,7 +13089,7 @@ class Prim:
 
 
         """
-    def floatListAttribValue(self, name_or_attrib: Union[Attrib, str]) -> Sequence[float]:
+    def floatListAttribValue(self, name_or_attrib: Union[str, Attrib]) -> Tuple[float,...]:
         """
 
         floatListAttribValue(self, name_or_attrib) -> tuple of float
@@ -13117,7 +13117,7 @@ class Prim:
 
 
         """
-    def intListAttribValue(self, name_or_attrib: Union[Attrib, str]) -> Sequence[int]:
+    def intListAttribValue(self, name_or_attrib: Union[Attrib, str]) -> Tuple[int,...]:
         """
 
         intListAttribValue(self, name_or_attrib) -> tuple of int
@@ -13140,7 +13140,7 @@ class Prim:
 
 
         """
-    def stringListAttribValue(self, name_or_attrib: Union[Attrib, str]) -> Sequence[str]:
+    def stringListAttribValue(self, name_or_attrib: Union[Attrib, str]) -> Tuple[str,...]:
         """
 
         stringListAttribValue(self, name_or_attrib) -> tuple of str
@@ -13292,7 +13292,7 @@ class Prim:
 
 
         """
-    def attribValue(self, attrib: Union[Attrib, str]) -> Union[int, float, str, Sequence[int], Sequence[float], Dict[str, Any]]:
+    def attribValue(self, attrib: Union[Attrib, str]) -> Union[int, float, str, Tuple[int,...], Tuple[float,...], Dict[str, Any]]:
         """
 
         attribValue(self, name_or_attrib) -> int, float, str, tuple or dict
@@ -13327,7 +13327,7 @@ class Prim:
 
 
         """
-    def attribValueAtInterior(self, attrib: Union[Attrib, str], u: float, v: float, w: float = ...) -> Union[int, float, str, Sequence[int], Sequence[float]]:
+    def attribValueAtInterior(self, attrib: Union[Attrib, str], u: float, v: float, w: float = ...) -> Union[int, float, str, Tuple[int,...], Tuple[float,...]]:
         """
 
         attribValueAtInterior(self, attrib_or_name, u, v, w=0.0) -> int, float,
@@ -13394,9 +13394,9 @@ class Prim:
 
         """
     def primuConvert(self, u: float, mode: int, tol: Optional[float] = ...) -> float: ...
-    def voxelRangeAsBool(self, range: BoundingBox) -> Sequence[bool]: ...
-    def voxelRangeAsInt(self, range: BoundingBox) -> Sequence[int]: ...
-    def voxelRangeAsFloat(self, range: BoundingBox) -> Sequence[float]: ...
+    def voxelRangeAsBool(self, range: BoundingBox) -> Tuple[bool, ...]: ...
+    def voxelRangeAsInt(self, range: BoundingBox) -> Tuple[int, ...]: ...
+    def voxelRangeAsFloat(self, range: BoundingBox) -> Tuple[float, ...]: ...
     def voxelRangeAsVector3(self, range: BoundingBox) -> Sequence[Vector3]: ...
 
 class Face(Prim):
@@ -13477,7 +13477,7 @@ class Face(Prim):
 
 
         """
-    def attribValueAt(self, attrib_or_name: Union[Attrib, str], u: float, du: float = ...) -> Union[int, float, str, Sequence[int], Sequence[float]]:
+    def attribValueAt(self, attrib_or_name: Union[Attrib, str], u: float, du: float = ...) -> Union[int, float, str, Tuple[int,...], Tuple[float,...]]:
         """
 
         attribValueAt(self, attrib_or_name, u, du=0) -> int, float, str or tuple
@@ -15839,7 +15839,7 @@ class ParmTemplateGroup:
 
 
         '''
-    def findIndices(self, name_or_parm_template: Union[ParmTemplate, str]) -> Sequence[int]:
+    def findIndices(self, name_or_parm_template: Union[ParmTemplate, str]) -> Tuple[int,...]:
         """
 
         findIndices(self, name_or_parm_template) -> tuple of int
@@ -15887,7 +15887,7 @@ class ParmTemplateGroup:
 
 
         """
-    def findIndicesForFolder(self, name_or_parm_template: Union[ParmTemplate, str]) -> Sequence[int]:
+    def findIndicesForFolder(self, name_or_parm_template: Union[ParmTemplate, str]) -> Tuple[int,...]:
         """
 
         findIndicesForFolder(self, label_or_labels) -> tuple of int
@@ -15935,7 +15935,7 @@ class ParmTemplateGroup:
           >     return parm_template
 
         '''
-    def containingFolderIndices(self, name_or_parm_template_or_indices: Union[str, ParmTemplate, Sequence[int]]) -> Sequence[int]:
+    def containingFolderIndices(self, name_or_parm_template_or_indices: Union[str, ParmTemplate, Sequence[int]]) -> Tuple[int,...]:
         """
 
         containingFolderIndices(self, name_or_parm_template_or_indices) -> tuple
@@ -18607,7 +18607,7 @@ class AgentLayer:
 
 
         """
-    def bindings(self, transform: Optional[int] = ...) -> Sequence[AgentShapeBinding]:
+    def bindings(self, transform: Optional[int] = ...) -> Tuple[AgentShapeBinding,...]:
         """
 
         bindings(self, transform = None) -> tuple of hou.AgentShapeBinding
@@ -21057,7 +21057,7 @@ class Attrib:
 
 
         """
-    def options(self) -> Dict[str, Union[bool, int, float, str, Vector2, Vector3, Vector4, Quaternion, Matrix3, Matrix4, Sequence[int], Sequence[float]]]:
+    def options(self) -> Dict[str, Union[bool, int, float, str, Vector2, Vector3, Vector4, Quaternion, Matrix3, Matrix4, Tuple[int,...], Tuple[float,...]]]:
         """
 
         option(self, name) -> bool, int, float, str, hou.Vector2, hou.Vector3,
@@ -21072,7 +21072,7 @@ class Attrib:
 
 
         """
-    def option(self, option_name: str) -> Union[bool, int, float, str, Vector2, Vector3, Vector4, Quaternion, Matrix3, Matrix4, Sequence[int], Sequence[float]]: ...
+    def option(self, option_name: str) -> Union[bool, int, float, str, Vector2, Vector3, Vector4, Quaternion, Matrix3, Matrix4, Tuple[int,...], Tuple[float,...]]: ...
 
 class AttribDataId:
     """
@@ -22385,7 +22385,7 @@ class ChannelGraph:
     def __eq__(self, other: object) -> bool: ...
     def __ne__(self, other: object) -> bool: ...
     def __hash__(self) -> int: ...
-    def selectedKeyframes(self) -> dict[Parm, Sequence[BaseKeyframe]]:
+    def selectedKeyframes(self) -> dict[Parm, Tuple[BaseKeyframe,...]]:
         """
 
         selectedKeyframes(self) -> dictionary of (, tuple of hou.BaseKeyframe)
@@ -22411,7 +22411,7 @@ class ChannelGraph:
 
 
         """
-    def setSelection(self, s: Tuple[ChannelGraphSelection, ...]) -> None:
+    def setSelection(self, s: Sequence[ChannelGraphSelection]) -> None:
         """
 
         setSelection(self, chan_graph_selections)
@@ -22569,7 +22569,7 @@ class ChannelList:
 
 
         """
-    def addParms(self, parms: Tuple[Parm, ...], selected: bool = True, pinned: bool = False, valueselected: bool = False) -> None: ...
+    def addParms(self, parms: Sequence[Parm], selected: bool = True, pinned: bool = False, valueselected: bool = False) -> None: ...
     def addPaths(self, paths: Sequence[str], selected: bool = True, pinned: bool = False, valueselected: bool = False) -> None:
         """
 
@@ -25716,7 +25716,7 @@ class Cop2Node(OpNode):
 
 
         """
-    def allPixels(self, plane: str = ..., component: Optional[str] = ..., interleaved: bool = ..., time: float = ...) -> Sequence[float]:
+    def allPixels(self, plane: str = ..., component: Optional[str] = ..., interleaved: bool = ..., time: float = ...) -> Tuple[float,...]:
         '''
 
         allPixels(self, plane=\\"C\\", component=None, interleaved=True, time=-1.0)
@@ -25859,7 +25859,7 @@ class Cop2Node(OpNode):
 
 
         """
-    def imageBounds(self, plane: str = ...) -> Sequence[int, int, int]:
+    def imageBounds(self, plane: str = ...) -> Tuple[int, int, int]:
         '''
 
         imageBounds(self, plane=\\"C\\") -> tuple of int
@@ -26167,7 +26167,7 @@ class crowds:
 
         '''
     @staticmethod
-    def findAgentDefinitions(geometry: Geometry, group: str = ..., group_type: EnumValue = ...) -> Sequence[AgentDefinition]:
+    def findAgentDefinitions(geometry: Geometry, group: str = ..., group_type: EnumValue = ...) -> Tuple[AgentDefinition,...]:
         '''
 
         findAgentDefinitions(geometry, group = \\"\\",
@@ -32054,7 +32054,7 @@ class Geometry:
 
 
         """
-    def floatListAttribValue(self, name_or_attrib: Union[Attrib, str]) -> Sequence[float]:
+    def floatListAttribValue(self, name_or_attrib: Union[str, Attrib]) -> Tuple[float,...]:
         """
 
         floatListAttribValue(self, name_or_attrib) -> tuple of float
@@ -32084,7 +32084,7 @@ class Geometry:
 
 
         """
-    def intListAttribValue(self, name_or_attrib: Union[Attrib, str]) -> Sequence[int]:
+    def intListAttribValue(self, name_or_attrib: Union[Attrib, str]) -> Tuple[int,...]:
         """
 
         intListAttribValue(self, name_or_attrib) -> tuple of int
@@ -32108,7 +32108,7 @@ class Geometry:
 
 
         """
-    def stringListAttribValue(self, name_or_attrib: Union[Attrib, str]) -> Sequence[str]:
+    def stringListAttribValue(self, name_or_attrib: Union[Attrib, str]) -> Tuple[str,...]:
         """
 
         stringListAttribValue(self, name_or_attrib) -> tuple of str
@@ -32973,7 +32973,7 @@ class Geometry:
 
 
         """
-    def createPoints(self, point_positions: Sequence[Sequence[float]]) -> Sequence[Point]:
+    def createPoints(self, point_positions: Sequence[Sequence[float]]) -> Tuple[Point,...]:
         """
 
         createPoints(self, point_positions) -> tuple of hou.Point
@@ -33031,7 +33031,7 @@ class Geometry:
 
 
         """
-    def createPolygons(self, point_positions: Sequence[Union[Point, Sequence[int]]], is_closed: bool = ...) -> Sequence[Polygon]:
+    def createPolygons(self, point_positions: Sequence[Union[Point, Sequence[int]]], is_closed: bool = ...) -> Tuple[Polygon,...]:
         """
 
         createPolygons(self, points, is_closed=True) -> tuple of hou.Polygon
@@ -33815,7 +33815,7 @@ class Geometry:
 
 
         """
-    def copyAttribs(self, attribs: Tuple[Attrib, ...]) -> None: ...
+    def copyAttribs(self, attribs: Sequence[Attrib]) -> None: ...
     def copy(self, geometry: Geometry, clone_data_ids: bool = False, prims: Optional[Selection] = None) -> None:
         """
 
@@ -33912,7 +33912,7 @@ class Geometry:
 
 
         """
-    def attribValue(self, name_or_attrib: Union[str, Attrib]) -> Union[int, float, str, Sequence[float], Sequence[int], Dict[str, Any]]:
+    def attribValue(self, name_or_attrib: Union[str, Attrib]) -> Union[int, float, str, Tuple[int,...], Tuple[float,...], Dict[str, Any]]:
         """
 
         attribValue(self, name_or_attrib) -> int, float, str, tuple or dict
@@ -34294,7 +34294,7 @@ class Geometry:
 
 
         '''
-    def pointGroups(self, scope: EnumValue = ...) -> Sequence[PointGroup]:
+    def pointGroups(self, scope: EnumValue = ...) -> Tuple[PointGroup,...]:
         """
 
         pointGroups(self, scope=hou.groupScope.Public) -> tuple of
@@ -34365,7 +34365,7 @@ class Geometry:
 
 
         """
-    def primGroups(self, scope: EnumValue = ...) -> Sequence[PrimGroup]:
+    def primGroups(self, scope: EnumValue = ...) -> Tuple[PrimGroup,...]:
         """
 
         primGroups(self, scope=hou.groupScope.Public) -> tuple of hou.PrimGroup
@@ -34430,7 +34430,7 @@ class Geometry:
 
 
         """
-    def edgeGroups(self, scope: EnumValue = ...) -> Sequence[EdgeGroup]:
+    def edgeGroups(self, scope: EnumValue = ...) -> Tuple[EdgeGroup,...]:
         """
 
         edgeGroups(self, scope=hou.groupScope.Public) -> tuple of hou.EdgeGroup
@@ -34479,7 +34479,7 @@ class Geometry:
 
 
         """
-    def vertexGroups(self, scope: EnumValue = ...) -> Sequence[VertexGroup]:
+    def vertexGroups(self, scope: EnumValue = ...) -> Tuple[VertexGroup,...]:
         """
 
         vertexGroups(self, scope=hou.groupScope.Public) -> tuple of
@@ -34696,7 +34696,7 @@ class Geometry:
 
 
         """
-    def primLoop(self, prims: Sequence[Prim], loop_type: EnumValue) -> Sequence[Prim]:
+    def primLoop(self, prims: Sequence[Prim], loop_type: EnumValue) -> Tuple[Prim,...]:
         """
 
         primLoop(self, prims, loop_type) -> tuple of hou.Prim
@@ -34725,7 +34725,7 @@ class Geometry:
 
 
         """
-    def pointLoop(self, points: Sequence[Point], loop_type: EnumValue) -> Sequence[Point]:
+    def pointLoop(self, points: Sequence[Point], loop_type: EnumValue) -> Tuple[Point,...]:
         """
 
         pointLoop(self, points, full_loop) -> tuple of hou.Point
@@ -34753,7 +34753,7 @@ class Geometry:
 
 
         """
-    def edgeLoop(self, edges: Sequence[Edge], loop_type: EnumValue, full_loop_per_edge: bool, force_ring: bool, allow_ring: bool) -> Sequence[Edge]:
+    def edgeLoop(self, edges: Sequence[Edge], loop_type: EnumValue, full_loop_per_edge: bool, force_ring: bool, allow_ring: bool) -> Tuple[Edge,...]:
         """
 
         edgeLoop(self, edges, loop_type, full_loop_per_edge, force_ring,
@@ -35002,7 +35002,7 @@ class Geometry:
 
 
         """
-    def generateAttribMenu(self, attrib_type: Optional[EnumValue] = ..., data_type: Optional[EnumValue] = ..., min_size: int = ..., max_size: int = ..., array_type: bool = ..., scalar_type: bool = ..., case_sensitive: bool = ..., pattern: str = ..., decode_tokens: bool = ...) -> Sequence[str]:
+    def generateAttribMenu(self, attrib_type: Optional[EnumValue] = ..., data_type: Optional[EnumValue] = ..., min_size: int = ..., max_size: int = ..., array_type: bool = ..., scalar_type: bool = ..., case_sensitive: bool = ..., pattern: str = ..., decode_tokens: bool = ...) -> Tuple[str,...]:
         '''
 
         generateAttribMenu(self, attrib_type=None, data_type=None, min_size=1,
@@ -35110,10 +35110,10 @@ class Geometry:
 
 
         """
-    def pointAttribs(self, scope: EnumValue = ...) -> Sequence[Attrib]: ...
-    def primAttribs(self, scope: EnumValue = ...) -> Sequence[Attrib]: ...
-    def vertexAttribs(self, scope: EnumValue = ...) -> Sequence[Attrib]: ...
-    def globalAttribs(self, scope: EnumValue = ...) -> Sequence[Attrib]: ...
+    def pointAttribs(self, scope: EnumValue = ...) -> Tuple[Attrib, ...]: ...
+    def primAttribs(self, scope: EnumValue = ...) -> Tuple[Attrib, ...]: ...
+    def vertexAttribs(self, scope: EnumValue = ...) -> Tuple[Attrib, ...]: ...
+    def globalAttribs(self, scope: EnumValue = ...) -> Tuple[Attrib, ...]: ...
 
 class GeometryDelta:
     """
@@ -38877,7 +38877,7 @@ class GeometryViewportSettings:
 
 
         """
-    def spriteTextureLimit(self) -> Sequence[int]:
+    def spriteTextureLimit(self) -> Tuple[int,...]:
         """
 
         spriteTextureLimit(self) -> tuple of int
@@ -45505,7 +45505,7 @@ class hipFile:
 
         '''
     @staticmethod
-    def collisionNodesIfMerged(file_name: str, node_pattern: str = ...) -> Sequence[OpNode]:
+    def collisionNodesIfMerged(file_name: str, node_pattern: str = ...) -> Tuple[OpNode,...]:
         '''
 
         collisionNodesIfMerged(file_name, node_pattern=\\"*\\") -> tuple of
@@ -45618,7 +45618,7 @@ class hipFile:
 
         """
     @staticmethod
-    def importFBX(file_name: str, suppress_save_prompt: bool = ..., merge_into_scene: bool = ..., import_cameras: bool = ..., import_joints_and_skin: bool = ..., import_geometry: bool = ..., import_lights: bool = ..., import_animation: bool = ..., import_materials: bool = ..., resample_animation: bool = ..., resample_interval: float = ..., override_framerate: bool = ..., framerate: int = ..., hide_joints_attached_to_skin: bool = ..., convert_joints_to_zyx_rotation_order: bool = ..., material_mode: EnumValue = ..., compatibility_mode: EnumValue = ..., single_precision_vertex_caches: bool = ..., triangulate_nurbs: bool = ..., triangulate_patches: bool = ..., import_global_ambient_light: bool = ..., import_blend_deformers_as_blend_sops: bool = ..., segment_scale_already_baked_in: bool = ..., convert_file_paths_to_relative: bool = ..., unlock_geometry: bool = ..., unlock_deformations: bool = ..., import_nulls_as_subnets: bool = ..., import_into_object_subnet: bool = ..., convert_into_y_up_coordinate_system: bool = ..., create_sibling_bones: bool = ..., override_scene_frame_range: bool = ..., convert_units: bool = ...) -> Sequence[ObjNode]:
+    def importFBX(file_name: str, suppress_save_prompt: bool = ..., merge_into_scene: bool = ..., import_cameras: bool = ..., import_joints_and_skin: bool = ..., import_geometry: bool = ..., import_lights: bool = ..., import_animation: bool = ..., import_materials: bool = ..., resample_animation: bool = ..., resample_interval: float = ..., override_framerate: bool = ..., framerate: int = ..., hide_joints_attached_to_skin: bool = ..., convert_joints_to_zyx_rotation_order: bool = ..., material_mode: EnumValue = ..., compatibility_mode: EnumValue = ..., single_precision_vertex_caches: bool = ..., triangulate_nurbs: bool = ..., triangulate_patches: bool = ..., import_global_ambient_light: bool = ..., import_blend_deformers_as_blend_sops: bool = ..., segment_scale_already_baked_in: bool = ..., convert_file_paths_to_relative: bool = ..., unlock_geometry: bool = ..., unlock_deformations: bool = ..., import_nulls_as_subnets: bool = ..., import_into_object_subnet: bool = ..., convert_into_y_up_coordinate_system: bool = ..., create_sibling_bones: bool = ..., override_scene_frame_range: bool = ..., convert_units: bool = ...) -> Tuple[ObjNode,...]:
         """
 
         importFBX(file_name, suppress_save_prompt=False, merge_into_scene=True,
@@ -45953,7 +45953,7 @@ class hmath:
 
         """
     @staticmethod
-    def buildTransform(values_dict: dict[str, Union[Vector3, Sequence[float]]], transform_order: str = ..., rotate_order: str = ...) -> Matrix4:
+    def buildTransform(values_dict: dict[str, Union[Vector3, Sequence[float]]], transform_order: Literal['srt','str','rst','rts','tsr','trs'] = ..., rotate_order: Literal['xyz','xzy','yxz','yzx','zxy','zyx'] = ...) -> Matrix4:
         '''
 
         buildTransform(values_dict, transform_order=\\"srt\\", rotate_order=\\"xyz\\")
@@ -46352,7 +46352,7 @@ class hotkeys:
     def __init__(self, *args, **kwargs) -> None: ...
     __swig_destroy__: Incomplete
     @staticmethod
-    def assignments(hotkey_symbol: str) -> Sequence[str]: ...
+    def assignments(hotkey_symbol: str) -> Tuple[str,...]: ...
     @staticmethod
     def hotkeyDescription(hotkey_symbol: str) -> str:
         '''
@@ -46422,7 +46422,7 @@ class hotkeys:
 
         """
     @staticmethod
-    def findConflicts(context: str, hotkey_symbol: str, key: Optional[str] = ...) -> Sequence[str]:
+    def findConflicts(context: str, hotkey_symbol: str, key: Optional[str] = ...) -> Tuple[str,...]:
         '''
 
         findConflicts(context, symbol, key) -> tuple of str
@@ -46869,7 +46869,7 @@ class hotkeys:
 
         '''
     @staticmethod
-    def availableKeycodes(context: str, hotkey_symbol: str, layout_keys: Optional[Sequence[str]] = ..., modifiers: int = ...) -> Sequence[int]:
+    def availableKeycodes(context: str, hotkey_symbol: str, layout_keys: Optional[Sequence[str]] = ..., modifiers: int = ...) -> Tuple[int,...]:
         """
 
         availableKeycodes(context, hotkey_symbol, layout_keys, modifiers=0) ->
@@ -51095,7 +51095,7 @@ class LopNode(OpNode):
 
 
         """
-    def layersAboveLayerBreak(self, output_index: int = ..., use_last_cook_context_options: bool = ..., frame: Optional[float] = ..., context_options: Optional[Dict[str, Union[str, float]]] = ...) -> Sequence[str]:
+    def layersAboveLayerBreak(self, output_index: int = ..., use_last_cook_context_options: bool = ..., frame: Optional[float] = ..., context_options: Optional[Dict[str, Union[str, float]]] = ...) -> Tuple[str,...]:
         """
 
         layersAboveLayerBreak(self, output_index = 0,
@@ -53708,7 +53708,7 @@ class Matrix3:
 
 
         """
-    def extractRotates(self, rotate_order: str = ...) -> Vector3:
+    def extractRotates(self, rotate_order: Literal['xyz','xzy','yxz','yzx','zxy','zyx'] = ...) -> Vector3:
         '''
 
         extractRotates(self, rotate_order=\\"xyz\\") -> hou.Vector3
@@ -53740,7 +53740,7 @@ class Matrix3:
 
 
         '''
-    def removeScalesAndShears(self, transform_order: str = ...) -> Tuple[Vector3, Vector3]:
+    def removeScalesAndShears(self, transform_order: Literal['srt','str','rst','rts','tsr','trs'] = ...) -> Tuple[Vector3, Vector3]:
         '''
 
         removeScalesAndShears(self, transform_order=\\"srt\\") -> tuple of
@@ -54071,7 +54071,7 @@ class Matrix4:
 
 
         """
-    def explode(self, transform_order: str = ..., rotate_order: str = ..., pivot: Vector3 = ..., pivot_rotate: Vector3 = ...) -> dict[str, Vector3]:
+    def explode(self, transform_order: Literal['srt','str','rst','rts','tsr','trs'] = ..., rotate_order: Literal['xyz','xzy','yxz','yzx','zxy','zyx'] = ..., pivot: Vector3 = ..., pivot_rotate: Vector3 = ...) -> dict[str, Vector3]:
         """
 
         explode(self, transform_order='srt', rotate_order='xyz',
@@ -54130,7 +54130,7 @@ class Matrix4:
 
 
         """
-    def extractTranslates(self, transform_order: str = ..., pivot: Vector3 = ..., pivot_rotate: Vector3 = ...) -> Vector3:
+    def extractTranslates(self, transform_order: Literal['srt','str','rst','rts','tsr','trs'] = ..., pivot: Vector3 = ..., pivot_rotate: Vector3 = ...) -> Vector3:
         """
 
         extractTranslates(self, transform_order='srt',
@@ -54147,7 +54147,7 @@ class Matrix4:
           > <hou.Vector3 [0.707107, 0.707107, 0]>
 
         """
-    def extractRotates(self, transform_order: str = ..., rotate_order: str = ..., pivot: Vector3 = ..., pivot_rotate: Vector3 = ...) -> Vector3:
+    def extractRotates(self, transform_order: Literal['srt','str','rst','rts','tsr','trs'] = ..., rotate_order: Literal['xyz','xzy','yxz','yzx','zxy','zyx'] = ..., pivot: Vector3 = ..., pivot_rotate: Vector3 = ...) -> Vector3:
         """
 
         extractRotates(self, transform_order='srt', rotate_order='xyz',
@@ -54159,7 +54159,7 @@ class Matrix4:
 
 
         """
-    def extractScales(self, transform_order: str = ..., pivot: Vector3 = ..., pivot_rotate: Vector3 = ...) -> Vector3:
+    def extractScales(self, transform_order: Literal['srt','str','rst','rts','tsr','trs'] = ..., pivot: Vector3 = ..., pivot_rotate: Vector3 = ...) -> Vector3:
         """
 
         extractScales(self, transform_order='srt', pivot=hou.Vector3(),
@@ -54171,7 +54171,7 @@ class Matrix4:
 
 
         """
-    def extractShears(self, transform_order: str = ..., pivot: Vector3 = ..., pivot_rotate: Vector3 = ...) -> Vector3:
+    def extractShears(self, transform_order: Literal['srt','str','rst','rts','tsr','trs'] = ..., pivot: Vector3 = ..., pivot_rotate: Vector3 = ...) -> Vector3:
         """
 
         extractShears(self, transform_order='srt', pivot=hou.Vector3(),
@@ -55159,7 +55159,7 @@ class NetworkEditor(PathBasedPaneTab):
 
 
         """
-    def setPreSelectedItems(self, items: Tuple[NetworkItem, ...]) -> None:
+    def setPreSelectedItems(self, items: Sequence[NetworkItem]) -> None:
         """
 
         setPreSelectedItems(self, items)
@@ -55426,7 +55426,7 @@ class NetworkEditor(PathBasedPaneTab):
 
 
         """
-    def setAdjustments(self, items: Tuple[NetworkItem, ...], adjustments: typing.Iterable[NetworkAnimValue], auto_remove: bool = False) -> None:
+    def setAdjustments(self, items: Sequence[NetworkItem], adjustments: typing.Iterable[NetworkAnimValue], auto_remove: bool = False) -> None:
         """
 
         setAdjustments(self, items, adjustments, auto_remove=False)
@@ -55448,7 +55448,7 @@ class NetworkEditor(PathBasedPaneTab):
 
 
         """
-    def setShapes(self, shapes: Tuple[NetworkShape, ...]) -> None:
+    def setShapes(self, shapes: Sequence[NetworkShape]) -> None:
         """
 
         setShapes(self, shapes)
@@ -55459,7 +55459,7 @@ class NetworkEditor(PathBasedPaneTab):
 
 
         """
-    def setOverlayShapes(self, shapes: Tuple[NetworkShape, ...]) -> None:
+    def setOverlayShapes(self, shapes: Sequence[NetworkShape]) -> None:
         """
 
         setOverlayShapes(self, shapes)
@@ -57969,7 +57969,7 @@ class Parm:
 
 
         """
-    def setKeyframes(self, keyframes: Tuple[BaseKeyframe, ...]) -> None:
+    def setKeyframes(self, keyframes: Sequence[BaseKeyframe]) -> None:
         """
 
         setKeyframes(self, keyframes)
@@ -59866,7 +59866,7 @@ class ParmTuple:
     def containingFolders(self) -> Tuple[str, ...]: ...
     def containingFolderIndices(self) -> Tuple[int, ...]: ...
     def containingFolderSetParmTuples(self) -> Tuple[ParmTuple, ...]: ...
-    def setKeyframe(self, keyframes: Tuple[BaseKeyframe, ...]) -> None:
+    def setKeyframe(self, keyframes: Sequence[BaseKeyframe]) -> None:
         """
 
         setKeyframe(self, keyframe_vector)
@@ -60092,7 +60092,7 @@ class ParmTuple:
     def isConstrained(self) -> bool: ...
     def isShowingExpression(self) -> bool: ...
     def showExpression(self, value: bool) -> None: ...
-    def eval(self) -> Union[Sequence[int], Sequence[float], Sequence[str], Ramp]:
+    def eval(self) -> Union[Tuple[int,...], Tuple[float,...], Tuple[str,...], Ramp]:
         """
 
         eval(self) -> tuple of int, float, str, or hou.Ramp
@@ -60105,7 +60105,7 @@ class ParmTuple:
 
 
         """
-    def evalAtFrame(self, frame: float) -> Union[Sequence[int], Sequence[float], Sequence[str], Ramp]:
+    def evalAtFrame(self, frame: float) -> Union[Tuple[int,...], Tuple[float,...], Tuple[str,...], Ramp]:
         """
 
         evalAtFrame(self, frame) -> tuple of int, float, str, or hou.Ramp
@@ -60118,7 +60118,7 @@ class ParmTuple:
 
 
         """
-    def evalAtTime(self, frame: float) -> Union[Sequence[int], Sequence[float], Sequence[str], Ramp]:
+    def evalAtTime(self, frame: float) -> Union[Tuple[int,...], Tuple[float,...], Tuple[str,...], Ramp]:
         """
 
         evalAtTime(self, time) -> tuple of int, float, str, or hou.Ramp
@@ -61885,7 +61885,7 @@ class playbar:
 
         """
     @staticmethod
-    def channelListFromParms(parms: Tuple[Parm, ...]) -> ChannelList:
+    def channelListFromParms(parms: Sequence[Parm]) -> ChannelList:
         """
 
         channelListFromParms(self,parms) -> hou.ChannelList
@@ -61896,7 +61896,7 @@ class playbar:
 
         """
     @staticmethod
-    def channelListFromParmTuples(parms: Tuple[ParmTuple, ...]) -> ChannelList:
+    def channelListFromParmTuples(parms: Sequence[ParmTuple]) -> ChannelList:
         """
 
         channelListFromParmTuples(self,parms) -> hou.ChannelList
@@ -62315,7 +62315,7 @@ class Point:
 
 
         """
-    def floatListAttribValue(self, name_or_attrib: Union[str, Attrib]) -> Sequence[float]:
+    def floatListAttribValue(self, name_or_attrib: Union[str, Attrib]) -> Tuple[float,...]:
         """
 
         floatListAttribValue(self, name_or_attrib) -> tuple of float
@@ -62342,7 +62342,7 @@ class Point:
 
 
         """
-    def intListAttribValue(self, name_or_attrib: Union[str, Attrib]) -> Sequence[int]:
+    def intListAttribValue(self, name_or_attrib: Union[str, Attrib]) -> Tuple[int,...]:
         """
 
         intListAttribValue(self, name_or_attrib) -> tuple of int
@@ -62365,7 +62365,7 @@ class Point:
 
 
         """
-    def stringListAttribValue(self, name_or_attrib: Union[str, Attrib]) -> Sequence[str]:
+    def stringListAttribValue(self, name_or_attrib: Union[str, Attrib]) -> Tuple[str,...]:
         """
 
         stringListAttribValue(self, name_or_attrib) -> tuple of str
@@ -62441,7 +62441,7 @@ class Point:
 
 
         """
-    def attribValue(self, attrib: Union[Attrib, str]) -> Union[int, float, str, Sequence[int], Sequence[float], Dict[str, Any]]:
+    def attribValue(self, attrib: Union[Attrib, str]) -> Union[int, float, str, Tuple[int,...], Tuple[float,...], Dict[str, Any]]:
         '''
 
         attribValue(self, name_or_attrib) -> int, float, str, tuple or dict
@@ -62745,7 +62745,7 @@ class PointGroup:
 
 
         """
-    def options(self) -> Dict[str, Union[bool, int, float, str, Vector2, Vector3, Vector4, Quaternion, Matrix3, Matrix4, Sequence[int], Sequence[float]]]:
+    def options(self) -> Dict[str, Union[bool, int, float, str, Vector2, Vector3, Vector4, Quaternion, Matrix3, Matrix4, Tuple[int,...], Tuple[float,...]]]:
         """
 
         option(self, name) -> bool, int, float, str, hou.Vector2, hou.Vector3,
@@ -62760,7 +62760,7 @@ class PointGroup:
 
 
         """
-    def option(self, option_name: str) -> Union[bool, int, float, str, Vector2, Vector3, Vector4, Quaternion, Matrix3, Matrix4, Sequence[int], Sequence[float]]: ...
+    def option(self, option_name: str) -> Union[bool, int, float, str, Vector2, Vector3, Vector4, Quaternion, Matrix3, Matrix4, Tuple[int,...], Tuple[float,...]]: ...
 
 class Polygon(Face):
     """
@@ -63022,7 +63022,7 @@ class PrimGroup:
 
 
         """
-    def options(self) -> Dict[str, Union[bool, int, float, str, Vector2, Vector3, Vector4, Quaternion, Matrix3, Matrix4, Sequence[int], Sequence[float]]]:
+    def options(self) -> Dict[str, Union[bool, int, float, str, Vector2, Vector3, Vector4, Quaternion, Matrix3, Matrix4, Tuple[int,...], Tuple[float,...]]]:
         """
 
         option(self, name) -> bool, int, float, str, hou.Vector2, hou.Vector3,
@@ -63037,7 +63037,7 @@ class PrimGroup:
 
 
         """
-    def option(self, option_name: str) -> Union[bool, int, float, str, Vector2, Vector3, Vector4, Quaternion, Matrix3, Matrix4, Sequence[int], Sequence[float]]: ...
+    def option(self, option_name: str) -> Union[bool, int, float, str, Vector2, Vector3, Vector4, Quaternion, Matrix3, Matrix4, Tuple[int,...], Tuple[float,...]]: ...
 
 class properties:
     """
@@ -63057,7 +63057,7 @@ class properties:
     def __init__(self, *args, **kwargs) -> None: ...
     __swig_destroy__: Incomplete
     @staticmethod
-    def classes(tags: Optional[Sequence[str]] = ...) -> Sequence[str]:
+    def classes(tags: Optional[Sequence[str]] = ...) -> Tuple[str,...]:
         """
 
         classes(tags=None) -> tuple of str
@@ -63708,7 +63708,7 @@ class Quaternion:
 
 
         """
-    def setToEulerRotates(self, angles_in_deg: float, rotate_order: str = ...) -> None:
+    def setToEulerRotates(self, angles_in_deg: float, rotate_order: Literal['xyz','xzy','yxz','yzx','zxy','zyx'] = ...) -> None:
         '''
 
         setToEulerRotates(self, angles_in_deg, rotate_order=\\"xyz\\")
@@ -63897,7 +63897,7 @@ class Quaternion:
 
 
         """
-    def extractEulerRotates(self, rotate_order: str = ...) -> Vector3:
+    def extractEulerRotates(self, rotate_order: Literal['xyz','xzy','yxz','yzx','zxy','zyx'] = ...) -> Vector3:
         '''
 
         extractEulerRotates(self, rotate_order=\\"xyz\\") -> hou.Vector3
@@ -65924,7 +65924,7 @@ class SceneViewer(PathBasedPaneTab):
 
 
         """
-    def selectObjects(self, prompt: str = ..., sel_index: int = ..., allow_drag: bool = ..., quick_select: bool = ..., use_existing_selection: bool = ..., allow_multisel: bool = ..., allowed_types: Sequence[str] = ..., icon: Optional[str] = ..., label: Optional[str] = ..., prior_selection_paths: Optional[Sequence[str]] = ..., prior_selection_ids: Optional[int] = ..., prior_selections: Sequence[str] = ..., toolbox_templategroup: Optional[str] = ..., toolbox1_templategroup: Optional[str] = ..., select_parm: str = ...) -> Sequence[Node]:
+    def selectObjects(self, prompt: str = ..., sel_index: int = ..., allow_drag: bool = ..., quick_select: bool = ..., use_existing_selection: bool = ..., allow_multisel: bool = ..., allowed_types: Sequence[str] = ..., icon: Optional[str] = ..., label: Optional[str] = ..., prior_selection_paths: Optional[Sequence[str]] = ..., prior_selection_ids: Optional[int] = ..., prior_selections: Sequence[str] = ..., toolbox_templategroup: Optional[str] = ..., toolbox1_templategroup: Optional[str] = ..., select_parm: str = ...) -> Tuple[Node,...]:
         '''
 
         selectObjects(self, prompt=\'Select objects\', sel_index=0,
@@ -65951,7 +65951,7 @@ class SceneViewer(PathBasedPaneTab):
 
 
         '''
-    def selectDynamics(self, prompt: str = ..., sel_index: int = ..., allow_objects: bool = ..., allow_modifiers: bool = ..., quick_select: bool = ..., use_existing_selection: bool = ..., allow_multisel: bool = ..., icon: Optional[str] = ..., label: Optional[str] = ..., prior_selection_paths: Optional[Sequence[str]] = ..., prior_selection_ids: Optional[int] = ..., prior_selections: Sequence[str] = ..., toolbox_templategroup: Optional[str] = ..., toolbox1_templategroup: Optional[str] = ..., select_parm: str = ...) -> Sequence[DopData]:
+    def selectDynamics(self, prompt: str = ..., sel_index: int = ..., allow_objects: bool = ..., allow_modifiers: bool = ..., quick_select: bool = ..., use_existing_selection: bool = ..., allow_multisel: bool = ..., icon: Optional[str] = ..., label: Optional[str] = ..., prior_selection_paths: Optional[Sequence[str]] = ..., prior_selection_ids: Optional[int] = ..., prior_selections: Sequence[str] = ..., toolbox_templategroup: Optional[str] = ..., toolbox1_templategroup: Optional[str] = ..., select_parm: str = ...) -> Tuple[DopData,...]:
         '''
 
         selectDynamics(self, prompt=\'Select dynamics objects\', sel_index=0,
@@ -65989,7 +65989,7 @@ class SceneViewer(PathBasedPaneTab):
 
 
         '''
-    def selectSceneGraph(self, prompt: str = ..., preselection: Sequence[str] = ..., prim_mask: EnumValue = ..., quick_select: bool = ..., use_existing_selection: bool = ..., confirm_existing: bool = ..., allow_multisel: bool = ..., allow_drag: bool = ..., propagate_selection: bool = ..., path_prefix_mask: str = ..., prim_kind: str = ..., validate_selection_for_node: Incomplete = ..., select_parm: str = ..., allow_kind_mismatch: EnumValue = ..., allow_instance_proxies: EnumValue = ..., fix_preselection_paths=...) -> Sequence[str]:
+    def selectSceneGraph(self, prompt: str = ..., preselection: Sequence[str] = ..., prim_mask: EnumValue = ..., quick_select: bool = ..., use_existing_selection: bool = ..., confirm_existing: bool = ..., allow_multisel: bool = ..., allow_drag: bool = ..., propagate_selection: bool = ..., path_prefix_mask: str = ..., prim_kind: str = ..., validate_selection_for_node: Incomplete = ..., select_parm: str = ..., allow_kind_mismatch: EnumValue = ..., allow_instance_proxies: EnumValue = ..., fix_preselection_paths=...) -> Tuple[str,...]:
         """
 
         selectSceneGraph(self, prompt='Select primitives', preselection=[],
@@ -66003,7 +66003,7 @@ class SceneViewer(PathBasedPaneTab):
 
 
         """
-    def selectSceneGraphInstances(self, prompt: str = ..., preselection: Sequence[str] = ..., quick_select: bool = ..., use_existing_selection: bool = ..., confirm_existing: bool = ..., allow_multisel: bool = ..., allow_drag: bool = ..., path_prefix_mask: str = ..., instance_level: int = ..., instance_indices_only: bool = ..., validate_selection_for_node: Incomplete = ..., select_parm: str = ...) -> Sequence[str]:
+    def selectSceneGraphInstances(self, prompt: str = ..., preselection: Sequence[str] = ..., quick_select: bool = ..., use_existing_selection: bool = ..., confirm_existing: bool = ..., allow_multisel: bool = ..., allow_drag: bool = ..., path_prefix_mask: str = ..., instance_level: int = ..., instance_indices_only: bool = ..., validate_selection_for_node: Incomplete = ..., select_parm: str = ...) -> Tuple[str,...]:
         '''
 
         selectSceneGraphInstances(self, prompt=\'Select point instances\',
@@ -66093,7 +66093,7 @@ class SceneViewer(PathBasedPaneTab):
 
 
         """
-    def setCurrentGeometrySelection(self, geometry_type: EnumValue, nodes: Sequence[Node], selections: Tuple[Selection, ...]) -> None:
+    def setCurrentGeometrySelection(self, geometry_type: EnumValue, nodes: Sequence[Node], selections: Sequence[Selection]) -> None:
         """
 
         setCurrentGeometrySelection(self, geometry_type, nodes, selections)
@@ -68923,7 +68923,7 @@ class ShelfSet(ShelfElement):
 
 
         """
-    def setShelves(self, shelves: Tuple[Shelf, ...]) -> None:
+    def setShelves(self, shelves: Sequence[Shelf]) -> None:
         """
 
         setShelves(self, shelves)
@@ -70065,7 +70065,7 @@ class SopNodeType(OpNodeType):
     thisown: Incomplete
     def __init__(self, *args, **kwargs) -> None: ...
     __swig_destroy__: Incomplete
-    def selectors(self, selector_indices: Sequence[int] = ...) -> Sequence[Selector]:
+    def selectors(self, selector_indices: Sequence[int] = ...) -> Tuple[Selector,...]:
         """
 
         selectors(self, selector_indices=()) -> tuple of hou.Selector
@@ -71197,7 +71197,7 @@ class Surface(Prim):
 
 
         """
-    def attribValueAt(self, attrib_or_name: Union[Attrib, str], u: float, v: float, du: float = ..., dv: float = ...) -> Union[int, float, str, Sequence[int], Sequence[float]]:
+    def attribValueAt(self, attrib_or_name: Union[Attrib, str], u: float, v: float, du: float = ..., dv: float = ...) -> Union[int, float, str, Tuple[int,...], Tuple[float,...]]:
         """
 
         attribValueAt(self, attrib_or_name, u, v, du=0, dv=0) -> int, float, str
@@ -71520,7 +71520,7 @@ class Take:
 
 
         """
-    def loadChildTakeFromFile(self, filename: str) -> Sequence[Take]:
+    def loadChildTakeFromFile(self, filename: str) -> Tuple[Take,...]:
         """
 
         loadChildTakeFromFile(self, filename) -> tuple of hou.Take
@@ -72576,7 +72576,7 @@ class Tool(ShelfElement):
 
 
         """
-    def setToolMenuCategories(self, pane_type: EnumValue, categories: Tuple[NodeTypeCategory, ...]) -> None:
+    def setToolMenuCategories(self, pane_type: EnumValue, categories: Sequence[NodeTypeCategory]) -> None:
         """
 
         setToolMenuCategories(self, pane_type, categories)
@@ -73855,7 +73855,7 @@ class ui:
 
         """
     @staticmethod
-    def readMultiInput(text: str, input_labels: Sequence[str], password_input_indices: Sequence[int] = ..., buttons: Sequence[str] = ..., severity_type: EnumValue = ..., default_choice: int = ..., close_choice: int = ..., help: Optional[str] = ..., title: Optional[str] = ..., initial_contents: Sequence[str] = ...) -> Tuple[int, Sequence[str]]:
+    def readMultiInput(text: str, input_labels: Sequence[str], password_input_indices: Sequence[int] = ..., buttons: Sequence[str] = ..., severity_type: EnumValue = ..., default_choice: int = ..., close_choice: int = ..., help: Optional[str] = ..., title: Optional[str] = ..., initial_contents: Sequence[str] = ...) -> Tuple[int, Tuple[str,...]]:
         '''
 
         readMultiInput(message, input_labels, password_input_indices=(),
@@ -73941,7 +73941,7 @@ class ui:
 
         '''
     @staticmethod
-    def selectFromList(choices: Sequence[str], default_choices: Sequence[int] = ..., exclusive: bool = ..., message: Optional[str] = ..., title: Optional[str] = ..., column_header: str = ..., num_visible_rows: int = ..., clear_on_cancel: bool = ..., width: int = ..., height: int = ..., sort: bool = ..., condense_paths: bool = ...) -> Sequence[int]:
+    def selectFromList(choices: Sequence[str], default_choices: Sequence[int] = ..., exclusive: bool = ..., message: Optional[str] = ..., title: Optional[str] = ..., column_header: str = ..., num_visible_rows: int = ..., clear_on_cancel: bool = ..., width: int = ..., height: int = ..., sort: bool = ..., condense_paths: bool = ...) -> Tuple[int,...]:
         '''
 
         selectFromList(choices, default_choices=(), exclusive=False,
@@ -74010,7 +74010,7 @@ class ui:
 
         '''
     @staticmethod
-    def selectFromTree(choices: Sequence[str], picked: Sequence[int] = ..., exclusive: bool = ..., message: Optional[str] = ..., title: Optional[str] = ..., clear_on_cancel: bool = ..., width: int = ..., height: int = ...) -> Sequence[str]:
+    def selectFromTree(choices: Sequence[str], picked: Sequence[int] = ..., exclusive: bool = ..., message: Optional[str] = ..., title: Optional[str] = ..., clear_on_cancel: bool = ..., width: int = ..., height: int = ...) -> Tuple[str,...]:
         """
 
         selectFromTree(choices, picked=(), exclusive=False, message=None,
@@ -74088,7 +74088,7 @@ class ui:
 
         """
     @staticmethod
-    def selectParm(category: NodeTypeCategory = ..., bound_parms_only: bool = ..., relative_to_node: Optional[OpNode] = ..., message: Optional[str] = ..., title: Optional[str] = ..., initial_parms: Sequence[Parm] = ..., multiple_select: bool = ..., width: int = ..., height: int = ...) -> Sequence[str]:
+    def selectParm(category: NodeTypeCategory = ..., bound_parms_only: bool = ..., relative_to_node: Optional[OpNode] = ..., message: Optional[str] = ..., title: Optional[str] = ..., initial_parms: Sequence[Parm] = ..., multiple_select: bool = ..., width: int = ..., height: int = ...) -> Tuple[str,...]:
         """
 
         selectParm(category=None, bound_parms_only=False, relative_to_node=None,
@@ -74126,7 +74126,7 @@ class ui:
 
         """
     @staticmethod
-    def selectParmTuple(category: NodeTypeCategory = ..., bound_parms_only: bool = ..., relative_to_node: Optional[OpNode] = ..., message: Optional[str] = ..., title: Optional[str] = ..., initial_parm_tuples: Sequence[ParmTuple] = ..., multiple_select: bool = ..., width: int = ..., height: int = ...) -> Sequence[str]:
+    def selectParmTuple(category: NodeTypeCategory = ..., bound_parms_only: bool = ..., relative_to_node: Optional[OpNode] = ..., message: Optional[str] = ..., title: Optional[str] = ..., initial_parm_tuples: Sequence[ParmTuple] = ..., multiple_select: bool = ..., width: int = ..., height: int = ...) -> Tuple[str,...]:
         """
 
         selectParmTuple(category=None, bound_parms_only=False,
@@ -74233,7 +74233,7 @@ class ui:
 
         """
     @staticmethod
-    def displayFileDependencyDialog(rop_node: Optional[RopNode] = ..., uploaded_files: Sequence[str] = ..., forced_unselected_patterns: Sequence[str] = ..., project_dir_variable: str = ..., is_standalone: bool = ...) -> Tuple[bool, Sequence[Tuple[Parm, str]]]:
+    def displayFileDependencyDialog(rop_node: Optional[RopNode] = ..., uploaded_files: Sequence[str] = ..., forced_unselected_patterns: Sequence[str] = ..., project_dir_variable: str = ..., is_standalone: bool = ...) -> Tuple[bool, Tuple[Tuple[Parm, str],...]]:
         """
 
         displayFileDependencyDialog(rop_node=None, uploaded_files=(),
@@ -75998,7 +75998,7 @@ class ui:
 
         """
     @staticmethod
-    def loadPackageArchive(file_path: str, extract_path: Optional[str] = ...) -> Sequence[str]:
+    def loadPackageArchive(file_path: str, extract_path: Optional[str] = ...) -> Tuple[str,...]:
         """
 
         loadPackageArchive(file_path, extract_path=None) -> list of string
@@ -78371,7 +78371,7 @@ class Vector3:
 
 
         """
-    def smoothRotation(self, reference: Vector3, rotate_order: str = ...) -> Vector3:
+    def smoothRotation(self, reference: Vector3, rotate_order: Literal['xyz','xzy','yxz','yzx','zxy','zyx'] = ...) -> Vector3:
         '''
 
         smoothRotation(self, reference, rotate_order=\\"xyz\\") -> hou.Vector3
@@ -78918,7 +78918,7 @@ class Vertex:
 
 
         """
-    def floatListAttribValue(self, name_or_attrib: Union[str, Attrib]) -> Sequence[float]:
+    def floatListAttribValue(self, name_or_attrib: Union[str, Attrib]) -> Tuple[float,...]:
         """
 
         floatListAttribValue(self, name_or_attrib) -> tuple of float
@@ -78945,7 +78945,7 @@ class Vertex:
 
 
         """
-    def intListAttribValue(self, name_or_attrib: Union[str, Attrib]) -> Sequence[int]:
+    def intListAttribValue(self, name_or_attrib: Union[str, Attrib]) -> Tuple[int,...]:
         """
 
         intListAttribValue(self, name_or_attrib) -> tuple of int
@@ -78968,7 +78968,7 @@ class Vertex:
 
 
         """
-    def stringListAttribValue(self, name_or_attrib: Union[str, Attrib]) -> Sequence[str]:
+    def stringListAttribValue(self, name_or_attrib: Union[str, Attrib]) -> Tuple[str,...]:
         """
 
         stringListAttribValue(self, name_or_attrib) -> tuple of str
@@ -79035,7 +79035,7 @@ class Vertex:
 
 
         """
-    def attribValue(self, attrib: Union[Attrib, str]) -> Union[int, float, str, Sequence[int], Sequence[float], Dict[str, Any]]:
+    def attribValue(self, attrib: Union[Attrib, str]) -> Union[int, float, str, Tuple[int,...], Tuple[float,...], Dict[str, Any]]:
         """
 
         attribValue(self, name_or_attrib) -> int, float, str, tuple or dict
@@ -79295,7 +79295,7 @@ class VertexGroup:
 
 
         """
-    def options(self) -> Dict[str, Union[bool, int, float, str, Vector2, Vector3, Vector4, Quaternion, Matrix3, Matrix4, Sequence[int], Sequence[float]]]:
+    def options(self) -> Dict[str, Union[bool, int, float, str, Vector2, Vector3, Vector4, Quaternion, Matrix3, Matrix4, Tuple[int,...], Tuple[float,...]]]:
         """
 
         option(self, name) -> bool, int, float, str, hou.Vector2, hou.Vector3,
@@ -79310,7 +79310,7 @@ class VertexGroup:
 
 
         """
-    def option(self, option_name: str) -> Union[bool, int, float, str, Vector2, Vector3, Vector4, Quaternion, Matrix3, Matrix4, Sequence[int], Sequence[float]]: ...
+    def option(self, option_name: str) -> Union[bool, int, float, str, Vector2, Vector3, Vector4, Quaternion, Matrix3, Matrix4, Tuple[int,...], Tuple[float,...]]: ...
 
 class VexContext:
     """
@@ -82738,7 +82738,7 @@ class viewportVisualizers:
     def __init__(self, *args, **kwargs) -> None: ...
     __swig_destroy__: Incomplete
     @staticmethod
-    def visualizers(category: EnumValue = ..., node: Optional[Node] = ...) -> Sequence[ViewportVisualizer]:
+    def visualizers(category: EnumValue = ..., node: Optional[Node] = ...) -> Tuple[ViewportVisualizer,...]:
         """
 
         visualizers(category=hou.viewportVisualizerCategory.Common, node=None)
@@ -84242,7 +84242,7 @@ def applicationName() -> str:
 
 
     """
-def applicationVersion(include_patch: bool = False) -> Tuple[int, ...]:
+def applicationVersion(include_patch: bool = ...) -> Tuple[int, int]:
     """
 
     hou.vdbVersionInfo
@@ -85883,7 +85883,7 @@ def lvar(name: str) -> Any:
 
 
     '''
-def contextOption(opt: str) -> Any:
+def contextOption(opt: str) -> Union[float, str]:
     """
 
     hou.contextOption
@@ -86436,7 +86436,7 @@ def updateProgressAndCheckForInterrupt(percentage: int = -1) -> bool:
 
 
     """
-def runVex(*args, **kwargs) -> dict[str, Any]:
+def runVex(vex_file: str, inputs: dict[str, Any], precision: Literal['32','64'] = ...) -> dict[str, Any]:
     '''
 
     hou.runVex
@@ -86575,7 +86575,7 @@ def runVex(*args, **kwargs) -> dict[str, Any]:
 
 
     '''
-def saveImageDataToFile(*args) -> None:
+def saveImageDataToFile(color_and_alpha_data: Union[Sequence[float], bytes], width: int, height: int, file_name: str) -> None:
     '''
 
     hou.saveImageDataToFile
@@ -86641,7 +86641,7 @@ def saveImageDataToFile(*args) -> None:
 
 
     '''
-def loadImageDataFromFile(*args, **kwargs) -> bytes: ...
+def loadImageDataFromFile(file_name: str, arg: EnumValue = ...) -> bytes: ...
 def imageResolution(image_file_name: str) -> Tuple[int, ...]:
     '''
 
@@ -86889,7 +86889,7 @@ def setChopExportConflictResolutionPattern(pattern: str) -> None:
 
 
     """
-def nodeType(*args) -> Optional[NodeType]:
+def nodeType(category_or_name: Union[NodeTypeCategory, str], internal_name: Optional[str] = ...) -> Optional[NodeType]:
     '''
 
     hou.nodeType
@@ -89588,7 +89588,7 @@ def almostEqual(x: float, y: float) -> bool:
 
 
     """
-def fileReferences(*args, **kwargs) -> Tuple[tuple[Parm, str], ...]:
+def fileReferences(project_dir_variable: str = ..., include_all_refs: bool = ...) -> Sequence[Tuple[Parm, str]]:
     '''
 
     hou.fileReferences
@@ -90092,7 +90092,7 @@ def convertClipData(data: bytes, from_binary: bool, from_blosc_compression: bool
 
 
     """
-def convertKeyframesToClipData(keyframe_map: dict[str, Tuple[Keyframe, ...]], binary: bool = True, use_blosc_compression: bool = True) -> bytes:
+def convertKeyframesToClipData(keyframe_map: dict[str, Sequence[Keyframe]], binary: bool = True, use_blosc_compression: bool = True) -> bytes:
     """
 
     hou.convertKeyframesToClipData
@@ -90253,7 +90253,7 @@ def contextOptionNames() -> Tuple[str, ...]:
 
 
     """
-def setContextOption(*args) -> None:
+def setContextOption(option: str, value: Optional[Union[str, float]]) -> None:
     """
 
     hou.setContextOption
@@ -90788,7 +90788,7 @@ def refreshPreferences() -> None:
 
 
     """
-def startHoudiniEngineDebugger(*args) -> None:
+def startHoudiniEngineDebugger(portOrPipeName: Union[int, str]) -> None:
     '''
 
     hou.startHoudiniEngineDebugger
@@ -90865,7 +90865,7 @@ def machineName(alpha: bool = True) -> str:
 
 
     """
-def createAnimationLayers(*args) -> Optional[Node]:
+def createAnimationLayers(path: str = ...) -> ChopNode:
     '''
 
     hou.createAnimationLayers
@@ -90894,7 +90894,7 @@ def createAnimationLayers(*args) -> Optional[Node]:
 
 
     '''
-def addAnimationLayer(*args) -> Optional[Node]:
+def addAnimationLayer(layermixer: ChopNode, layername: str) -> ChopNode:
     '''
 
     hou.addAnimationLayer
@@ -90924,7 +90924,7 @@ def addAnimationLayer(*args) -> Optional[Node]:
 
 
     '''
-def removeAnimationLayer(layermixer: Node, layername: str, merge_down: bool = False) -> bool:
+def removeAnimationLayer(layermixer: ChopNode, layername: str, merge_down: bool = ...) -> bool:
     """
 
     hou.removeAnimationLayer
@@ -90953,7 +90953,7 @@ def removeAnimationLayer(layermixer: Node, layername: str, merge_down: bool = Fa
 
 
     """
-def createAnimationClip(*args) -> Optional[Node]:
+def createAnimationClip(path: str = ..., set_export: bool = ...) -> ChopNode:
     '''
 
     hou.createAnimationClip
@@ -90983,7 +90983,7 @@ def createAnimationClip(*args) -> Optional[Node]:
 
 
     '''
-def registerOpdefPath(*args, **kwargs) -> None:
+def registerOpdefPath(path: str, server_name: str, port: str = ...) -> Any:
     '''
 
     hou.registerOpdefPath

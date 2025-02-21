@@ -30,6 +30,16 @@ tupleTypeRegex = re.compile("^_([a-zA-Z0-9]+)Tuple$")
 tupleGenTypeRegex = re.compile("^_([a-zA-Z0-9]+)TupleGenerator$")
 
 
+class IsResult:
+    """Indicates whether an annotating type is an argument or a return.
+
+    This is used to modify how permissive arguments may be, since we generally want arguments
+    to be abstract and returns to be concrete.
+    """
+
+    is_set: bool = False
+
+
 def is_std(node: ast.AST, attr: str) -> bool:
     if (
         isinstance(node, ast.Attribute)
@@ -82,14 +92,20 @@ class AnnotationFixer(ast.NodeTransformer):
         new_node = self.generic_visit(node)
         if isinstance(new_node, ast.Subscript) and is_std(new_node.value, "vector"):
             # NOTE: we use Tuple instead of Tuple because of Parm.Tuple()
-            # convert:  std.vector[Foo]  -->  Tuple[Foo, ...]
-            return ast.Subscript(
-                value=ast.Name(id="Tuple", ctx=ast.Load()),
-                slice=ast.Tuple(
-                    elts=[new_node.slice, ast.Constant(value=Ellipsis)], ctx=ast.Load()
-                ),
-                ctx=ast.Load(),
-            )
+            if IsResult.is_set:
+                return ast.Subscript(
+                    value=ast.Name(id="Tuple", ctx=ast.Load()),
+                    slice=ast.Tuple(
+                        elts=[new_node.slice, ast.Constant(value=Ellipsis)], ctx=ast.Load()
+                    ),
+                    ctx=ast.Load(),
+                )
+            else:
+                return ast.Subscript(
+                    value=ast.Name(id="Sequence", ctx=ast.Load()),
+                    slice=new_node.slice,
+                    ctx=ast.Load(),
+                )
         return new_node
 
 
@@ -255,7 +271,15 @@ class HoudiniTypeFixer(SignatureFixer):
         allow_optional_result = ctx.name not in NON_OPTIONAL_RETURN_FUNCTIONS.get(class_name, {})
 
         new_type = self.converter.cpp_arg_to_py_type(type_name, is_result, allow_optional_result)
+
+        # We need to indicate to the transformer whether we expect an argument (abstract) or
+        # return (concrete) type for sequences, so set IsResult.is_set appropriately.
+        # Since the transformer has a lot of indirect calls, setting this global scope override
+        # allows us to change this behavior without redefining the whole transformer class.
+        IsResult.is_set = is_result
         new_type = self.transfomer.transform(new_type)
+        IsResult.is_set = False
+
         new_type = self.maybe_add_optional(new_type, default_value)
 
         return new_type
