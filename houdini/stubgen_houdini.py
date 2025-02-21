@@ -7,6 +7,7 @@ from functools import lru_cache
 
 import mypy.stubgen
 import mypy.stubgenc
+import mypy.stubdoc
 from mypy.stubgenc import FunctionContext, FunctionSig, SignatureGenerator
 
 from hou_cleanup_config import (
@@ -16,6 +17,7 @@ from hou_cleanup_config import (
     MISSING_DEFINITIONS,
     NON_OPTIONAL_RETURN_FUNCTIONS,
     NON_OPTIONAL_RETURN_TYPES,
+    TYPE_ALIASES,
 )
 
 from stubgenlib import (
@@ -28,6 +30,9 @@ from stubgenlib import (
 
 tupleTypeRegex = re.compile("^_([a-zA-Z0-9]+)Tuple$")
 tupleGenTypeRegex = re.compile("^_([a-zA-Z0-9]+)TupleGenerator$")
+
+# Fix the type annotation for the `is_valid_type` to include subscripted types and the | character
+mypy.stubdoc._TYPE_RE = re.compile(r"^[a-zA-Z_][\w\[\], .\"\'|]*(\.[a-zA-Z_][\w\[\], ]*)*$")
 
 
 class IsResult:
@@ -91,10 +96,9 @@ class AnnotationFixer(ast.NodeTransformer):
 
         new_node = self.generic_visit(node)
         if isinstance(new_node, ast.Subscript) and is_std(new_node.value, "vector"):
-            # NOTE: we use Tuple instead of Tuple because of Parm.Tuple()
             if IsResult.is_set:
                 return ast.Subscript(
-                    value=ast.Name(id="Tuple", ctx=ast.Load()),
+                    value=ast.Name(id="tuple", ctx=ast.Load()),
                     slice=ast.Tuple(
                         elts=[new_node.slice, ast.Constant(value=Ellipsis)], ctx=ast.Load()
                     ),
@@ -243,7 +247,7 @@ class HoudiniTypeFixer(SignatureFixer):
     converter = HoudiniCppTypeConverter()
     transfomer = AnnotationFixer()
 
-    def maybe_add_optional(self, type_name: str, default_value: str | None):
+    def maybe_add_optional(self, type_name: str, default_value: str | None) -> str:
         if default_value == "None" and not (
             type_name.startswith("Optional[")
             or type_name.startswith("typing.Optional[")
@@ -368,10 +372,15 @@ class ASTStubGenerator(mypy.stubgen.ASTStubGenerator):
         imports += "import datetime\n"
         imports += "import typing\n"
         imports += ("from typing import Any, Callable, Dict, Iterator, Iterable, Literal, Optional, "
-                    "Sequence, Self, Union, Tuple\n\n")
+                    "Sequence, Self, Union, Tuple, TypeAlias\n\n")
         imports += "import pxr.Sdf\n"
         imports += "import pxr.Usd\n"
         imports += f"from {pyside} import QtGui, QtWidgets\n\n"
+
+        for type_alias_name, type_alias in TYPE_ALIASES.items():
+            imports += f"{type_alias_name}: TypeAlias = {type_alias}\n"
+
+        imports += "\n"
         return imports
 
     @staticmethod
