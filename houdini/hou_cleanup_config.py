@@ -5,28 +5,38 @@ the C++ type analysis.
 """
 
 _TYPE_ALIAS_COMPONENTS = {
-    "ATTRIB_ARG": ["int", "float", "str", "Sequence[int]", "Sequence[float]", "Sequence[str]"],
-    "ATTRIB_RETURN": ["int", "float", "str", "tuple[int, ...]", "tuple[float, ...]", "tuple[str, ...]"],
-    "PARM_RETURN": ["bool", "int", "float", "str", "dict[str, str]", "'Ramp'"],
-    "OPTION_ARG": ["bool", "int", "float", "str", "Vector2", "Vector3", "Vector4", "Quaternion", "Matrix3", "Matrix4", "Sequence[int]", "Sequence[float]"],
-    "OPTION_RETURN": ["bool", "int", "float", "str", "Vector2", "Vector3", "Vector4", "Quaternion", "Matrix3", "Matrix4", "tuple[int, ...]", "tuple[float, ...]"],
-    "OPTION_SINGLE_ARG": ["bool", "int", "float", "str", "Vector2", "Vector3", "Vector4", "Quaternion", "Matrix3", "Matrix4"],
-    "OPTION_SINGLE_RETURN": ["bool", "int", "float", "str", "Vector2", "Vector3", "Vector4", "Quaternion", "Matrix3", "Matrix4"],
+    "ATTRIB": ["int", "float", "str"],
+    "PARM": ["bool", "int", "float", "str", "dict[str, str]", "'Ramp'"],
+    "OPTION": ["bool", "int", "float", "str", "Vector2", "Vector3", "Vector4", "Quaternion", "Matrix3", "Matrix4"],
+    "OPTION_MULTI_ARG": ["bool", "int", "float", "str", "Vector2", "Vector3", "Vector4", "Quaternion", "Matrix3", "Matrix4", "Sequence[int]", "Sequence[float]"],
+    "OPTION_MULTI_RETURN": ["bool", "int", "float", "str", "Vector2", "Vector3", "Vector4", "Quaternion", "Matrix3", "Matrix4", "tuple[int, ...]", "tuple[float, ...]"],
 }
 
 
-TYPE_ALIASES = {
-    "AttribArgType": " | ".join(_TYPE_ALIAS_COMPONENTS["ATTRIB_ARG"]),
-    "AttribDictArgType": " | ".join(f"dict[str, {typ}]" for typ in _TYPE_ALIAS_COMPONENTS["ATTRIB_ARG"]),
-    "AttribReturnType": " | ".join(_TYPE_ALIAS_COMPONENTS["ATTRIB_RETURN"]),
-    "AttribDictReturnType": " | ".join(f"dict[str, {typ}]" for typ in _TYPE_ALIAS_COMPONENTS["ATTRIB_RETURN"]),
-    "ParmReturnType": " | ".join(_TYPE_ALIAS_COMPONENTS["PARM_RETURN"]),
-    "ParmTupleReturnType": " | ".join(f"tuple[{typ}, ...]" for typ in _TYPE_ALIAS_COMPONENTS["PARM_RETURN"]),
-    "OptionArgType": " | ".join(_TYPE_ALIAS_COMPONENTS["OPTION_ARG"]),
-    "OptionReturnType": " | ".join(_TYPE_ALIAS_COMPONENTS["OPTION_RETURN"]),
-    "OptionSingleArgType": " | ".join(_TYPE_ALIAS_COMPONENTS["OPTION_ARG"]),
-    "OptionSingleReturnType": " | ".join(_TYPE_ALIAS_COMPONENTS["OPTION_SINGLE_RETURN"]),
-}
+def get_type_aliases() -> dict[str, str]:
+    attrib_arg_types = _TYPE_ALIAS_COMPONENTS["ATTRIB"] + [f"Sequence[{typ}]" for typ in _TYPE_ALIAS_COMPONENTS["ATTRIB"]]
+    attrib_return_types = _TYPE_ALIAS_COMPONENTS["ATTRIB"] + [f"tuple[{typ}, ...]" for typ in _TYPE_ALIAS_COMPONENTS["ATTRIB"]]
+    option_full_multi_types = [f"Sequence[{typ}]" for typ in _TYPE_ALIAS_COMPONENTS["OPTION"]]
+
+    result = {
+        "AttribBasicType": " | ".join(_TYPE_ALIAS_COMPONENTS["ATTRIB"]),
+        "AttribArgType": " | ".join(attrib_arg_types),
+        "AttribDictArgType": " | ".join(f"dict[str, {typ}]" for typ in attrib_arg_types),
+        "AttribReturnType": " | ".join(attrib_return_types),
+        "AttribDictReturnType": " | ".join(f"dict[str, {typ}]" for typ in attrib_return_types),
+        "ParmType": " | ".join(_TYPE_ALIAS_COMPONENTS["PARM"]),
+        "ParmTupleArgType": " | ".join(f"Sequence[{typ}]" for typ in _TYPE_ALIAS_COMPONENTS["PARM"]),
+        "ParmTupleReturnType": " | ".join(f"tuple[{typ}, ...]" for typ in _TYPE_ALIAS_COMPONENTS["PARM"]),
+        "OptionType": " | ".join(_TYPE_ALIAS_COMPONENTS["OPTION"]),
+        "OptionSequenceType": " | ".join(f"Sequence[{typ}]" for typ in _TYPE_ALIAS_COMPONENTS["OPTION"]),
+        "OptionMultiArgType": " | ".join(_TYPE_ALIAS_COMPONENTS["OPTION_MULTI_ARG"]),
+        "OptionMultiReturnType": " | ".join(_TYPE_ALIAS_COMPONENTS["OPTION_MULTI_RETURN"]),
+    }
+
+    return result
+
+
+TYPE_ALIASES = get_type_aliases()
 
 
 ADDITIONAL_ENUM_NAMES = {
@@ -84,10 +94,10 @@ MISSING_DEFINITIONS = {
         "def inputConnections(self) -> tuple[OpNodeConnection, ...]",
         "def node(self, node_path: str) -> OpNode | None",
         "def outputConnections(self) -> tuple[OpNodeConnection, ...]",
-        "def setParmExpressions(self, parm_dict: dict[str, Any], language: EnumValue | None = None, replace_expressions: bool = True) -> None",
-        "def setParms(self, parm_dict: dict[str, Any]) -> None",
+        "def setParmExpressions(self, parm_dict: dict[str, str | Sequence[str]], language: EnumValue | None = None, replace_expressions: bool = True) -> None",
+        "def setParms(self, parm_dict: dict[str, ParmType | ParmTupleArgType]) -> None",
         "def type(self) -> OpNodeType",
-],
+    ],
     "Parm": [
         "def set(self, value: int | float | str | Parm | Ramp, language: EnumValue | None = None, follow_parm_reference: bool = True) -> None",
     ],
@@ -131,6 +141,7 @@ MISSING_DEFINITIONS = {
     ],
     "ui": [
         "@staticmethod\ndef selectFile(start_directory: str | None = None, title: str | None = None, collapse_sequences: bool = False, file_type: EnumValue = fileType.Any, pattern: str | None = None, default_value: str | None = None, multiple_select: bool = False, image_chooser: bool = False, chooser_mode: EnumValue = fileChooserMode.ReadAndWrite, width: int = 0, height: int = 0) -> str",
+        "@staticmethod\ndef selectNode(relative_to_node: Node | None = None, initial_node: Node | None = None, node_type_filter: EnumValue | None = None, title: str | None = None, width: int = 0, height: int = 0, multiple_select: bool = False, custom_node_filter_callback: Callable[[Node], bool] | None = None) -> str | tuple[str, ...] | None",
     ],
 }
 
@@ -653,6 +664,9 @@ EXPLICIT_RETURN_TYPES = {
         "vopNetNodeTypeCategory": "OpNodeTypeCategory",
         "vopNodeTypeCategory": "OpNodeTypeCategory",
     },
+    "Bundle": {
+        "pattern": "str | None",
+    },
     "DopData": {
         "creator": "OpNode",
         "dopNetNode": "OpNode",
@@ -698,8 +712,14 @@ EXPLICIT_RETURN_TYPES = {
         "createClip": "ChopNode",
         "node": "OpNode",
     },
+    "PythonPanel": {
+        "activeInterfaceRootWidget": "QtWidgets.QWidget"
+    },
     "ScriptEvalContext": {
         "node": "OpNode | None",
+    },
+    "VDB": {
+        "voxelRange": "tuple[bool, ...] | tuple[int, ...] | tuple[float, ...] | tuple[Vector3, ...]"
     },
     "ViewerState": {
         "categoryNode": "OpNode | None",
@@ -717,7 +737,11 @@ EXPLICIT_RETURN_TYPES = {
 #  tuple subscripts, literals, and modern | characters.
 #  Note that even in mypy 1.15, this pattern does not support | characters.
 #   _TYPE_RE: Final = re.compile(r"^[a-zA-Z_][\w\[\], .\"\'|]*(\.[a-zA-Z_][\w\[\], ]*)*$")
-
+# FIXME: The Callables provided to the callback system for most classes take
+#  different argument types and numbers of arguments according to the event type associated
+#  with the callback.  To avoid an overload nightmare and to avoid fully articulating code
+#  that is likely to be out of date at some stage, I'm going to leave them as `Callable`
+#  with no subscript annotation.
 EXPLICIT_DEFINITIONS = {
     None: {
         # signatures for these special methods include many inaccurate overloads
@@ -731,18 +755,32 @@ EXPLICIT_DEFINITIONS = {
     "__hou__": {
         "addAnimationLayer": "(layermixer: ChopNode, layername: str = "") -> ChopNode",
         "applicationVersion": "(include_patch: bool = False) -> tuple[int, int]",
+        "addContextOptionChangeCallback": "(callback: Callable[[str], None]) -> None",
+        "removeContextOptionChangeCallback": "(callback: Callable[[str], None]) -> None",
+        "contextOptionChangeCallbacks": "() -> tuple[Callable[[str], None], ...]",
+        "ch": "(path: str) -> ParmType",
         "contextOption": "(opt: str) -> float | str",
         "createAnimationClip": "(path: str = ..., set_export: bool = False) -> ChopNode",
         "createAnimationLayers": "(path: str = ...) -> ChopNode",
+        "evalParm": "(path: str) -> ParmType",
+        "evalParmTuple": "(path: str) -> ParmTupleReturnType",
         "fileReferences": "(project_dir_variable: str = 'HIP', include_all_refs: bool = true) -> Sequence[tuple[Parm, str]]",
+        "hscriptExpression": "(expression: str) -> float | str | tuple[float, ...] | tuple[str, ...]",
+        "loadCPIODataFromString": "(data: bytes) -> tuple[tuple[str, bytes], ...]",
+        "loadIndexDataFromString": "(data: bytes) -> dict[str, bytes]",
         "loadImageDataFromFile": "(file_name: str, arg: EnumValue = ...) -> bytes",
+        "lvar": "(name: str) -> float | str",
         "nodeType": "(category_or_name: NodeTypeCategory | str, internal_name: str | None = None) -> NodeType | None",
-        "registerOpdefPath": "(path: str, server_name: str, port: str = '')",
+        "registerOpdefPath": "(path: str, server_name: str, port: str = '') -> None",
         "removeAnimationLayer": "(layermixer: ChopNode, layername: str, merge_down: bool = False) -> bool",
-        "runVex": "(vex_file: str, inputs: dict[str, Any], precision: Literal['32', '64'] = '32') -> dict[str, Any]",
+        "runCallbackAndCatchCrashes": "(callback: Callable) -> Optional[Any]",
+        "runVex": "(vex_file: str, inputs: dict[str, OptionType | OptionSequenceType], precision: Literal['32', '64'] = '32') -> dict[str, Any]",
         "saveImageDataToFile": "(color_and_alpha_data: Sequence[float] | bytes, width: int, height: int, file_name: str) -> None",
         "setContextOption": "(option: str, value: str | float | None) -> None",
         "startHoudiniEngineDebugger": "(portOrPipeName: int | str) -> None",
+    },
+    "_clone_Connection": {
+        "contextOptionExpression": "(self, opt: str) -> str",
     },
     "_StringMapDoubleTuple": {
         "__iter__": "(self) -> Iterator[str]",
@@ -752,6 +790,9 @@ EXPLICIT_DEFINITIONS = {
     },
     "_ik_Target": {
         "__init__": "(joint: _ik_Joint | None = None, goal_transform: Matrix4 = ..., joint_offset: Matrix4 = ..., target_type: EnumValue = _ik_targetType.Position, weight: float = 1.0, priority: int = 0, depth: int = -1) -> None",
+    },
+    "_logging_Sink": {
+        "setFilterCallback": "(self, callback: Callable[[_logging_LogEntry], None]) -> None",
     },
     "AdvancedDrawable": {
         "draw": "(self, handle: Incomplete, params: dict[str, Any] | None = None) -> None",
@@ -789,9 +830,11 @@ EXPLICIT_DEFINITIONS = {
         "addItem": "(self, label: str, file_path: str | None = None, thumbnail: bytes = b'', type_name: str = 'asset', blind_data: bytes = b'', creation_date: int = 0) -> str",
     },
     "Attrib": {
-        "option": "(self, option_name: str) -> OptionReturnType",
-        "options": "(self) -> dict[str, OptionReturnType]",
-        "setOption": "(self, name: str, value: OptionArgType, type_hint: EnumValue = ...) -> None",
+        "defaultValue": "(self) -> AttribReturnType",
+        "dicts": "tuple[dict[str, AttribBasicType], ...]",
+        "option": "(self, option_name: str) -> OptionMultiReturnType",
+        "options": "(self) -> dict[str, OptionMultiReturnType]",
+        "setOption": "(self, name: str, value: OptionMultiArgType, type_hint: EnumValue = ...) -> None",
     },
     "Bookmark": {
         "metadata": "(self, key: str, default_value: Any = None) -> Any",
@@ -849,6 +892,7 @@ EXPLICIT_DEFINITIONS = {
         "allPixelsAsString": "(self, plane: str = 'C', component: str | None = None, interleaved: bool = True, time: float = -1.0) -> bytes",
         "imageBounds": "(self, plane: str = 'C') -> tuple[int, int, int]",
         "saveImage": "saveImage(self, file_name: str, frame_range: Sequence[float] = ...) -> None",
+        "setPixelsOfCookingPlaneFromString": "(self, values: bytes, component: str | None = None, interleaved: bool = True, depth: EnumValue | None = None, flip_vertically: bool = False) -> None",
     },
     "DataParmTemplate": {
         "__init__": "(self, name: , label: , num_components: int, look: EnumValue = parmLook.Regular, naming_scheme: EnumValue = parmNamingScheme.XYZW, unknown_str: str | None = None, disable_when: str | None = None, is_hidden: bool = False, is_label_hidden: bool = False, join_with_next: bool = False, help: str | None = None, script_callback: str | None = None, script_callback_language: EnumValue = scriptLanguage.Hscript, tags: dict[str, str] = {}, unknown_dict: dict[EnumValue, str] = {}, default_expression: Sequence[str] = (), default_expression_language: Sequence[EnumValue] = ()) -> DataParmTemplate",
@@ -862,15 +906,16 @@ EXPLICIT_DEFINITIONS = {
         "addCallback": "(self, name: str, callback: Callable[[], None]) -> None",
         "callbacks": "(self, name: str) -> tuple[Callable[[], None], ...]",
         "removeCallback": "(self, name: str, callback: Callable[[], None]) -> None",
-        "setValue": "(self, name: str, value: OptionSingleArgType) -> None",
-        "value": "(self, name: str) -> OptionSingleReturnType",
-        "waitForValueToChangeTo": "(self, name: str, new_value: OptionSingleArgType) -> None",
+        "setValue": "(self, name: str, value: OptionType) -> None",
+        "value": "(self, name: str) -> OptionType",
+        "waitForValueToChangeTo": "(self, name: str, new_value: OptionType) -> None",
     },
     "DopData": {
         "createSubData": "(self, data_name: str, data_type: str = ..., avoid_name_collisions: bool = False) -> DopData",
     },
     "DopRecord": {
-        "setField": "(self, field_name: str, value: OptionSingleArgType) -> None",
+        "setField": "(self, field_name: str, value: OptionType) -> None",
+        "field": "(self, field_name: str) -> OptionType",
     },
     "EdgeGroup": {
         "add": "(self, edge_or_list_or_edge_group: Edge | Sequence[Edge] | EdgeGroup) -> None",
@@ -937,7 +982,7 @@ EXPLICIT_DEFINITIONS = {
         "setFolderNames": "(self, folder_names: Sequence[str]) -> None",
     },
     "Geometry": {
-        "addAttrib": "(self, type: EnumValue, name: str, default_value: Any, transform_as_normal: bool = True, create_local_variable: bool = True) -> Attrib",
+        "addAttrib": "(self, type: EnumValue, name: str, default_value: AttribArgType | AttribDictArgType, transform_as_normal: bool = True, create_local_variable: bool = True) -> Attrib",
         "attribValue": "(self, name_or_attrib: str | Attrib) -> AttribReturnType | AttribDictReturnType",
         "containsPrimType": "(self, type_or_name: EnumValue | str) -> bool",
         "countPrimType": "(self, type_or_name: EnumValue | str) -> int",
@@ -964,6 +1009,8 @@ EXPLICIT_DEFINITIONS = {
         "importUsdStage": "(self, stage: pxr.Usd.Stage, selectionrule: LopSelectionRule, purpose: str | None = None, traversal: str | None = None, path_attrib_name: str | None = None, name_attrib_name: str | None = None, frame: float | None = None) -> None",
         "intAttribValue": "(self, attrib: Attrib | str) -> int",
         "intListAttribValue": "(self, name_or_attrib: Attrib | str) -> tuple[int, ...]",
+        "intrinsicValue": "(self, intrinsic_name: str) -> AttribReturnType",
+        "packedFolderProperties": "(self, path: str) -> dict[str, bool]",
         "pointFloatAttribValuesAsString": "(self, name: str, float_type: EnumValue = numericData.Float32) -> bytes",
         "pointGroups": "(self, scope: EnumValue = groupScope.Public) -> tuple[PointGroup, ...]",
         "pointIntAttribValuesAsString": "(self, name: str, int_type: EnumValue = numericData.Int32) -> bytes",
@@ -1001,9 +1048,12 @@ EXPLICIT_DEFINITIONS = {
         "__init__": "(self) -> None",
     },
     "GeometryViewport": {
+        "addEventCallback": "(self, callback: Callable[[dict[str, Any]], None]) -> None",
         "changeType": "(self, type: EnumValue) -> None",
-        "setCamera": "(self, camera_node: ObjNode) -> None",
+        "eventCallbacks": "(self) -> tuple[Callable[[dict[str, Any]], None], ...]",
         "queryWorldPositionAndNormal": "(self, x: int, y: int, selectionRestriction: bool = False) -> tuple[Vector3, Vector3, bool]",
+        "removeEventCallback": "(self, callback: Callable[[dict[str, Any]], None]) -> None",
+        "setCamera": "(self, camera_node: ObjNode) -> None",
     },
     "GeometryViewportSettings": {
         "allowParticleSprites": "(self) -> bool",
@@ -1043,12 +1093,16 @@ EXPLICIT_DEFINITIONS = {
     },
     "HDADefinition": {
         "addSection": "(self, name: str, contents: str = '', compression_type: EnumValue = compressionType.NoCompression) -> HDASection",
-        "setExtraFileOption": "(self, name, value: OptionArgType, type_hint: EnumValue = fieldType.NoSuchField) -> None",
+        "extraFileOptions": "(self) -> dict[str, OptionType]",
+        "setExtraFileOption": "(self, name, value: OptionType, type_hint: EnumValue = fieldType.NoSuchField) -> None",
     },
     "HDASection": {
         "binaryContents": "(self, compressionType: EnumValue = compressionType.NoCompression) -> bytes",
         "contents": "(self, compressionType: EnumValue = compressionType.NoCompression) -> str",
         "setContents": "(self, contents: str, compressionType: EnumValue = compressionType.NoCompression) -> None",
+    },
+    "InterruptableOperation": {
+        "__exit__": "(self, type: type[BaseException], value: BaseException, traceback: TracebackType) -> None",
     },
     "IntParmTemplate": {
         "__init__": "(self, name: str, label: str, num_components: int, default_value: Sequence[int] = ..., min: int = 0, max: int = 10, min_is_strict=False, max_is_strict: bool = False, look: EnumValue = parmLook.Regular, naming_scheme: EnumValue = parmNamingScheme.XYZW, menu_items: Sequence[str] = ..., menu_labels: Sequence[str] = ..., icon_names: Sequence[str] = ..., item_generator_script: str | None = None, item_generator_script_language: EnumValue | None = None, menu_type: EnumValue = menuType.Normal, disable_when: str | None = None, is_hidden: bool = False, is_label_hidden: bool = False, join_with_next: bool = False, help: str | None = None, script_callback: str | None = None, script_callback_language: EnumValue = scriptLanguage.Hscript, tags: dict[str, str] = ..., default_expression: Sequence[str] = ..., default_expression_language: Sequence[str] = ...) -> None",
@@ -1063,6 +1117,10 @@ EXPLICIT_DEFINITIONS = {
         "__init__": "(self, name: str, label: str, column_labels: Sequence[str] = ..., is_hidden: bool = False, is_label_hidden: bool = False, join_with_next: bool = False, help: str | None = None, tags: dict[str, str] = ...) -> None",
     },
     "LopNetwork": {
+        "activeLayer": "(self, output_index: int = ..., ignore_errors: bool = ..., use_last_cook_context_options: bool = ..., frame: float|None = ..., context_options: dict[str, str | float] = ...) -> pxr.Sdf.Layer",
+        "postLayer": "(self, name: str) -> pxr.Sdf.Layer | None",
+        "sourceLayer": "(self, layer_index: int = ..., output_index: int = ..., use_last_cook_context_options: bool = ..., frame: float|None = ..., context_options: dict[str, str | float] = ...) -> pxr.Sdf.Layer",
+        "stage": "(self, output_index: int = ..., apply_viewport_overrides: bool = ..., ignore_errors: bool = ..., use_last_cook_context_options: bool = ..., apply_post_layers: bool = ..., frame: float|None = ..., context_options: dict[str, str | float] = ...) -> pxr.Usd.Stage",
         "viewportOverridesLayer": "(self, layer_id: EnumValue) -> pxr.Sdf.Layer",
     },
     "LopNode": {
@@ -1076,6 +1134,24 @@ EXPLICIT_DEFINITIONS = {
         "sourceLayerCount": "(self, output_index: int = 0, use_last_cook_context_options: bool = True, frame: float | None = None, context_options: dict[str, str | float] | None = None) -> LopViewportLoadMasks",
         "stage": "(self, output_index: int = 0, apply_viewport_overrides: bool = False, ignore_errors: bool = False, use_last_cook_context_options: bool = True, apply_post_layers: bool = True, frame: float | None = None, context_options: dict[str, Any] = ...) -> pxr.Usd.Stage",
         "stagePrimStats": "(self, primpath: str | None = None, output_index: int = 0, apply_viewport_overrides: bool = False, ignore_errors: bool = False, do_geometry_counts: bool = False, do_separate_purposes: bool = False, use_last_cook_context_options: bool = True, apply_post_layers: bool = True, frame: float | None = None, context_options: dict[str, str | float] | None = None) -> dict[str, int]",
+    },
+    "LopPostLayer": {
+        "__exit__": "(self, type: type[BaseException], value: BaseException, traceback: TracebackType) -> None",
+        "layer": "(self) -> pxr.Sdf.Layer",
+        "stage": "(self) -> pxr.Usd.Stage",
+    },
+    "LopSelectionRule": {
+        "collectionAwarePaths": "(self, lopnode: LopNode | None = None, fallback_to_new_paths: bool = False, stage: pxr.Usd.Stage | None = None, use_last_cook_context_options: bool = True) -> tuple[pxr.Sdf.Path, ...]",
+        "expandedPaths": "(self, lopnode: LopNode | None = None, return_ancestors: bool = False, fallback_to_new_paths: bool = False, stage: pxr.Usd.Stage | None = None, use_last_cook_context_options: bool = True) -> tuple[pxr.Sdf.Path, ...]",
+        "firstPath": "(self, lopnode: LopNode | None = None, return_ancestors: bool = False, fallback_to_new_paths: bool = False, stage: pxr.Usd.Stage | None = None, use_last_cook_context_options: bool = True) -> pxr.Sdf.Path",
+        "newPaths": "(self, lopnode: LopNode | None = None, stage: pxr.Usd.Stage | None = None, use_last_cook_context_options: bool = True) -> tuple[pxr.Sdf.Path, ...]",
+    },
+    "LopViewportOverrides": {
+        "__exit__": "(self, type: type[BaseException], value: BaseException, traceback: TracebackType) -> None",
+        "layer": "(self) -> pxr.Sdf.Layer",
+        "soloGeometry": "(self) -> pxr.Sdf.Path",
+        "soloLights": "(self) -> pxr.Sdf.Path",
+        "stage": "(self) -> pxr.Usd.Stage",
     },
     "Matrix2": {
         "__init__": "(self, values: int | float | Sequence[int] | Sequence[float] | Sequence[Sequence[int] | Sequence[float]] = 0) -> Matrix2",
@@ -1163,15 +1239,23 @@ EXPLICIT_DEFINITIONS = {
     },
     "OpNode": {
         "addError": "(self, message: str, severity: EnumValue = ...) -> None",
+        "addEventCallback": "(self, event_types: Sequence[EnumValue], callback: Callable) -> None",
+        "addParmCallback": "(self, callback: Callable[[OpNode, ParmTuple], None], names: Sequence[str]) -> None",
         "cook": "(self, force: bool = False, frame_range: Sequence[float] = ...) -> None",
         "cookCodeGeneratorNode": "(self, check_parent: bool = False) -> Node",
-        "evalParm": "(self, parm_path: str) -> ParmReturnType",
+        "evalParm": "(self, parm_path: str) -> ParmType",
         "evalParmTuple": "(self, parm_path: str) -> ParmTupleReturnType",
+        "eventCallbacks": "(self) -> tuple[tuple[tuple[EnumValue, ...], Callable], ...]",
         "fileReferences": "(self, recurse: bool = True, project_dir_variable: str = 'HIP', include_all_refs: bool = True) -> Sequence[tuple[Parm, str]]",
+        "lastCookContextOptions": "(self, only_used_options: bool = False) -> dict[str, str | float]",
         "needsToCook": "(self, time: float = ...) -> bool",
+        "removeEventCallback": "(self, event_types: Sequence[EnumValue], callback: Callable) -> None",
         "setDeleteScript": "(self, script_text: str, language: EnumValue = ...) -> None",
         "setInput": "(self, input_index: int, item_to_become_input: NetworkMovableItem | None, output_index: int = 0) -> None",
         "stampValue": "(self, parm_name: str, default_value: float | str) -> str",
+    },
+    "OpNodeType": {
+        "deprecationInfo": "(self) -> dict[str, str | Self]",
     },
     "OperationFailed": {
         "__init__": "(self, message: str | None = ...) -> None",
@@ -1224,11 +1308,14 @@ EXPLICIT_DEFINITIONS = {
         "node": "(self) -> OpNode",
         "setPending": "(self, values: Sequence[float | str]) -> None",
     },
+    "PerfMonEvent": {
+        "__exit__": "(self, type: type[BaseException], value: BaseException, traceback: TracebackType) -> None",
+    },
     "PerfMonProfile": {
         "stats": "(self) -> dict[str, Any]",
     },
     "PluginHotkeyDefinitions": {
-        "addDefaultBinding": "(self, context: str, command: str, assignments: Sequence[str], apply_platform_modifier_mappings: bool = True)",
+        "addDefaultBinding": "(self, context: str, command: str, assignments: Sequence[str], apply_platform_modifier_mappings: bool = True) -> None",
     },
     "Point": {
         "attribValue": "(self, attrib: Attrib | str) -> AttribReturnType | AttribDictReturnType",
@@ -1238,16 +1325,16 @@ EXPLICIT_DEFINITIONS = {
         "floatListAttribValue": "(self, name_or_attrib: str | Attrib) -> tuple[float, ...]",
         "intAttribValue": "(self, name_or_attrib: str | Attrib) -> int",
         "intListAttribValue": "(self, name_or_attrib: str | Attrib) -> tuple[int, ...]",
-        "setAttribValue": "(self, name_or_attrib: str | Attrib, attrib_value: AttribArgType | AttribArgDictType) -> None",
+        "setAttribValue": "(self, name_or_attrib: str | Attrib, attrib_value: AttribArgType | AttribDictArgType) -> None",
         "stringAttribValue": "(self, name_or_attrib: str | Attrib) -> str",
         "stringListAttribValue": "(self, name_or_attrib: str | Attrib) -> tuple[str, ...]",
     },
     "PointGroup": {
         "add": "(self, point_or_list_or_point_group: Point | Sequence[Point] | PointGroup) -> None",
-        "option": "(self, option_name: str) -> OptionReturnType",
-        "options": "(self) -> dict[str, OptionReturnType]",
+        "option": "(self, option_name: str) -> OptionMultiReturnType",
+        "options": "(self) -> dict[str, OptionMultiReturnType]",
         "remove": "(self, point_or_list_or_point_group: Point | Sequence[Point] | PointGroup) -> None",
-        "setOption": "(self, name: str, value: OptionArgType, type_hint: EnumValue = fieldType.NoSuchField) -> None",
+        "setOption": "(self, name: str, value: OptionMultiArgType, type_hint: EnumValue = fieldType.NoSuchField) -> None",
     },
     "Prim": {
         "attribValue": "(self, attrib: Attrib | str) -> AttribReturnType | AttribDictReturnType",
@@ -1261,7 +1348,7 @@ EXPLICIT_DEFINITIONS = {
         "intrinsicValue": "(self, intrinsic_name: str) -> AttribReturnType",
         "primuConvert": "(self, u: float, mode: int, tol: float | None = ...) -> float",
         "primuvConvert": "(self, uv: Sequence[float] | Vector2, mode: int, tol: float | None = ...) -> Vector2",
-        "setAttribValue": "(self, name_or_attrib: Attrib | str, attrib_value: AttribArgType | AttribArgDictType) -> None",
+        "setAttribValue": "(self, name_or_attrib: Attrib | str, attrib_value: AttribArgType | AttribDictArgType) -> None",
         "setIntrinsicValue": "(self, intrinsic_name: str, value: AttribArgType) -> None",
         "stringAttribValue": "(self, attrib: Attrib | str) -> str",
         "stringListAttribValue": "(self, name_or_attrib: Attrib | str) -> tuple[str, ...]",
@@ -1269,10 +1356,10 @@ EXPLICIT_DEFINITIONS = {
     },
     "PrimGroup": {
         "add": "(self, prim_or_list_or_prim_group: Prim | Sequence[Prim] | PrimGroup) -> None",
-        "option": "(self, option_name: str) -> OptionReturnType",
-        "options": "(self) -> dict[str, OptionReturnType]",
+        "option": "(self, option_name: str) -> OptionMultiReturnType",
+        "options": "(self) -> dict[str, OptionMultiReturnType]",
         "remove": "(self, prim_or_list_or_prim_group: Prim | Sequence[Prim] | PrimGroup) -> None",
-        "setOption": "(self, name: str, value: OptionArgType, type_hint: EnumValue = fieldType.NoSuchField) -> None",
+        "setOption": "(self, name: str, value: OptionMultiArgType, type_hint: EnumValue = fieldType.NoSuchField) -> None",
     },
     "Quaternion": {
         "__init__": "(self, x: Sequence[float] | float | Matrix3 | Matrix4, y: Sequence[float] | float, z: float = ..., w: float = ...) -> None",
@@ -1281,21 +1368,42 @@ EXPLICIT_DEFINITIONS = {
         "setToEulerRotates": "(self, angles_in_deg: float, rotate_order: Literal['xyz', 'xzy', 'yxz', 'yzx', 'zxy', 'zyx'] = 'xyz') -> None",
         "setToRotationMatrix": "(self, matrix3_or_matrix4: Matrix3 | Matrix4) -> None",
     },
+    "RadialScriptItem": {
+        "setActionCallback": "(self, callback: Callback) -> None",
+        "setCheckCallback": "(self, callback: Callback) -> None",
+    },
     "Ramp": {
         "__init__": "(self, basis: Sequence[EnumValue], keys: Sequence[float], values: Sequence[float] | Sequence[tuple[float, float, float]]) -> None",
+        "lookup": "(self, pos: float) -> float | tuple[float, float, float]",
+        "values": "(self) -> tuple[float | tuple[float, float, float], ...]",
     },
     "RampParmTemplate": {
         "__init__": "(self, name: str, label: str, ramp_parm_type: EnumValue, default_value: int = 2, default_basis: EnumValue | None = None, show_controls: bool = True, color_type: EnumValue | None = None, disable_when: str | None = None, is_hidden: bool = False, help: str | None = None, script_callback: str | None = None, script_callback_language: EnumValue = scriptLanguage.Hscript, tags: dict[str, str] = ..., default_expression_language: EnumValue = scriptLanguage.Hscript) -> None",
     },
+    "RedrawBlock": {
+        "__exit__": "(self, type: type[BaseException], value: BaseException, traceback: TracebackType) -> None",
+    },
     "RopNode": {
+        "addRenderEventCallback": "(self, callback: Callable[[RopNode, EnumValue, float], None], run_before_script: bool = False) -> None",
+        "removeRenderEventCallback": "(self, callback: Callable[[RopNode, EnumValue, float], None]) -> None",
         "render": "(self, frame_range: Sequence[float] | None = None, res: Sequence[int] | None = None, output_file: str | None = None, output_format=None, to_flipbook: bool = False, quality: int = 2, ignore_inputs: bool = False, method=RopByRop, ignore_bypass_flags: bool = False, ignore_lock_flags: bool = False, verbose: bool = False, output_progress: bool = False) -> None",
     },
+    "SceneGraphTree": {
+        "collapsePrimitives": "(self, prims: Sequence[str | pxr.Sdf.Path]) -> None",
+        "expandPrimitives": "(self, prims: Sequence[str | pxr.Sdf.Path], collapse_others: bool = False, expand_leaf_primitives: bool = False) -> None",
+        "expandedPrimitives": "(self, include_leaf_primitives: bool = False) -> tuple[pxr.Sdf.Path, ...]",
+    },
     "SceneViewer": {
+        "addEventCallback": "(self, callback: Callable) -> None",
         "bindViewerHandle": "(self, handle_type: str, name: str, settings: str | None = None, cache_previous_parms: bool = False, handle_parms: Sequence[str] | None = None) -> None",
         "bindViewerHandleStatic": "(self, handle_type: str, name: str, bindings: Sequence[str], settings: str | None = None) -> None",
+        "eventCallbacks": "(self) -> tuple[Callable, ...]",
         "groupListMask": "(self) -> str",
         "isGroupPicking": "(self) -> bool",
         "locateSceneGraphPrim": "(self, x: int, y: int) -> tuple[float, str]",
+        "qtWindow": "(self) -> QtWidgets.QWidget",
+        "removeEventCallback": "(self, callback: Callable) -> None",
+        "runStateCommand": "(self, name: str, args: dict[str, Any] | None = None) -> None",
         "selectDrawableGeometry": "(self, drawable_selection: dict[str, Incomplete], selection_modifier: EnumValue = pickModifier.Replace) -> None",
         "selectDynamics": "(self, prompt: str = 'Select objects', sel_index: int = 0, allow_objects: bool = True, allow_modifiers: bool = False, quick_select: bool = False, use_existing_selection: bool = True, allow_multisel: bool = True, icon: str | None = None, label: str | None = None, prior_selection_paths: Sequence[str] | None = ..., prior_selection_ids: int | None = ..., prior_selections: Sequence[str] = ..., toolbox_templategroup: str | None = None, toolbox1_templategroup: str | None = None, select_parm: str = '') -> tuple[DopData, ...]",
         "selectDynamicsPoints": "(self, prompt: str = 'Select objects', sel_index: int = 0, quick_select: bool = False, use_existing_selection: bool = True, allow_multisel: bool = True, only_select_points: bool = True, object_based_point_selection: bool = False, use_last_selected_object: bool = False, icon: str | None = None, label: str | None = None, prior_selection_paths: Sequence[str] | None = ..., prior_selection_ids: int | None = ..., prior_selections: Sequence[str] = ..., toolbox_templategroup: str | None = None, toolbox1_templategroup: str | None = None, select_parm: str = '') -> Sequence[tuple[DopData, GeometrySelection]]",
@@ -1308,9 +1416,11 @@ EXPLICIT_DEFINITIONS = {
         "selectSceneGraphInstances": "(self, prompt: str = 'Select point instances', preselection: Sequence[str] = ..., quick_select: bool = False, use_existing_selection: bool = True, confirm_existing: bool = False, allow_multisel: bool = True, allow_drag: bool = True, path_prefix_mask: str = '', instance_level: int = 0, instance_indices_only: bool = False, validate_selection_for_node: Incomplete = ..., select_parm: str = '') -> tuple[str, ...]",
         "setCurrentState": "(self, state: EnumValue, wait_for_exit: bool = False, generate: EnumValue = stateGenerateMode.Insert, request_new_on_generate: bool = True, ex_situ_generate: bool = False) -> None",
         "setPromptMessage": "(self, msg: str, msg_type: EnumValue = promptMessageType.Prompt) -> None",
+        "stage": "(self) -> pxr.Usd.Stage",
         "triggerStateSelector": "(self, action: EnumValue, name: str | None = None) -> None",
     },
     "ScriptEvalContext": {
+        "__exit__": "(self, type: type[BaseException], value: BaseException, traceback: TracebackType) -> None",
         "__init__": "(self, node_or_parm: OpNode | Parm) -> None"
     },
     "Selection": {
@@ -1327,6 +1437,16 @@ EXPLICIT_DEFINITIONS = {
         "shaderCode": "(self, shader_type: EnumValue | None = None) -> str",
         "shaderString": "(self, render_type: str | None = None) -> str",
     },
+    "ShellIO": {
+        "CloseCallbacks": "(self) -> tuple[Callable[[], None], ...]",
+        "addCloseCallback": "(self, callback: Callable[[], None]) -> None",
+        "addExitCallback": "(self, callback: Callable[[], None]) -> None",
+        "closeCallbacks": "(self) -> tuple[Callable[[], None], ...]",
+        "exitCallbacks": "(self) -> tuple[Callable[[], None], ...]",
+        "readline": "(self, size: int = -1) -> str",
+        "removeCloseCallback": "(self, callback: Callable[[], None]) -> None",
+        "removeExitCallback": "(self, callback: Callable[[], None]) -> None",
+    },
     "SimpleDrawable": {
         "__init__": "(self, scene_viewer: SceneViewer, geometry: Geometry | EnumValue, name: str) -> None",
         "setOutlineColor": "(self, color: Color | Vector4) -> None",
@@ -1334,6 +1454,10 @@ EXPLICIT_DEFINITIONS = {
     "SopNodeType": {
         "addSelector": "(self, name: str, selector_type: str, prompt: str = 'Select components', primitive_types: Sequence[EnumValue] = ..., group_parm_name: str | None = None, group_type_parm_name: str | None = None, input_index: int = 0, input_required: bool = True, allow_dragging: bool = False, empty_string_selects_all: bool = True) -> Selector",
         "selectors": "(self, selector_indices: Sequence[int] = ...) -> tuple[Selector, ...]",
+    },
+    "SopVerb": {
+        "parms": "(self) -> dict[str, OptionType]",
+        "setParms": "(self, p: dict[str, OptionMultiArgType]) -> None",
     },
     "StickyNote": {
         "setSize": "(self, size: Sequence[float] | Vector2) -> None",
@@ -1371,6 +1495,12 @@ EXPLICIT_DEFINITIONS = {
         "cookWorkItems": "(self, block: bool = False, generate_only: bool = False, tops_only: bool = False, save_prompt: bool = False, nodes: Sequence[TopNode] = ...) -> None",
         "generateStaticWorkItems": "(self, block: bool = False, nodes: Sequence[TopNode] = ...) -> None",
     },
+    "UndosDisabler": {
+        "__exit__": "(self, type: type[BaseException], value: BaseException, traceback: TracebackType) -> None",
+    },
+    "UndosGroup": {
+        "__exit__": "(self, type: type[BaseException], value: BaseException, traceback: TracebackType) -> None",
+    },
     "Vector2": {
         "__init__": "(self, x: Sequence[float] | float = ..., y: float = ...) -> None",
         "__mul__": "(self, scalar_or_matrix2: float | Matrix2) -> Vector2",
@@ -1392,22 +1522,23 @@ EXPLICIT_DEFINITIONS = {
         "floatListAttribValue": "(self, name_or_attrib: str | Attrib) -> tuple[float, ...]",
         "intAttribValue": "(self, name_or_attrib: str | Attrib) -> int",
         "intListAttribValue": "(self, name_or_attrib: str | Attrib) -> tuple[int, ...]",
-        "setAttribValue": "(self, name_or_attrib: str | Attrib, attrib_value: AttribArgType | AttribArgDictType) -> None",
+        "setAttribValue": "(self, name_or_attrib: str | Attrib, attrib_value: AttribArgType | AttribDictArgType) -> None",
         "stringAttribValue": "(self, name_or_attrib: str | Attrib) -> str",
         "stringListAttribValue": "(self, name_or_attrib: str | Attrib) -> tuple[str, ...]",
     },
     "VertexGroup": {
         "add": "(self, vertex_or_list_or_vertex_group: Vertex | Sequence[Vertex] | VertexGroup) -> None",
-        "option": "(self, option_name: str) -> OptionReturnType",
-        "options": "(self) -> dict[str, OptionReturnType]",
+        "option": "(self, option_name: str) -> OptionMultiReturnType",
+        "options": "(self) -> dict[str, OptionMultiReturnType]",
         "remove": "(self, vertex_or_list_or_vertex_group: Vertex | Sequence[Vertex] | VertexGroup) -> None",
-        "setOption": "(self, name: str, value: OptionArgType, type_hint: EnumValue = fieldType.NoSuchField) -> None",
+        "setOption": "(self, name: str, value: OptionMultiArgType, type_hint: EnumValue = fieldType.NoSuchField) -> None",
     },
     "ViewerHandleContext": {
         "scaleFactor": "(self, ref_position: Sequence[float] = ...) -> float",
     },
     "ViewerHandleTemplate": {
         "__init__": "(self, name: str, label: str, categories: Sequence[EnumValue]) -> None",
+        "bindFactory": "(self, callback: Callable[[SceneViewer, str], Handle])",
         "bindGadget": "(self, drawable_type: EnumValue, gadget_name: str , gadget_label: str | None = None, parms: Sequence[str] | None = None) -> None",
         "bindParameter": "(self, param_type: EnumValue, name: str , label: str | None = None, default_value: int | float | str | None = None, num_components: int = 1, min_limit: int = 0, max_limit: int = 1, visible: bool = True) -> None",
         "bindSetting": "(self, param_type: EnumValue, name: str , label: str | None = None, menu_as_button_strip: bool = False, menu_items: Sequence[tuple[str, str] | tuple[str, str, str]] | None = None, num_components: int = 1, default_value: int | float | str | None = None, min_limit: int = 0, max_limit: int = 1, align: bool = False) -> None",
@@ -1424,11 +1555,12 @@ EXPLICIT_DEFINITIONS = {
         "addToggleItem": "(self, id,: str label: str, default: bool, hotkey: str = '') -> None",
     },
     "ViewerStateTemplate": {
-        "__init__": "(self, state_name: str, state_label: str, node_type_category: NodeTypeCategory, contexts: Sequence[NodeTypeCategory] | None = None)",
+        "__init__": "(self, state_name: str, state_label: str, node_type_category: NodeTypeCategory, contexts: Sequence[NodeTypeCategory] | None = None) -> None",
         "bindDrawableSelector": "(self, prompt: str, auto_start: bool = True, toolbox: bool = True, drawable_mask=[], hotkey: str = '', name: str = '') -> None",
         "bindDynamicsPointSelector": "(self, prompt: str, allow_objects: bool = True, allow_modifiers: bool = False, quick_select: bool = True, auto_start: bool = True, toolbox: bool = True, use_existing_selection: bool = True, secure_selection: EnumValue = secureSelectionOption.Obey, allow_multisel: bool = True, only_select_points: bool = True, object_based_point_selection: bool = False, use_last_selected_object: bool = False, hotkey: str = '', name: str = '') -> None",
         "bindDynamicsPolygonSelector": "(self, prompt: str, quick_select: bool = True, auto_start: bool = True, toolbox: bool = True, use_existing_selection: bool = True, object_based_point_selection: bool = False, secure_selection: EnumValue = secureSelectionOption.Obey, use_last_selected_object: bool = False, hotkey: str = '', name: str = '') -> None",
         "bindDynamicsSelector": "(self, prompt: str, allow_objects: bool = True, allow_modifiers: bool = False, quick_select: bool = True, auto_start: bool = True, toolbox: bool = True, use_existing_selection: bool = True, secure_selection: EnumValue = secureSelectionOption.Obey, allow_multisel: bool = True, hotkey: str = '', name: str = '') -> None",
+        "bindFactory": "(self, callback: Callable[[str, SceneViewer], Any])",
         "bindGadget": "(self, drawable_type: EnumValue, gadget_name: str, gadget_label: str | None = None) -> None",
         "bindGeometrySelector": "(self, prompt: str, allow_drag: bool = False, quick_select: bool = True, auto_start: bool = True, toolbox: bool = True, use_existing_selection: bool = True, consume_selection: bool = True, secure_selection: EnumValue = secureSelectionOption.Obey, initial_selection: str = '', initial_selection_type: EnumValue = geometryType.Primitives, ordered: bool = False, geometry_types: Sequence[EnumValue] = ..., primitive_types: Sequence[EnumValue] = ..., allow_other_sops: bool = False, hotkey: str = '', name: str = '') -> None",
         "bindHandle": "(self, handle_type: str, name: str, settings: str | None = None) -> None",
@@ -1441,28 +1573,53 @@ EXPLICIT_DEFINITIONS = {
     "ViewportVisualizer": {
         "setParm": "(self, parm_name: str, value: int | float | str) -> None",
     },
+    "Volume": {
+        "setAllVoxelsFromString": "(self, values: bytes) -> None",
+        "setVoxelSliceFromString": "(self, values: bytes, plane: str, index: int) -> None",
+    },
     "VopNode": {
         "shaderCode": "(self, shader_type: EnumValue | None = None) -> str",
         "shaderString": "(self, render_type: str | None = None, shader_type: EnumValue = shaderType.Surface, as_encapsulated: bool = False) -> str",
     },
     "anim": {
+        "addBookmarksChangedCallback": "(callback: Callable) -> None",
+        "addGeometryChannelsChangedCallback": "(collection_name: str, callback: Callable, on_mouse_up: bool = True) -> bool",
         "getGeometryChannels": "(collection_name: str, geometry: Geometry, channel_names: Sequence[str] | None = None) -> None",
         "isGeometryChannelPinned": "(collection_name: str, channel_names: str | None = None) -> bool",
         "mergeGeometryChannels": "(collection_name: str, geometry: Geometry, channel_names: Sequence[str] | None = None) -> None",
         "newBookmark": "(name: str, start: float, end: float) -> Bookmark",
+        "removeBookmarksChangedCallback": "(callback: Callable) -> None",
+        "removeGeometryChannelsChangedCallback": "(collection_name: str, callback: Callable, on_mouse_up: bool = True) -> bool",
         "saveBookmarks": "(filename: str, bookmarks: Sequence[Bookmark] | None = None, include_temporary: bool = False) -> bool",
         "saveBookmarksToString": "(bookmarks: Sequence[Bookmark] | None = None, include_temporary: bool = False, binary: bool = True) -> bytes",
         "setGeometryChannelsFromPattern": "(collection_name: str, geometry: Geometry, pattern: str) -> None",
+    },
+    "clone": {
+        "addConnectionChangeCallback": "(callback: Callable[[str], None]) -> None",
+        "addImageChangeCallback": "(callback: Callable[[str], None]) -> None",
+        "connectionChangeCallbacks": "() -> tuple[Callable[[str], None], ...]",
+        "imageChangeCallbacks": "() -> tuple[Callable[[str], None], ...]",
+        "removeConnectionChangeCallback": "(callback: Callable[[str], None]) -> None",
+        "removeImageChangeCallback": "(callback: Callable[[str], None]) -> None",
     },
     "crowds": {
         "findAgentDefinitions": "(geometry: Geometry, group: str = '', group_type: EnumValue = geometryType.Primitives) -> tuple[AgentDefinition, ...]",
         "replaceAgentDefinitions": "(geometry: Geometry, new_definition_map: dict[AgentDefinition, AgentDefinition], group: str = '', group_type: EnumValue = geometryType.Primitives) -> None",
         "setBlendshapeDeformerParms": "(base_shape_geo: Geometry, attribs: str = 'P N', point_id_attrib: str = 'id', prim_id_attrib: str = 'id') -> None",
+        "applyUsdProcedural": "(stage: pxr.Usd.Stage, selection_rule: LopSelectionRule, camera_path: str, resolution: tuple[int, int], lod_threshold: float, offscreen_quality: float, optimize_identical_poses: bool, bake_all_agents: bool, frame: float, prototype_material: str, instance_material: str, default_material: str) -> None",
+    },
+    "hda": {
+        "addEventCallback": "(event_types: Sequence[EnumValue], callback: Callable) -> None",
+        "eventCallbacks": "() -> tuple[tuple[tuple[EnumValue, ...], Callable], ...]) -> None",
+        "removeEventCallback": "(event_types: Sequence[EnumValue], callback: Callable) -> None",
     },
     "hipFile": {
         "collisionNodesIfMerged": "(file_name: str, node_pattern: str = '*') -> tuple[OpNode, ...]",
         "importFBX": "(file_name: str, suppress_save_prompt: bool = False, merge_into_scene: bool = True, import_cameras: bool = True, import_joints_and_skin: bool = True, import_geometry: bool = True, import_lights: bool = True, import_animation: bool = True, import_materials: bool = True, resample_animation: bool = False, resample_interval: float = 1.0, override_framerate: bool = False, framerate: int = -1, hide_joints_attached_to_skin: bool = True, convert_joints_to_zyx_rotation_order: bool = False, material_mode: EnumValue = fbxMaterialMode.FBXShaderNodes, compatibility_mode: EnumValue = fbxCompatibilityMode.Maya, single_precision_vertex_caches: bool = False, triangulate_nurbs: bool = False, triangulate_patches: bool = False, import_global_ambient_light: bool = False, import_blend_deformers_as_blend_sops: bool = False, segment_scale_already_baked_in: bool = True, convert_file_paths_to_relative: bool = True, unlock_geometry: bool = False, unlock_deformations: bool = False, import_nulls_as_subnets: bool = False, import_into_object_subnet: bool = True, convert_into_y_up_coordinate_system: bool = False, create_sibling_bones: bool = True, override_scene_frame_range: bool = False, convert_units: bool = False) -> tuple[ObjNode, ...]",
         "merge": "(file_name: str, node_pattern: str = '*', overwrite_on_conflict: bool = False, ignore_load_warnings: bool = False) -> None",
+        "addEventCallback": "(callback: Callable[[EnumValue], None]) -> None",
+        "removeEventCallback": "(callback: Callable[[EnumValue], None]) -> None",
+        "eventCallbacks": "() -> tuple[Callable[[EnumValue], None], ...]",
     },
     "hmath": {
         "buildRotate": "(rx: float | Vector3, ry: float = ..., rz: float = ..., order: str = 'xyz') -> Matrix4",
@@ -1489,12 +1646,18 @@ EXPLICIT_DEFINITIONS = {
     },
     "lop": {
         "addLockedGeometry": "(identifier: str, geo: Geometry, args: dict[str, str] | None = None) -> str",
+        "addPreferenceChangeCallback": "(callback: Callable) -> None",
+        "availableRendererInfo": "() -> list[dict[str, Any]]",
         "createConnectionParmsForProperty": "(source: LopNode | str, primpath: str, propertyname: str, parametername: str | None = None, prepend_control_parm: bool = ...) -> ParmTemplateGroup",
         "createParmsForProperty": "(source: LopNode | str, primpath: str, propertyname: str, parametername: str | None = None, prepend_control_parm: bool = ..., prefix_xform_parms: bool = ...) -> ParmTemplateGroup",
+        "removePreferenceChangeCallback": "(callback: Callable) -> None",
         "setParmTupleFromProperty": "(parmtuple: ParmTuple, source: LopNode | str, primpath: str, propertyname: str) -> None",
         "translateShader": "(node: Node, node_output_name: str, material_prim_path: str, container_prim_path: str, shader_prim_name: str | None = None, frame: float | None = None) -> str",
     },
     "playbar": {
+        "addEventCallback": "(callback: Callable[[EnumValue, float], None]) -> None",
+        "eventCallbacks": "() -> tuple[Callable[[EnumValue, float], None], ...]",
+        "removeEventCallback": "(callback: Callable[[EnumValue, float], None]) -> None",
         "setChannelList": "(arg: ChannelList) -> None",
     },
     "properties": {
@@ -1507,36 +1670,47 @@ EXPLICIT_DEFINITIONS = {
         "collapseCommonVars": "(path: str, vars: Sequence[str] = ...) -> str",
     },
     "ui": {
+        "addEventLoopCallback": "(callback: Callable[[], None]) -> None",
+        "addResourceEventCallback": "(callback: Callable[[enumValue, Any, str], None]) -> None",
+        "addSelectionCallback": "(callback: Callable[[Sequence[NetworkMovableItem]], None]) -> None",
+        "addTriggerUpdateCallback": "(callback: Callable) -> None",
         "displayConfirmation": "(text: str, severity: EnumValue = ..., help: str | None = None, title: str | None = None, details: str | None = None, details_label: str | None = None, details_expanded: bool = False, suppress: EnumValue = ...) -> bool",
         "displayCustomConfirmation": "(text: str, buttons: Sequence[str] = ..., severity: EnumValue = ..., default_choice: int = 0, close_choice: int = -1, help: str | None = None, title: str | None = None, details: str | None = None, details_label: str | None = None, details_expanded: bool = False, suppress: EnumValue = ...) -> int",
         "displayFileDependencyDialog": "(rop_node: RopNode | None = None, uploaded_files: Sequence[str] = ..., forced_unselected_patterns: Sequence[str] = ..., project_dir_variable: str = 'HIP', is_standalone: bool = true) -> tuple[bool, tuple[tuple[Parm, str], ...]]",
         "displayMessage": "(text: str, buttons: Sequence[str] = ..., severity: EnumValue = ..., default_choice: int = 0, close_choice: int = -1, help: str | None = None, title: str | None = None, details: str | None = None, details_label: str | None = None, details_expanded: bool = False, suppress: EnumValue = ...) -> int",
+        "eventLoopCallbacks": "() -> tuple[Callable[[], None], ...]",
+        "fireResourceCustomEvent": "(resource_type: EnumValue, user_data: dict[str, bool | AttribBasicType], queue: bool = True) -> None",
         "getDragSourceData": "(label: str, index: int = 0) -> Any",
         "hasDragSourceData": "(label: str, index: int) -> bool",
         "loadPackageArchive": "(file_path: str, extract_path: str | None = None) -> tuple[str, ...]",
+        "openColorEditor": "(color_changed_callback: Callable[[Color, float], None], include_alpha: bool = False, initial_color: Color | None = None, initial_alpha: float = 1.0) -> None",
         "openFileEditor": "(title: str, file_path: str, action_callback: Callable[[dict[str, int | float | bool | str]], None] | None = None, params: dict[str, int | float | bool | str] | None = None) -> None",
         "openValueLadder": "(initial_value: float, value_changed_callback: Callable[[float], None], type: EnumValue = valueLadderType.Generic, data_type: EnumValue = valueLadderDataType.Float) -> None",
+        "openViewerHandleCodeGenDialog": "(category: NodeTypeCategory, action_callback: Callable[[dict[str, str | bool]], None]) -> None",
         "openViewerStateCodeGenDialog": "(category: NodeTypeCategory, action_callback: Callable[[dict[str, int | float | bool | str]], None], operator_name: str | None = None) -> None",
         "packageInfo": "(file_paths: Sequence[str]) -> str",
+        "postEventCallback": "(callback: Callable[[], None]) -> None",
         "printResourceMessage": "(resource_type: EnumValue, message: str, message_type: EnumValue = ...) -> None",
         "readInput": "(text: str, buttons: Sequence[str] = ..., severity_type: EnumValue = ..., default_choice: int = 0, close_choice: int = -1, help: str | None = None, title: str | None = None, initial_contents: str | None = None) -> tuple[int, str]",
         "readMultiInput": "(text: str, input_labels: Sequence[str], password_input_indices: Sequence[int] = ..., buttons: Sequence[str] = ..., severity_type: EnumValue = ..., default_choice: int = 0, close_choice: int = -1, help: str | None = None, title: str | None = None, initial_contents: Sequence[str] = ...) -> tuple[int, tuple[str, ...]]",
         "reloadViewerStates": "(state_names: Sequence[str] | None = None) -> None",
+        "removeEventLoopCallback": "(callback: Callable[[], None]) -> None",
+        "removePostedEventCallback": "(callback: Callable[[], None]) -> None",
+        "removeResourceEventCallback": "(callback: Callable[[enumValue, Any, str], None]) -> None",
+        "removeSelectionCallback": "(callback: Callable[[Sequence[NetworkMovableItem]], None]) -> None",
+        "removeTriggerUpdateCallback": "(callback: Callable) -> None",
         "selectFromList": "(choices: Sequence[str], default_choices: Sequence[int] = ..., exclusive: bool = False, message: str | None = None, title: str | None = None, column_header: str = 'Choices', num_visible_rows: int = 10, clear_on_cancel: bool = False, width: int = 0, height: int = 0, sort: bool = False, condense_paths: bool = False) -> tuple[int, ...]",
         "selectFromTree": "(choices: Sequence[str], picked: Sequence[int] = ..., exclusive: bool = False, message: str | None = None, title: str | None = None, clear_on_cancel: bool = False, width: int = 0, height: int = 0) -> tuple[str, ...]",
+        "selectMultipleNodes": "(relative_to_node: Node | None = None, initial_node: Node | None = None, node_type_filter: EnumValue | None = None, title: str | None = None, width: int = 0, height: int = 0, custom_node_filter_callback: Callable[[Node], bool] | None = None) -> tuple[str, ...]",
         "selectParm": "(category: NodeTypeCategory = ..., bound_parms_only: bool = False, relative_to_node: OpNode | None = None, message: str | None = None, title: str | None = None, initial_parms: Sequence[Parm] = ..., multiple_select: bool = True, width: int = 0, height: int = 0) -> tuple[str, ...]",
         "selectParmTuple": "(category: NodeTypeCategory = ..., bound_parms_only: bool = False, relative_to_node: OpNode | None = None, message: str | None = None, title: str | None = None, initial_parm_tuples: Sequence[ParmTuple] = ..., multiple_select: bool = True, width: int = 0, height: int = 0) -> tuple[str, ...]",
+        "selectionCallbacks": "() -> tuple[Callable[[Sequence[NetworkMovableItem]], None], ...]",
         "setStatusMessage": "(message: str, severity: EnumValue = ...) -> None",
         "viewerHandleInfo": "(handle_names: Sequence[str] = ...) -> str",
         "viewerStateInfo": "(state_names: Sequence[str] = ...) -> str",
+        "waitUntil": "(callback: Callable[[], bool]) -> None",
     },
     "viewportVisualizers": {
-        # FIXME: The Callables provided to the callback system for viewport visualizers take
-        #  different argument types and numbers of arguments according to the event type associated
-        #  with the callback.  To avoid an overload nightmare and to avoid fully articulating code
-        #  that is likely to be out of date at some stage, I'm going to leave them as `Callable`
-        #  with no subscript annotation.
-        #  See the documentation of hou.viewportVisualizerEventType for more information.
         "addEventCallback": "(self, event_types: EnumValue, callback: Callable, category: EnumValue = viewportVisualizerCategory.Common, node: Node | None = None) -> None",
         "createVisualizer": "(type: EnumValue, category: EnumValue = viewportVisualizerCategory.Common, node: Node | None = None) -> ViewportVisualizer",
         "eventCallbacks": "(category=hou.viewportVisualizerCategory.Common, node=None) -> Sequence[tuple[Sequence[EnumValue], Callable]]",

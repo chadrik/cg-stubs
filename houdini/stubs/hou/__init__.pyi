@@ -5,22 +5,25 @@ from _typeshed import Incomplete
 
 import datetime
 import typing
+from types import TracebackType
 from typing import Any, Callable, Dict, Iterator, Iterable, Literal, Optional, Sequence, Self, Union, Tuple, TypeAlias
 
 import pxr.Sdf
 import pxr.Usd
 from PySide2 import QtGui, QtWidgets
 
+AttribBasicType: TypeAlias = int | float | str
 AttribArgType: TypeAlias = int | float | str | Sequence[int] | Sequence[float] | Sequence[str]
 AttribDictArgType: TypeAlias = dict[str, int] | dict[str, float] | dict[str, str] | dict[str, Sequence[int]] | dict[str, Sequence[float]] | dict[str, Sequence[str]]
 AttribReturnType: TypeAlias = int | float | str | tuple[int, ...] | tuple[float, ...] | tuple[str, ...]
 AttribDictReturnType: TypeAlias = dict[str, int] | dict[str, float] | dict[str, str] | dict[str, tuple[int, ...]] | dict[str, tuple[float, ...]] | dict[str, tuple[str, ...]]
-ParmReturnType: TypeAlias = bool | int | float | str | dict[str, str] | 'Ramp'
+ParmType: TypeAlias = bool | int | float | str | dict[str, str] | 'Ramp'
+ParmTupleArgType: TypeAlias = Sequence[bool] | Sequence[int] | Sequence[float] | Sequence[str] | Sequence[dict[str, str]] | Sequence['Ramp']
 ParmTupleReturnType: TypeAlias = tuple[bool, ...] | tuple[int, ...] | tuple[float, ...] | tuple[str, ...] | tuple[dict[str, str], ...] | tuple['Ramp', ...]
-OptionArgType: TypeAlias = bool | int | float | str | Vector2 | Vector3 | Vector4 | Quaternion | Matrix3 | Matrix4 | Sequence[int] | Sequence[float]
-OptionReturnType: TypeAlias = bool | int | float | str | Vector2 | Vector3 | Vector4 | Quaternion | Matrix3 | Matrix4 | tuple[int, ...] | tuple[float, ...]
-OptionSingleArgType: TypeAlias = bool | int | float | str | Vector2 | Vector3 | Vector4 | Quaternion | Matrix3 | Matrix4 | Sequence[int] | Sequence[float]
-OptionSingleReturnType: TypeAlias = bool | int | float | str | Vector2 | Vector3 | Vector4 | Quaternion | Matrix3 | Matrix4
+OptionType: TypeAlias = bool | int | float | str | Vector2 | Vector3 | Vector4 | Quaternion | Matrix3 | Matrix4
+OptionSequenceType: TypeAlias = Sequence[bool] | Sequence[int] | Sequence[float] | Sequence[str] | Sequence[Vector2] | Sequence[Vector3] | Sequence[Vector4] | Sequence[Quaternion] | Sequence[Matrix3] | Sequence[Matrix4]
+OptionMultiArgType: TypeAlias = bool | int | float | str | Vector2 | Vector3 | Vector4 | Quaternion | Matrix3 | Matrix4 | Sequence[int] | Sequence[float]
+OptionMultiReturnType: TypeAlias = bool | int | float | str | Vector2 | Vector3 | Vector4 | Quaternion | Matrix3 | Matrix4 | tuple[int, ...] | tuple[float, ...]
 
 
 class _SwigNonDynamicMeta(type):
@@ -11893,7 +11896,7 @@ class OpNode(Node):
 
 
         """
-    def lastCookContextOptions(self, only_used_options: bool = False) -> dict[str, Any]:
+    def lastCookContextOptions(self, only_used_options: bool = ...) -> dict[str, str|float]:
         """
 
         lastCookContextOptions(self, only_used_options=False) -> dict of str to
@@ -11906,7 +11909,7 @@ class OpNode(Node):
 
 
         """
-    def evalParm(self, parm_path: str) -> ParmReturnType:
+    def evalParm(self, parm_path: str) -> ParmType:
         """
 
         evalParm(self, parm_path) -> int, float, or str
@@ -11924,7 +11927,7 @@ class OpNode(Node):
 
 
         """
-    def addEventCallback(self, event_types: Sequence[EnumValue], callback: Any) -> None:
+    def addEventCallback(self, event_types: Sequence[EnumValue], callback: Callable) -> None:
         '''
 
         addEventCallback(self, event_types, callback)
@@ -11991,7 +11994,7 @@ class OpNode(Node):
 
 
         '''
-    def addParmCallback(self, callback: Any, names: Sequence[str]) -> None:
+    def addParmCallback(self, callback: Callable[[OpNode, ParmTuple], None], names: Sequence[str]) -> None:
         """
 
         addParmCallback(self, callback, parm_names)
@@ -12015,7 +12018,7 @@ class OpNode(Node):
 
 
         """
-    def removeEventCallback(self, event_types: Sequence[EnumValue], callback: Any) -> None:
+    def removeEventCallback(self, event_types: Sequence[EnumValue], callback: Callable) -> None:
         """
 
         removeEventCallback(self, event_types, callback)
@@ -12033,13 +12036,13 @@ class OpNode(Node):
 
 
         """
-    def eventCallbacks(self) -> tuple[tuple[tuple[EnumValue, ...], Any], ...]: ...
+    def eventCallbacks(self) -> tuple[tuple[tuple[EnumValue,...], Callable],...]: ...
     def createNode(self, node_type_name: str, node_name: str | None = None, run_init_scripts: bool = True, load_contents: bool = True, exact_type_name: bool = False, force_valid_node_name: bool = False) -> OpNode: ...
     def inputConnections(self) -> tuple[OpNodeConnection, ...]: ...
     def node(self, node_path: str) -> OpNode | None: ...
     def outputConnections(self) -> tuple[OpNodeConnection, ...]: ...
-    def setParmExpressions(self, parm_dict: dict[str, Any], language: EnumValue | None = None, replace_expressions: bool = True) -> None: ...
-    def setParms(self, parm_dict: dict[str, Any]) -> None: ...
+    def setParmExpressions(self, parm_dict: dict[str, str | Sequence[str]], language: EnumValue | None = None, replace_expressions: bool = True) -> None: ...
+    def setParms(self, parm_dict: dict[str, ParmType | ParmTupleArgType]) -> None: ...
     def type(self) -> OpNodeType: ...
 
 class NodeGroup:
@@ -13193,7 +13196,7 @@ class Prim:
 
 
         """
-    def setAttribValue(self, name_or_attrib: Attrib|str, attrib_value: AttribArgType|AttribArgDictType) -> None:
+    def setAttribValue(self, name_or_attrib: Attrib|str, attrib_value: AttribArgType|AttribDictArgType) -> None:
         '''
 
         setAttribValue(self, name_or_attrib, attrib_value)
@@ -13369,7 +13372,7 @@ class Prim:
 
 
         """
-    def nearestToPosition(self, position: Sequence[float]) -> Tuple[float, float, float]:
+    def nearestToPosition(self, position: Sequence[float]) -> tuple[float, float, float]:
         """
 
         nearestToPosition(self, pos3)
@@ -14798,7 +14801,7 @@ class OpNodeType(NodeType):
 
 
         """
-    def deprecationInfo(self) -> dict[str, Any]:
+    def deprecationInfo(self) -> dict[str, str|Self]:
         """
 
         deprecationInfo(self) -> dict of str to str or hou.NodeType
@@ -17594,7 +17597,7 @@ class _logging_Sink:
 
 
         """
-    def setFilterCallback(self, callback: Any) -> None:
+    def setFilterCallback(self, callback: Callable[[_logging_LogEntry], None]) -> None:
         """
 
         setFilterCallback(callback)
@@ -19917,7 +19920,7 @@ class anim:
 
         """
     @staticmethod
-    def addBookmarksChangedCallback(callback: Any) -> None:
+    def addBookmarksChangedCallback(callback: Callable) -> None:
         """
 
         addBookmarksChangedCallback(callback)
@@ -19928,7 +19931,7 @@ class anim:
 
         """
     @staticmethod
-    def removeBookmarksChangedCallback(callback: Any) -> None:
+    def removeBookmarksChangedCallback(callback: Callable) -> None:
         """
 
         removeBookmarksChangedCallback(callback)
@@ -19938,7 +19941,7 @@ class anim:
 
         """
     @staticmethod
-    def addGeometryChannelsChangedCallback(collection_name: str, callback: Any, on_mouse_up: bool = True) -> bool:
+    def addGeometryChannelsChangedCallback(collection_name: str, callback: Callable, on_mouse_up: bool = ...) -> bool:
         """
 
         addGeometryChannelsChangedCallback(collection_name, callback,
@@ -19975,7 +19978,7 @@ class anim:
 
         """
     @staticmethod
-    def removeGeometryChannelsChangedCallback(collection_name: str, callback: Any, on_mouse_up: bool = True) -> bool:
+    def removeGeometryChannelsChangedCallback(collection_name: str, callback: Callable, on_mouse_up: bool = ...) -> bool:
         """
 
         removeGeometryChannelsChangedCallback(collection_name, callback,
@@ -20998,7 +21001,7 @@ class Attrib:
 
 
         """
-    def setOption(self, name: str, value: OptionArgType, type_hint: EnumValue = ...) -> None:
+    def setOption(self, name: str, value: OptionMultiArgType, type_hint: EnumValue = ...) -> None:
         """
 
         setOption(self, name, value, type_hint = hou.fieldType::NoSuchField)
@@ -21054,7 +21057,7 @@ class Attrib:
 
 
         """
-    def defaultValue(self) -> Any:
+    def defaultValue(self) -> AttribReturnType:
         """
 
         defaultValue(self) -> int or float or str or tuple
@@ -21068,7 +21071,7 @@ class Attrib:
 
 
         """
-    def options(self) -> dict[str, OptionReturnType]:
+    def options(self) -> dict[str, OptionMultiReturnType]:
         """
 
         option(self, name) -> bool, int, float, str, hou.Vector2, hou.Vector3,
@@ -21083,7 +21086,7 @@ class Attrib:
 
 
         """
-    def option(self, option_name: str) -> OptionReturnType: ...
+    def option(self, option_name: str) -> OptionMultiReturnType: ...
 
 class AttribDataId:
     """
@@ -24169,7 +24172,7 @@ class clone:
 
         """
     @staticmethod
-    def addConnectionChangeCallback(callback: Any) -> None:
+    def addConnectionChangeCallback(callback: Callable[[str], None]) -> None:
         """
 
         hou.clone.addConnectionChangeCallback
@@ -24197,7 +24200,7 @@ class clone:
 
         """
     @staticmethod
-    def removeConnectionChangeCallback(callback: Any) -> None:
+    def removeConnectionChangeCallback(callback: Callable[[str], None]) -> None:
         """
 
         hou.clone.removeConnectionChangeCallback
@@ -24220,7 +24223,7 @@ class clone:
 
         """
     @staticmethod
-    def connectionChangeCallbacks() -> tuple[Any, ...]:
+    def connectionChangeCallbacks() -> tuple[Callable[[str], None],...]:
         """
 
         hou.clone.connectionChangeCallbacks
@@ -24236,7 +24239,7 @@ class clone:
 
         """
     @staticmethod
-    def addImageChangeCallback(callback: Any) -> None:
+    def addImageChangeCallback(callback: Callable[[str], None]) -> None:
         """
 
         hou.clone.addImageChangeCallback
@@ -24261,7 +24264,7 @@ class clone:
 
         """
     @staticmethod
-    def removeImageChangeCallback(callback: Any) -> None:
+    def removeImageChangeCallback(callback: Callable[[str], None]) -> None:
         """
 
         hou.clone.removeImageChangeCallback
@@ -24284,7 +24287,7 @@ class clone:
 
         """
     @staticmethod
-    def imageChangeCallbacks() -> tuple[Any, ...]:
+    def imageChangeCallbacks() -> tuple[Callable[[str], None],...]:
         """
 
         hou.clone.imageChangeCallbacks
@@ -24584,7 +24587,7 @@ class _clone_Connection:
 
 
         """
-    def contextOptionExpression(self, opt: str) -> Any:
+    def contextOptionExpression(self, opt: str) -> str:
         """
 
         contextOptionExpression(self, opt) -> str
@@ -26048,7 +26051,7 @@ class Cop2Node(OpNode):
 
 
         """
-    def setPixelsOfCookingPlaneFromString(self, values: Any, component: Optional[str] = None, interleaved: bool = True, depth: Optional[EnumValue] = None, flip_vertically: bool = False) -> None:
+    def setPixelsOfCookingPlaneFromString(self, values: bytes, component: str|None = ..., interleaved: bool = ..., depth: EnumValue|None = ..., flip_vertically: bool = ...) -> None:
         """
 
         setPixelsOfCookingPlaneFromString(self, values, component=None,
@@ -26362,7 +26365,7 @@ class crowds:
 
         """
     @staticmethod
-    def applyUsdProcedural(stage: Any, selection_rule: LopSelectionRule, camera_path: str, resolution: tuple[int, int], lod_threshold: float, offscreen_quality: float, optimize_identical_poses: bool, bake_all_agents: bool, frame: float, prototype_material: str, instance_material: str, default_material: str) -> None:
+    def applyUsdProcedural(stage: pxr.Usd.Stage, selection_rule: LopSelectionRule, camera_path: str, resolution: tuple[int, int], lod_threshold: float, offscreen_quality: float, optimize_identical_poses: bool, bake_all_agents: bool, frame: float, prototype_material: str, instance_material: str, default_material: str) -> None:
         """
 
         applyUsdProcedural(self, stage, selection_rule, camera_path, resolution,
@@ -27113,7 +27116,7 @@ class Dialog:
 
 
         """
-    def setValue(self, name: str, value: OptionSingleArgType) -> None:
+    def setValue(self, name: str, value: OptionType) -> None:
         """
 
         setValue(self, name, value)
@@ -27141,7 +27144,7 @@ class Dialog:
 
 
         """
-    def waitForValueToChangeTo(self, name: str, new_value: OptionSingleArgType) -> None:
+    def waitForValueToChangeTo(self, name: str, new_value: OptionType) -> None:
         """
 
         waitForValueToChangeTo(self, name, new_value)
@@ -27186,7 +27189,7 @@ class Dialog:
 
 
         """
-    def value(self, name: str) -> OptionSingleReturnType:
+    def value(self, name: str) -> OptionType:
         """
 
         value(self, name)
@@ -27668,7 +27671,7 @@ class DopRecord:
 
 
         """
-    def field(self, field_name: str) -> Any:
+    def field(self, field_name: str) -> OptionType:
         '''
 
         field(self) -> int, bool, float, str, hou.Vector2, hou.Vector3,
@@ -27722,7 +27725,7 @@ class DopRecord:
 
 
         """
-    def setField(self, field_name: str, value: OptionSingleArgType) -> None:
+    def setField(self, field_name: str, value: OptionType) -> None:
         """
 
         setField(self, field_name, value)
@@ -33592,7 +33595,7 @@ class Geometry:
 
 
         """
-    def addAttrib(self, type: EnumValue, name: str, default_value: Any, transform_as_normal: bool = ..., create_local_variable: bool = ...) -> Attrib:
+    def addAttrib(self, type: EnumValue, name: str, default_value: AttribArgType|AttribDictArgType, transform_as_normal: bool = ..., create_local_variable: bool = ...) -> Attrib:
         '''
 
         addAttrib(self, type, name, default_value, transform_as_normal=False,
@@ -33987,7 +33990,7 @@ class Geometry:
 
 
         """
-    def intrinsicValue(self, intrinsic_name: str) -> Any:
+    def intrinsicValue(self, intrinsic_name: str) -> AttribReturnType:
         """
 
         intrinsicValue(self, intrinsic_name) -> int, float, str, or tuple
@@ -34650,7 +34653,7 @@ class Geometry:
 
 
         """
-    def nearestPrim(self, position: Sequence[float]) -> Tuple[Prim, float, float, float]:
+    def nearestPrim(self, position: Sequence[float]) -> tuple[Prim, float, float, float]:
         """
 
         nearestPrim(self, position) -> (hou.Prim or None, float, float, float)
@@ -35094,7 +35097,7 @@ class Geometry:
 
 
         """
-    def packedFolderProperties(self, path: str) -> dict[str, Any]:
+    def packedFolderProperties(self, path: str) -> dict[str, bool]:
         """
 
         packedFolderProperties(self, path) -> dict
@@ -36831,7 +36834,7 @@ class GeometryViewport:
 
 
         """
-    def addEventCallback(self, callback: Any) -> None:
+    def addEventCallback(self, callback: Callable[[dict[str, Any]], None]) -> None:
         '''
 
         addEventCallback(self, callback)
@@ -36879,7 +36882,7 @@ class GeometryViewport:
           > curSceneViewer.curViewport().addEventCallback(onViewportCB)
 
         '''
-    def removeEventCallback(self, callback: Any) -> None:
+    def removeEventCallback(self, callback: Callable[[dict[str, Any]], None]) -> None:
         """
 
         removeEventCallback(self,callback)
@@ -36899,7 +36902,7 @@ class GeometryViewport:
 
 
         """
-    def eventCallbacks(self) -> tuple[Any, ...]:
+    def eventCallbacks(self) -> tuple[Callable[[dict[str, Any]], None],...]:
         """
 
         eventCallbacks(self) -> tuple of callbacks
@@ -43486,7 +43489,7 @@ class hda:
 
         """
     @staticmethod
-    def addEventCallback(event_types: Sequence[EnumValue], callback: Any) -> None:
+    def addEventCallback(event_types: Sequence[EnumValue], callback: Callable) -> None:
         '''
 
         addEventCallback(self, event_types, callback)
@@ -43555,7 +43558,7 @@ class hda:
 
         '''
     @staticmethod
-    def removeEventCallback(event_types: Sequence[EnumValue], callback: Any) -> None:
+    def removeEventCallback(event_types: Sequence[EnumValue], callback: Callable) -> None:
         """
 
         removeEventCallback(self, event_types, callback)
@@ -44292,7 +44295,7 @@ class HDADefinition:
 
 
         """
-    def setExtraFileOption(self, name, value: OptionArgType, type_hint: EnumValue = ...) -> None:
+    def setExtraFileOption(self, name, value: OptionType, type_hint: EnumValue = ...) -> None:
         '''
 
         setExtraFileOption(self, name, value, type_hint =
@@ -44363,7 +44366,7 @@ class HDADefinition:
 
 
         """
-    def extraFileOptions(self) -> Any:
+    def extraFileOptions(self) -> dict[str, OptionType]:
         """
 
         extraFileOptions(self) -> dict of str to bool, int, float, str
@@ -45681,7 +45684,7 @@ class hipFile:
 
         """
     @staticmethod
-    def addEventCallback(callback: Any) -> None:
+    def addEventCallback(callback: Callable[[EnumValue], None]) -> None:
         '''
 
         addEventCallback(self, callback)
@@ -45703,7 +45706,7 @@ class hipFile:
 
         '''
     @staticmethod
-    def removeEventCallback(callback: Any) -> None:
+    def removeEventCallback(callback: Callable[[EnumValue], None]) -> None:
         """
 
         removeEventCallback(callback)
@@ -45729,7 +45732,7 @@ class hipFile:
 
         """
     @staticmethod
-    def eventCallbacks() -> tuple[Any, ...]:
+    def eventCallbacks() -> tuple[Callable[[EnumValue], None],...]:
         """
 
         eventCallbacks() -> tuple of callback
@@ -48124,7 +48127,7 @@ class InterruptableOperation:
 
         """
     def __enter__(self) -> InterruptableOperation: ...
-    def __exit__(self, type: Any, value: Any, traceback: Any) -> None: ...
+    def __exit__(self, type: type[BaseException], value: BaseException, traceback: TracebackType) -> None: ...
 
 class IntParmTemplate(ParmTemplate):
     """
@@ -50620,7 +50623,7 @@ class LopNetwork(OpNode):
 
 
         """
-    def postLayer(self, name: str) -> Any:
+    def postLayer(self, name: str) -> pxr.Sdf.Layer|None:
         """
 
         postLayer(self, name) -> pxr.Sdf.Layer or None
@@ -52250,7 +52253,7 @@ class lop:
 
         """
     @staticmethod
-    def availableRendererInfo() -> Any:
+    def availableRendererInfo() -> list[dict[str, Any]]:
         """
 
         availableRendererInfo() -> list of dict
@@ -52261,7 +52264,7 @@ class lop:
 
         """
     @staticmethod
-    def addPreferenceChangeCallback(callback: Any) -> None:
+    def addPreferenceChangeCallback(callback: Callable) -> None:
         """
 
         addPreferenceChangeCallback(callback)
@@ -52272,7 +52275,7 @@ class lop:
 
         """
     @staticmethod
-    def removePreferenceChangeCallback(callback: Any) -> None:
+    def removePreferenceChangeCallback(callback: Callable) -> None:
         """
 
         removePreferenceChangeCallback(callback)
@@ -52421,9 +52424,9 @@ class LopPostLayer:
     def __init__(self, *args, **kwargs) -> None: ...
     __swig_destroy__: Incomplete
     def __enter__(self) -> LopPostLayer: ...
-    def layer(self) -> Any: ...
-    def stage(self) -> Any: ...
-    def __exit__(self, type: Any, value: Any, traceback: Any) -> None: ...
+    def layer(self) -> pxr.Sdf.Layer: ...
+    def stage(self) -> pxr.Usd.Stage: ...
+    def __exit__(self, type: type[BaseException], value: BaseException, traceback: TracebackType) -> None: ...
 
 class LopSelectionRule:
     """
@@ -52451,7 +52454,7 @@ class LopSelectionRule:
 
 
         """
-    def expandedPaths(self, lopnode: Optional[LopNode] = None, return_ancestors: bool = False, fallback_to_new_paths: bool = False, stage: Optional[Any] = None, use_last_cook_context_options: bool = True) -> Any:
+    def expandedPaths(self, lopnode: LopNode|None = ..., return_ancestors: bool = ..., fallback_to_new_paths: bool = ..., stage: pxr.Usd.Stage|None = ..., use_last_cook_context_options: bool = ...) -> tuple[pxr.Sdf.Path,...]:
         """
 
         expandedPaths(self, lopnode=None, return_ancestors=False,
@@ -52494,7 +52497,7 @@ class LopSelectionRule:
 
 
         """
-    def firstPath(self, lopnode: Optional[LopNode] = None, return_ancestors: bool = False, fallback_to_new_paths: bool = False, stage: Optional[Any] = None, use_last_cook_context_options: bool = True) -> Any:
+    def firstPath(self, lopnode: LopNode|None = ..., return_ancestors: bool = ..., fallback_to_new_paths: bool = ..., stage: pxr.Usd.Stage|None = ..., use_last_cook_context_options: bool = ...) -> pxr.Sdf.Path:
         """
 
         firstPath(self, lopnode=None, return_ancestors=False,
@@ -52513,7 +52516,7 @@ class LopSelectionRule:
 
 
         """
-    def collectionAwarePaths(self, lopnode: Optional[LopNode] = None, fallback_to_new_paths: bool = False, stage: Optional[Any] = None, use_last_cook_context_options: bool = True) -> Any:
+    def collectionAwarePaths(self, lopnode: LopNode|None = ..., fallback_to_new_paths: bool = ..., stage: pxr.Usd.Stage|None = ..., use_last_cook_context_options: bool = ...) -> tuple[pxr.Sdf.Path,...]:
         """
 
         collectionAwarePaths(self, lopnode=None, fallback_to_new_paths=False,
@@ -52554,7 +52557,7 @@ class LopSelectionRule:
 
 
         """
-    def newPaths(self, lopnode: Optional[LopNode] = None, stage: Optional[Any] = None, use_last_cook_context_options: bool = True) -> Any:
+    def newPaths(self, lopnode: LopNode|None = ..., stage: pxr.Usd.Stage|None = ..., use_last_cook_context_options: bool = ...) -> tuple[pxr.Sdf.Path,...]:
         """
 
         newPaths(self, lopnode=None, stage=None, use_last_cook_context_options =
@@ -53233,7 +53236,7 @@ class LopViewportOverrides:
 
 
         """
-    def layer(self) -> Any:
+    def layer(self) -> pxr.Sdf.Layer:
         """
 
         layer(self) -> pxr.Sdf.Layer
@@ -53248,7 +53251,7 @@ class LopViewportOverrides:
 
 
         """
-    def stage(self) -> Any:
+    def stage(self) -> pxr.Usd.Stage:
         """
 
         stage(self) -> pxr.Sdf.Stage
@@ -53260,7 +53263,7 @@ class LopViewportOverrides:
 
 
         """
-    def soloLights(self) -> Any:
+    def soloLights(self) -> pxr.Sdf.Path:
         """
 
         soloLights(self) -> tuple of pxr.Sdf.Path
@@ -53270,7 +53273,7 @@ class LopViewportOverrides:
 
 
         """
-    def soloGeometry(self) -> Any:
+    def soloGeometry(self) -> pxr.Sdf.Path:
         """
 
         soloGeometry(self) -> tuple of pxr.Sdf.Path
@@ -53280,7 +53283,7 @@ class LopViewportOverrides:
 
 
         """
-    def __exit__(self, type: Any, value: Any, traceback: Any) -> None: ...
+    def __exit__(self, type: type[BaseException], value: BaseException, traceback: TracebackType) -> None: ...
 
 class Matrix2:
     """
@@ -55070,7 +55073,7 @@ class NetworkEditor(PathBasedPaneTab):
 
 
         """
-    def networkItemsInBox(self, pos1: Vector2, pos2: Vector2, for_drop: bool = False, for_select: bool = False) -> tuple[Tuple[NetworkItem, str, int], ...]:
+    def networkItemsInBox(self, pos1: Vector2, pos2: Vector2, for_drop: bool = False, for_select: bool = False) -> tuple[tuple[NetworkItem, str, int], ...]:
         """
 
         networkItemsInBox(self, pos1, pos2, for_drop=False, for_select=False) ->
@@ -55120,7 +55123,7 @@ class NetworkEditor(PathBasedPaneTab):
 
 
         """
-    def dropTargetItem(self) -> Tuple[NetworkItem, str, int]:
+    def dropTargetItem(self) -> tuple[NetworkItem, str, int]:
         """
 
         dropTargetItem(self) -> (hou.NetworkItem, str, int)
@@ -56823,7 +56826,7 @@ class Bundle:
 
 
         """
-    def pattern(self) -> Any:
+    def pattern(self) -> str | None:
         '''
 
         pattern(self) -> str or None
@@ -60492,7 +60495,7 @@ class PerfMonEvent:
 
         """
     def __enter__(self) -> PerfMonEvent: ...
-    def __exit__(self, type: Any, value: Any, traceback: Any) -> None: ...
+    def __exit__(self, type: type[BaseException], value: BaseException, traceback: TracebackType) -> None: ...
 
 class PerfMonProfile:
     """
@@ -61702,7 +61705,7 @@ class playbar:
 
         """
     @staticmethod
-    def addEventCallback(callback: Any) -> None:
+    def addEventCallback(callback: Callable[[EnumValue, float], None]) -> None:
         '''
 
         addEventCallback(self, callback)
@@ -61724,7 +61727,7 @@ class playbar:
 
         '''
     @staticmethod
-    def removeEventCallback(callback: Any) -> None:
+    def removeEventCallback(callback: Callable[[EnumValue, float], None]) -> None:
         """
 
         removeEventCallback(callback)
@@ -61750,7 +61753,7 @@ class playbar:
 
         """
     @staticmethod
-    def eventCallbacks() -> tuple[Any, ...]:
+    def eventCallbacks() -> tuple[Callable[[EnumValue, float], None],...]:
         """
 
         eventCallbacks() -> tuple of callback
@@ -62052,7 +62055,7 @@ class PluginHotkeyDefinitions:
 
 
         """
-    def addDefaultBinding(self, context: str, command: str, assignments: Sequence[str], apply_platform_modifier_mappings: bool = ...) -> Any:
+    def addDefaultBinding(self, context: str, command: str, assignments: Sequence[str], apply_platform_modifier_mappings: bool = ...) -> None:
         """
 
         addDefaultBinding(self, context, command, assignments, bool
@@ -62417,7 +62420,7 @@ class Point:
 
 
         """
-    def setAttribValue(self, name_or_attrib: str|Attrib, attrib_value: AttribArgType|AttribArgDictType) -> None:
+    def setAttribValue(self, name_or_attrib: str|Attrib, attrib_value: AttribArgType|AttribDictArgType) -> None:
         """
 
         setAttribValue(self, name_or_attrib, attrib_value)
@@ -62700,7 +62703,7 @@ class PointGroup:
 
 
         """
-    def setOption(self, name: str, value: OptionArgType, type_hint: EnumValue = ...) -> None:
+    def setOption(self, name: str, value: OptionMultiArgType, type_hint: EnumValue = ...) -> None:
         """
 
         setOption(self, name, value, type_hint = hou.fieldType::NoSuchField)
@@ -62756,7 +62759,7 @@ class PointGroup:
 
 
         """
-    def options(self) -> dict[str, OptionReturnType]:
+    def options(self) -> dict[str, OptionMultiReturnType]:
         """
 
         option(self, name) -> bool, int, float, str, hou.Vector2, hou.Vector3,
@@ -62771,7 +62774,7 @@ class PointGroup:
 
 
         """
-    def option(self, option_name: str) -> OptionReturnType: ...
+    def option(self, option_name: str) -> OptionMultiReturnType: ...
 
 class Polygon(Face):
     """
@@ -62977,7 +62980,7 @@ class PrimGroup:
 
 
         """
-    def setOption(self, name: str, value: OptionArgType, type_hint: EnumValue = ...) -> None:
+    def setOption(self, name: str, value: OptionMultiArgType, type_hint: EnumValue = ...) -> None:
         """
 
         setOption(self, name, value, type_hint = hou.fieldType::NoSuchField)
@@ -63033,7 +63036,7 @@ class PrimGroup:
 
 
         """
-    def options(self) -> dict[str, OptionReturnType]:
+    def options(self) -> dict[str, OptionMultiReturnType]:
         """
 
         option(self, name) -> bool, int, float, str, hou.Vector2, hou.Vector3,
@@ -63048,7 +63051,7 @@ class PrimGroup:
 
 
         """
-    def option(self, option_name: str) -> OptionReturnType: ...
+    def option(self, option_name: str) -> OptionMultiReturnType: ...
 
 class properties:
     """
@@ -63255,7 +63258,7 @@ class PythonPanel(PathBasedPaneTab):
 
 
         """
-    def activeInterfaceRootWidget(self) -> Any:
+    def activeInterfaceRootWidget(self) -> QtWidgets.QWidget:
         """
 
         activeInterfaceRootWidget(self) -> Qt.QtWidgets.QWidget subclass
@@ -64215,7 +64218,7 @@ class RadialScriptItem(RadialItem):
 
 
         """
-    def setActionCallback(self, callback: Any) -> None:
+    def setActionCallback(self, callback: Callback) -> None:
         """
 
         setActionCallback(self)
@@ -64234,7 +64237,7 @@ class RadialScriptItem(RadialItem):
 
 
         """
-    def setCheckCallback(self, callback: Any) -> None:
+    def setCheckCallback(self, callback: Callback) -> None:
         """
 
         setCheckCallback(self)
@@ -64656,7 +64659,7 @@ class Ramp:
 
 
         """
-    def lookup(self, pos: float) -> Any:
+    def lookup(self, pos: float) -> float|tuple[float, float, float]:
         """
 
         lookup(self, position) -> float or tuple
@@ -64669,7 +64672,7 @@ class Ramp:
 
 
         """
-    def values(self) -> Any:
+    def values(self) -> tuple[float|tuple[float, float, float],...]:
         """
 
         values(self) -> tuple of float or tuple of tuple of float
@@ -64973,7 +64976,7 @@ class RedrawBlock:
         """
     __swig_destroy__: Incomplete
     def __enter__(self) -> RedrawBlock: ...
-    def __exit__(self, type: Any, value: Any, traceback: Any) -> None: ...
+    def __exit__(self, type: type[BaseException], value: BaseException, traceback: TracebackType) -> None: ...
 
 class ReferencePlane:
     """
@@ -65274,7 +65277,7 @@ class RopNode(OpNode):
 
 
         """
-    def addRenderEventCallback(self, callback: Any, run_before_script: bool = False) -> None:
+    def addRenderEventCallback(self, callback: Callable[[RopNode, EnumValue, float], None], run_before_script: bool = ...) -> None:
         '''
 
         addRenderEventCallback(self, callback, run_before_script = False)
@@ -65326,7 +65329,7 @@ class RopNode(OpNode):
 
 
         '''
-    def removeRenderEventCallback(self, callback: Any) -> None:
+    def removeRenderEventCallback(self, callback: Callable[[RopNode, EnumValue, float], None]) -> None:
         """
 
         removeRenderEventCallback(self, callback)
@@ -65631,7 +65634,7 @@ class SceneGraphTree(PathBasedPaneTab):
 
 
         """
-    def collapsePrimitives(self, prims: Any) -> None:
+    def collapsePrimitives(self, prims: Sequence[str|pxr.Sdf.Path]) -> None:
         """
 
         collapsePrimitives(self, paths)
@@ -65644,7 +65647,7 @@ class SceneGraphTree(PathBasedPaneTab):
 
 
         """
-    def expandPrimitives(self, prims: Any, collapse_others: bool = False, expand_leaf_primitives: bool = False) -> None:
+    def expandPrimitives(self, prims: Sequence[str|pxr.Sdf.Path], collapse_others: bool = ..., expand_leaf_primitives: bool = ...) -> None:
         """
 
         expandPrimitives(self, paths, collapse_others=False,
@@ -65662,7 +65665,7 @@ class SceneGraphTree(PathBasedPaneTab):
 
 
         """
-    def expandedPrimitives(self, include_leaf_primitives: bool = False) -> Any:
+    def expandedPrimitives(self, include_leaf_primitives: bool = ...) -> tuple[pxr.Sdf.Path,...]:
         """
 
         expandedPrimitives(self, include_leaf_primitives=False) -> list of
@@ -67282,7 +67285,7 @@ class SceneViewer(PathBasedPaneTab):
 
 
         """
-    def runStateCommand(self, name: str, args: Optional[Any] = None) -> None:
+    def runStateCommand(self, name: str, args: dict[str, Any]|None = ...) -> None:
         '''
 
         runStateCommand(self, name, args=None)
@@ -67387,7 +67390,7 @@ class SceneViewer(PathBasedPaneTab):
 
 
         """
-    def stage(self) -> Any:
+    def stage(self) -> pxr.Usd.Stage:
         """
 
         stage(self) -> Usd.Stage
@@ -67925,7 +67928,7 @@ class SceneViewer(PathBasedPaneTab):
 
 
         """
-    def addEventCallback(self, callback: Any) -> None:
+    def addEventCallback(self, callback: Callable) -> None:
         '''
 
         addEventCallback(self, callback)
@@ -67998,7 +68001,7 @@ class SceneViewer(PathBasedPaneTab):
           > curSceneViewer.addEventCallback(onViewerCB)
 
         '''
-    def removeEventCallback(self, callback: Any) -> None:
+    def removeEventCallback(self, callback: Callable) -> None:
         """
 
         removeEventCallback(self,callback)
@@ -68018,7 +68021,7 @@ class SceneViewer(PathBasedPaneTab):
 
 
         """
-    def eventCallbacks(self) -> tuple[Any, ...]:
+    def eventCallbacks(self) -> tuple[Callable,...]:
         """
 
         eventCallbacks(self) -> tuple of callbacks
@@ -68028,7 +68031,7 @@ class SceneViewer(PathBasedPaneTab):
 
 
         """
-    def qtWindow(self) -> Any:
+    def qtWindow(self) -> QtWidgets.QWidget:
         """
 
         qtWindow(self) -> QtWidgets.QWidget
@@ -68250,7 +68253,7 @@ class ScriptEvalContext:
 
         """
     def __enter__(self) -> ScriptEvalContext: ...
-    def __exit__(self, type: Any, value: Any, traceback: Any) -> None: ...
+    def __exit__(self, type: type[BaseException], value: BaseException, traceback: TracebackType) -> None: ...
 
 class Selection:
     """
@@ -68981,7 +68984,7 @@ class ShellIO:
     thisown: Incomplete
     def __init__(self, *args, **kwargs) -> None: ...
     __swig_destroy__: Incomplete
-    def readline(self, size: int = -1) -> Any:
+    def readline(self, size: int = ...) -> str:
         """
 
         readline(self, size=-1) -> string
@@ -68990,7 +68993,7 @@ class ShellIO:
 
 
         """
-    def addCloseCallback(self, callback: Any) -> None:
+    def addCloseCallback(self, callback: Callable[[], None]) -> None:
         """
 
         addCloseCallback(callback)
@@ -69014,7 +69017,7 @@ class ShellIO:
 
 
         """
-    def removeCloseCallback(self, callback: Any) -> None:
+    def removeCloseCallback(self, callback: Callable[[], None]) -> None:
         """
 
         removeCloseCallback(callback)
@@ -69028,7 +69031,7 @@ class ShellIO:
 
 
         """
-    def closeCallbacks(self) -> tuple[Any, ...]:
+    def closeCallbacks(self) -> tuple[Callable[[], None],...]:
         """
 
         closeCallbacks() -> tuple of callback
@@ -69038,10 +69041,10 @@ class ShellIO:
 
 
         """
-    def CloseCallbacks(self) -> tuple[Any, ...]: ...
-    def addExitCallback(self, callback: Any) -> None: ...
-    def removeExitCallback(self, callback: Any) -> None: ...
-    def exitCallbacks(self) -> tuple[Any, ...]: ...
+    def CloseCallbacks(self) -> tuple[Callable[[], None],...]: ...
+    def addExitCallback(self, callback: Callable[[], None]) -> None: ...
+    def removeExitCallback(self, callback: Callable[[], None]) -> None: ...
+    def exitCallbacks(self) -> tuple[Callable[[], None],...]: ...
     def write(self, data: str) -> None:
         """
 
@@ -70271,7 +70274,7 @@ class SopVerb:
 
         """
     def loadParmsFromNodeAtTime(self, sopnode: SopNode, time: float) -> None: ...
-    def parms(self) -> dict[str, Any]:
+    def parms(self) -> dict[str, OptionType]:
         """
 
         parms(self) -> dictionary
@@ -70284,7 +70287,7 @@ class SopVerb:
 
 
         """
-    def setParms(self, p: dict[str, Any]) -> None:
+    def setParms(self, p: dict[str, OptionMultiArgType]) -> None:
         """
 
         setParms(self, parmdictionary)
@@ -75041,7 +75044,7 @@ class ui:
 
         '''
     @staticmethod
-    def viewerStateInfoFromFile(state_file: str) -> Tuple[str, str]:
+    def viewerStateInfoFromFile(state_file: str) -> tuple[str, str]:
         '''
 
         viewerStateInfoFromFile(state_filepath) -> (str, str)
@@ -75544,7 +75547,7 @@ class ui:
 
         """
     @staticmethod
-    def fireResourceCustomEvent(resource_type: EnumValue, user_data: dict[str, Any], queue: bool = True) -> None:
+    def fireResourceCustomEvent(resource_type: EnumValue, user_data: dict[str, bool|AttribBasicType], queue: bool = ...) -> None:
         """
 
         fireResourceCustomEvent(resource_type, user_data, queue=True)
@@ -76177,7 +76180,7 @@ class ui:
 
         """
     @staticmethod
-    def selectMultipleNodes(relative_to_node: Optional[Node] = None, initial_node: Optional[Node] = None, node_type_filter: Optional[EnumValue] = None, title: Optional[str] = None, width: int = 0, height: int = 0, custom_node_filter_callback: Optional[Any] = None) -> tuple[str, ...]:
+    def selectMultipleNodes(relative_to_node: Node|None = ..., initial_node: Node|None = ..., node_type_filter: EnumValue|None = ..., title: str|None = ..., width: int = ..., height: int = ..., custom_node_filter_callback: Callable[[Node], bool]|None = ...) -> tuple[str,...]:
         """
 
         selectMultipleNodes(relative_to_node=None, initial_node=None,
@@ -76204,7 +76207,7 @@ class ui:
 
         """
     @staticmethod
-    def openColorEditor(color_changed_callback: Any, include_alpha: bool = False, initial_color: Optional[Color] = None, initial_alpha: float = 1.0) -> None:
+    def openColorEditor(color_changed_callback: Callable[[Color, float], None], include_alpha: bool = ..., initial_color: Color|None = ..., initial_alpha: float = ...) -> None:
         '''
 
         openColorEditor( color_change_callback, include_alpha=False,
@@ -76339,7 +76342,7 @@ class ui:
 
         """
     @staticmethod
-    def addEventLoopCallback(callback: Any) -> None:
+    def addEventLoopCallback(callback: Callable[[], None]) -> None:
         """
 
         addEventLoopCallback(callback)
@@ -76367,7 +76370,7 @@ class ui:
 
         """
     @staticmethod
-    def removeEventLoopCallback(callback: Any) -> None:
+    def removeEventLoopCallback(callback: Callable[[], None]) -> None:
         """
 
         removeEventLoopCallback(callback)
@@ -76382,7 +76385,7 @@ class ui:
 
         """
     @staticmethod
-    def postEventCallback(callback: Any) -> None:
+    def postEventCallback(callback: Callable[[], None]) -> None:
         """
 
         postEventCallback(callback)
@@ -76399,7 +76402,7 @@ class ui:
 
         """
     @staticmethod
-    def removePostedEventCallback(callback: Any) -> None:
+    def removePostedEventCallback(callback: Callable[[], None]) -> None:
         """
 
         removePostedEventCallback(callback)
@@ -76411,7 +76414,7 @@ class ui:
 
         """
     @staticmethod
-    def eventLoopCallbacks() -> tuple[Any, ...]:
+    def eventLoopCallbacks() -> tuple[Callable[[], None],...]:
         """
 
         eventLoopCallbacks() -> tuple of callback
@@ -76422,7 +76425,7 @@ class ui:
 
         """
     @staticmethod
-    def waitUntil(callback: Any) -> None:
+    def waitUntil(callback: Callable[[], bool]) -> None:
         '''
 
         waitUntil(condition_callback)
@@ -76477,7 +76480,7 @@ class ui:
 
         '''
     @staticmethod
-    def addTriggerUpdateCallback(callback: Any) -> None:
+    def addTriggerUpdateCallback(callback: Callable) -> None:
         """
 
         removeTriggerUpdateCallback(callback)
@@ -76488,9 +76491,9 @@ class ui:
 
         """
     @staticmethod
-    def removeTriggerUpdateCallback(callback: Any) -> None: ...
+    def removeTriggerUpdateCallback(callback: Callable) -> None: ...
     @staticmethod
-    def addSelectionCallback(callback: Any) -> None:
+    def addSelectionCallback(callback: Callable[[Sequence[NetworkMovableItem]], None]) -> None:
         """
 
         addSelectionCallback(callback)
@@ -76512,7 +76515,7 @@ class ui:
 
         """
     @staticmethod
-    def removeSelectionCallback(callback: Any) -> None:
+    def removeSelectionCallback(callback: Callable[[Sequence[NetworkMovableItem]], None]) -> None:
         """
 
         removeSelectionCallback(callback)
@@ -76524,7 +76527,7 @@ class ui:
 
         """
     @staticmethod
-    def selectionCallbacks() -> tuple[Any, ...]:
+    def selectionCallbacks() -> tuple[Callable[[Sequence[NetworkMovableItem]], None],...]:
         """
 
         selectionCallbacks() -> tuple of callback
@@ -76535,7 +76538,7 @@ class ui:
 
         """
     @staticmethod
-    def addResourceEventCallback(callback: Any) -> None:
+    def addResourceEventCallback(callback: Callable[[enumValue, Any, str], None]) -> None:
         """
 
         addResourceEventCallback(self, callback)
@@ -76562,7 +76565,7 @@ class ui:
 
         """
     @staticmethod
-    def removeResourceEventCallback(callback: Any) -> None:
+    def removeResourceEventCallback(callback: Callable[[enumValue, Any, str], None]) -> None:
         """
 
         removeResourceEventCallback(self,callback)
@@ -76733,7 +76736,7 @@ class ui:
 
         """
     @staticmethod
-    def openViewerHandleCodeGenDialog(category: NodeTypeCategory, action_callback: Any) -> None:
+    def openViewerHandleCodeGenDialog(category: NodeTypeCategory, action_callback: Callable[[dict[str, str|bool]], None]) -> None:
         """
 
         openViewerHandleCodeGenDialog(categories, action_callback)
@@ -76801,6 +76804,8 @@ class ui:
         """
     @staticmethod
     def selectFile(start_directory: str | None = None, title: str | None = None, collapse_sequences: bool = False, file_type: EnumValue = fileType.Any, pattern: str | None = None, default_value: str | None = None, multiple_select: bool = False, image_chooser: bool = False, chooser_mode: EnumValue = fileChooserMode.ReadAndWrite, width: int = 0, height: int = 0) -> str: ...
+    @staticmethod
+    def selectNode(relative_to_node: Node | None = None, initial_node: Node | None = None, node_type_filter: EnumValue | None = None, title: str | None = None, width: int = 0, height: int = 0, multiple_select: bool = False, custom_node_filter_callback: Callable[[Node], bool] | None = None) -> str | tuple[str, ...] | None: ...
 
 class UIEvent:
     """
@@ -77520,7 +77525,7 @@ class UndosDisabler:
     def __init__(self, *args, **kwargs) -> None: ...
     __swig_destroy__: Incomplete
     def __enter__(self) -> UndosDisabler: ...
-    def __exit__(self, type: Any, value: Any, traceback: Any) -> None: ...
+    def __exit__(self, type: type[BaseException], value: BaseException, traceback: TracebackType) -> None: ...
 
 class UndosGroup:
     """
@@ -77548,7 +77553,7 @@ class UndosGroup:
 
         """
     def __enter__(self) -> UndosGroup: ...
-    def __exit__(self, type: Any, value: Any, traceback: Any) -> None: ...
+    def __exit__(self, type: type[BaseException], value: BaseException, traceback: TracebackType) -> None: ...
 
 class VDB(Prim):
     """
@@ -77801,7 +77806,7 @@ class VDB(Prim):
     def voxelRangeAsFloat(self, range: BoundingBox) -> tuple[float, ...]: ...
     def voxelRangeAsInt(self, range: BoundingBox) -> tuple[int, ...]: ...
     def voxelRangeAsVector3(self, range: BoundingBox) -> tuple[Vector3, ...]: ...
-    def voxelRange(self, range: BoundingBox) -> Any:
+    def voxelRange(self, range: BoundingBox) -> tuple[bool, ...] | tuple[int, ...] | tuple[float, ...] | tuple[Vector3, ...]:
         """
 
         voxelRangeAsVector3(self, range) -> tuple of hou.Vector3
@@ -79021,7 +79026,7 @@ class Vertex:
 
 
         """
-    def setAttribValue(self, name_or_attrib: str|Attrib, attrib_value: AttribArgType|AttribArgDictType) -> None:
+    def setAttribValue(self, name_or_attrib: str|Attrib, attrib_value: AttribArgType|AttribDictArgType) -> None:
         """
 
         setAttribValue(self, name_or_attrib, attrib_value)
@@ -79250,7 +79255,7 @@ class VertexGroup:
 
 
         """
-    def setOption(self, name: str, value: OptionArgType, type_hint: EnumValue = ...) -> None:
+    def setOption(self, name: str, value: OptionMultiArgType, type_hint: EnumValue = ...) -> None:
         """
 
         setOption(self, name, value, type_hint = hou.fieldType::NoSuchField)
@@ -79306,7 +79311,7 @@ class VertexGroup:
 
 
         """
-    def options(self) -> dict[str, OptionReturnType]:
+    def options(self) -> dict[str, OptionMultiReturnType]:
         """
 
         option(self, name) -> bool, int, float, str, hou.Vector2, hou.Vector3,
@@ -79321,7 +79326,7 @@ class VertexGroup:
 
 
         """
-    def option(self, option_name: str) -> OptionReturnType: ...
+    def option(self, option_name: str) -> OptionMultiReturnType: ...
 
 class VexContext:
     """
@@ -79750,7 +79755,7 @@ class ViewerEvent(UIEvent):
 
         """
     __swig_destroy__: Incomplete
-    def ray(self) -> Tuple[Vector3, Vector3]:
+    def ray(self) -> tuple[Vector3, Vector3]:
         """
 
         ray(self) -> (origin_point, direction)
@@ -79893,7 +79898,7 @@ class ViewerEvent(UIEvent):
 
 
         """
-    def screenToRay(self, scrx: float, scry: float) -> Tuple[Vector3, Vector3]:
+    def screenToRay(self, scrx: float, scry: float) -> tuple[Vector3, Vector3]:
         """
 
         screenToRay(self, scrx, scry) -> (origin_point, direction)
@@ -80557,7 +80562,7 @@ class ViewerHandleTemplate:
 
 
         """
-    def bindFactory(self, callback: Any) -> None:
+    def bindFactory(self, callback: Callable[[SceneViewer, str], Handle]) -> Any:
         """
 
         bindFactory(self, callable)
@@ -81080,7 +81085,7 @@ class ViewerStateTemplate:
 
     '''
     thisown: Incomplete
-    def __init__(self, state_name: str, state_label: str, node_type_category: NodeTypeCategory, contexts: Sequence[NodeTypeCategory]|None = ...) -> Any:
+    def __init__(self, state_name: str, state_label: str, node_type_category: NodeTypeCategory, contexts: Sequence[NodeTypeCategory]|None = ...) -> None:
         '''
 
         __init__(self, state_name, state_label, node_type_category,
@@ -82297,7 +82302,7 @@ class ViewerStateTemplate:
 
 
         """
-    def bindFactory(self, callback: Any) -> None:
+    def bindFactory(self, callback: Callable[[str, SceneViewer], Any]) -> Any:
         '''
 
         bindFactory(self, callable)
@@ -83195,7 +83200,7 @@ class Volume(Prim):
 
 
         """
-    def setAllVoxelsFromString(self, values: Any) -> None:
+    def setAllVoxelsFromString(self, values: bytes) -> None:
         '''
 
         setAllVoxelsFromString(self, values)
@@ -83331,7 +83336,7 @@ class Volume(Prim):
           >         volume.setVoxelSliceFromString(pixels, \\"xy\\", z)
 
         '''
-    def setVoxelSliceFromString(self, values: Any, plane: str, index: int) -> None: ...
+    def setVoxelSliceFromString(self, values: bytes, plane: str, index: int) -> None: ...
     def resolution(self) -> tuple[int, ...]:
         """
 
@@ -85607,7 +85612,7 @@ def parmClipboardContents() -> tuple[dict[str, str], ...]:
 
 
     """
-def evalParm(path: str) -> Any:
+def evalParm(path: str) -> ParmType:
     """
 
     hou.evalParm
@@ -85638,7 +85643,7 @@ def evalParm(path: str) -> Any:
 
 
     """
-def evalParmTuple(path: str) -> Any:
+def evalParmTuple(path: str) -> ParmTupleReturnType:
     """
 
     hou.evalParmTuple
@@ -85669,7 +85674,7 @@ def evalParmTuple(path: str) -> Any:
 
 
     """
-def ch(path: str) -> Any:
+def ch(path: str) -> ParmType:
     """
 
     hou.ch
@@ -85695,7 +85700,7 @@ def ch(path: str) -> Any:
 
 
     """
-def hscriptExpression(expression: str) -> Any:
+def hscriptExpression(expression: str) -> float|str|tuple[float,...]|tuple[str,...]:
     '''
 
     hou.hscriptExpression
@@ -85835,7 +85840,7 @@ def expressionGlobals() -> Any:
 
 
     '''
-def lvar(name: str) -> Any:
+def lvar(name: str) -> float|str:
     '''
 
     hou.lvar
@@ -85925,7 +85930,7 @@ def contextOption(opt: str) -> float|str:
 
 
     """
-def loadCPIODataFromString(data: Any) -> tuple[tuple[str, bytes], ...]:
+def loadCPIODataFromString(data: bytes) -> tuple[tuple[str, bytes],...]:
     """
 
     hou.loadCPIODataFromString
@@ -85959,7 +85964,7 @@ def loadCPIODataFromString(data: Any) -> tuple[tuple[str, bytes], ...]:
 
 
     """
-def loadIndexDataFromString(data: Any) -> dict[str, bytes]:
+def loadIndexDataFromString(data: bytes) -> dict[str, bytes]:
     """
 
     hou.loadIndexDataFromString
@@ -85997,7 +86002,7 @@ def loadIndexDataFromString(data: Any) -> dict[str, bytes]:
 
 
     """
-def addContextOptionChangeCallback(callback: Any) -> None:
+def addContextOptionChangeCallback(callback: Callable[[str], None]) -> None:
     """
 
     hou.addContextOptionChangeCallback
@@ -86030,7 +86035,7 @@ def addContextOptionChangeCallback(callback: Any) -> None:
 
 
     """
-def removeContextOptionChangeCallback(callback: Any) -> None:
+def removeContextOptionChangeCallback(callback: Callable[[str], None]) -> None:
     """
 
     hou.removeContextOptionChangeCallback
@@ -86059,7 +86064,7 @@ def removeContextOptionChangeCallback(callback: Any) -> None:
 
 
     """
-def contextOptionChangeCallbacks() -> tuple[Any, ...]:
+def contextOptionChangeCallbacks() -> tuple[Callable[[str], None],...]:
     """
 
     hou.contextOptionChangeCallbacks
@@ -86447,7 +86452,7 @@ def updateProgressAndCheckForInterrupt(percentage: int = -1) -> bool:
 
 
     """
-def runVex(vex_file: str, inputs: dict[str, Any], precision: Literal['32','64'] = ...) -> dict[str, Any]:
+def runVex(vex_file: str, inputs: dict[str, OptionType|OptionSequenceType], precision: Literal['32','64'] = ...) -> dict[str, Any]:
     '''
 
     hou.runVex
@@ -86698,7 +86703,7 @@ def imageResolution(image_file_name: str) -> tuple[int, ...]:
 
 
     '''
-def runCallbackAndCatchCrashes(callback: Any) -> Optional[Any]: ...
+def runCallbackAndCatchCrashes(callback: Callable) -> Optional[Any]: ...
 def updateModeSetting() -> EnumValue:
     """
 
@@ -90994,7 +90999,7 @@ def createAnimationClip(path: str = ..., set_export: bool = ...) -> ChopNode:
 
 
     '''
-def registerOpdefPath(path: str, server_name: str, port: str = ...) -> Any:
+def registerOpdefPath(path: str, server_name: str, port: str = ...) -> None:
     '''
 
     hou.registerOpdefPath

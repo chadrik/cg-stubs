@@ -159,7 +159,7 @@ class HoudiniCppTypeConverter(CppTypeConverter):
         (r"\bhboost::any\b", "Any"),
         (r"\bPyObject\b", "Any"),
         (r"\bPY_OpaqueObject\b", "Any"),
-        (r"\bUT_Tuple\b", "Tuple"),
+        (r"\bUT_Tuple\b", "tuple"),
         (r"\bswig::SwigPyIterator\b", "Self"),
         (r"\bUT_InfoTree\b", "NodeInfoTree"),
         # FIXME: These types are not fixed.  See Bookmark.metadata and ui.getDragSourceData
@@ -371,6 +371,7 @@ class ASTStubGenerator(mypy.stubgen.ASTStubGenerator):
         imports += super().get_imports() + "\n"
         imports += "import datetime\n"
         imports += "import typing\n"
+        imports += "from types import TracebackType\n"
         imports += ("from typing import Any, Callable, Dict, Iterator, Iterable, Literal, Optional, "
                     "Sequence, Self, Union, Tuple, TypeAlias\n\n")
         imports += "import pxr.Sdf\n"
