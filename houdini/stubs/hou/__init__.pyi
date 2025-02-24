@@ -6,7 +6,7 @@ from _typeshed import Incomplete
 import datetime
 import typing
 from types import TracebackType
-from typing import Any, Callable, Dict, Iterator, Iterable, Literal, Optional, Sequence, Self, Union, Tuple, TypeAlias
+from typing import Any, Callable, Dict, Iterator, Iterable, Mapping, Literal, Optional, Sequence, Self, Union, Tuple, TypeAlias
 
 import pxr.Sdf
 import pxr.Usd
@@ -12042,8 +12042,8 @@ class OpNode(Node):
     def inputConnections(self) -> Tuple[OpNodeConnection, ...]: ...
     def node(self, node_path: str) -> OpNode | None: ...
     def outputConnections(self) -> Tuple[OpNodeConnection, ...]: ...
-    def setParmExpressions(self, parm_dict: dict[str, str | Sequence[str]], language: EnumValue | None = None, replace_expressions: bool = True) -> None: ...
-    def setParms(self, parm_dict: dict[str, ParmType | ParmTupleArgType]) -> None: ...
+    def setParmExpressions(self, parm_dict: Mapping[str, str | Sequence[str]], language: EnumValue | None = None, replace_expressions: bool = True) -> None: ...
+    def setParms(self, parm_dict: Mapping[str, ParmType | ParmTupleArgType]) -> None: ...
     def type(self) -> OpNodeType: ...
 
 class NodeGroup:
@@ -14851,6 +14851,7 @@ class OpNodeType(NodeType):
     def generatorFlag(self) -> bool: ...
     def managerFlag(self) -> bool: ...
     def unorderedInputsFlag(self) -> bool: ...
+    def category(self) -> OpNodeTypeCategory: ...
 
 class NodeTypeCategory:
     """
@@ -15135,6 +15136,7 @@ class OpNodeTypeCategory(NodeTypeCategory):
 
 
         """
+    def nodeTypes(self) -> dict[str, OpNodeType]: ...
 
 class ParmTemplate:
     '''
@@ -15615,7 +15617,7 @@ class ParmTemplate:
 
 
         """
-    def setTags(self, tags: dict[str, str]) -> None:
+    def setTags(self, tags: Mapping[str, str]) -> None:
         """
 
         setTags(self, tags)
@@ -16292,7 +16294,7 @@ class ParmTemplateGroup:
 
 
         """
-    def asDialogScript(self, rename_conflicting_parms: bool = ..., full_info: bool = ..., script_name: str|None = ..., script_label: str|None = ..., script_tags: dict[str, str] = ...) -> str:
+    def asDialogScript(self, rename_conflicting_parms: bool = ..., full_info: bool = ..., script_name: str|None = ..., script_label: str|None = ..., script_tags: Mapping[str, str] = ...) -> str:
         """
 
         asDialogScript(rename_conflicting_parms=False, full_info=False,
@@ -18675,7 +18677,7 @@ class AgentMetadata:
 
     """
     thisown: Incomplete
-    def __init__(data: dict[str, Any]) -> None:
+    def __init__(data: Mapping[str, Any]) -> None:
         """
 
         __init__(data)
@@ -18744,7 +18746,7 @@ class AgentMetadata:
 
 
         """
-    def setData(self, data: dict[str, Any]) -> None:
+    def setData(self, data: Mapping[str, Any]) -> None:
         """
 
         setData(self, data)
@@ -22098,7 +22100,7 @@ class ButtonParmTemplate(ParmTemplate):
 
     """
     thisown: Incomplete
-    def __init__(self, name: str, label: str, disable_when: str|None = ..., is_hidden: bool = ..., is_label_hidden: bool = ..., join_with_next: bool = ..., help=..., script_callback: str|None = ..., script_callback_language: EnumValue = ..., tags: dict[str, str] = ...) -> None:
+    def __init__(self, name: str, label: str, disable_when: str|None = ..., is_hidden: bool = ..., is_label_hidden: bool = ..., join_with_next: bool = ..., help=..., script_callback: str|None = ..., script_callback_language: EnumValue = ..., tags: Mapping[str, str] = ...) -> None:
         """
 
         __init__(self, name, label, disable_when=None, is_hidden=False,
@@ -26217,7 +26219,7 @@ class crowds:
 
         '''
     @staticmethod
-    def replaceAgentDefinitions(geometry: Geometry, new_definition_map: dict[AgentDefinition, AgentDefinition], group: str = ..., group_type: EnumValue = ...) -> None:
+    def replaceAgentDefinitions(geometry: Geometry, new_definition_map: Mapping[AgentDefinition, AgentDefinition], group: str = ..., group_type: EnumValue = ...) -> None:
         '''
 
         replaceAgentDefinitions(geometry, new_definition_map, group = \\"\\",
@@ -26452,7 +26454,7 @@ class DataParmTemplate(ParmTemplate):
 
     """
     thisown: Incomplete
-    def __init__(self, name, label, num_components: int, look: EnumValue = ..., naming_scheme: EnumValue = ..., unknown_str: str|None = ..., disable_when: str|None = ..., is_hidden: bool = ..., is_label_hidden: bool = ..., join_with_next: bool = ..., help: str|None = ..., script_callback: str|None = ..., script_callback_language: EnumValue = ..., tags: dict[str, str] = ..., unknown_dict: dict[EnumValue, str] = ..., default_expression: Sequence[str] = ..., default_expression_language: Sequence[EnumValue] = ...) -> DataParmTemplate:
+    def __init__(self, name, label, num_components: int, look: EnumValue = ..., naming_scheme: EnumValue = ..., unknown_str: str|None = ..., disable_when: str|None = ..., is_hidden: bool = ..., is_label_hidden: bool = ..., join_with_next: bool = ..., help: str|None = ..., script_callback: str|None = ..., script_callback_language: EnumValue = ..., tags: Mapping[str, str] = ..., unknown_dict: Mapping[EnumValue, str] = ..., default_expression: Sequence[str] = ..., default_expression_language: Sequence[EnumValue] = ...) -> DataParmTemplate:
         """
 
         __init__(self, name, label, num_components, look=hou.parmLook.Regular,
@@ -28291,7 +28293,7 @@ class AdvancedDrawable(Drawable):
     thisown: Incomplete
     def __init__(self, *args, **kwargs) -> None: ...
     __swig_destroy__: Incomplete
-    def setParams(self, params: dict[str, Any]|None = ...) -> None:
+    def setParams(self, params: Mapping[str, Any]|None = ...) -> None:
         """
 
         setParams(self, params)
@@ -28405,7 +28407,7 @@ class AdvancedDrawable(Drawable):
 
 
         """
-    def draw(self, handle: Incomplete, params: dict[str, Any]|None = ...) -> None:
+    def draw(self, handle: Incomplete, params: Mapping[str, Any]|None = ...) -> None:
         """
 
         draw(self, handle, params=None)
@@ -29996,7 +29998,7 @@ class FloatParmTemplate(ParmTemplate):
 
     """
     thisown: Incomplete
-    def __init__(self, name: str, label: str, num_components: int, default_value: Sequence[float] = ..., min: float = ..., max: float = ..., min_is_strict: bool = ..., max_is_strict: bool = ..., look: EnumValue = ..., naming_scheme: EnumValue = ..., disable_when: str|None = ..., is_hidden: bool = ..., is_label_hidden: bool = ..., join_with_next: bool = ..., help: str|None = ..., script_callback: str|None = ..., script_callback_language: EnumValue = ..., tags: dict[str, str] = ..., default_expression: Sequence[str] = ..., default_expression_language: Sequence[EnumValue] = ...) -> None:
+    def __init__(self, name: str, label: str, num_components: int, default_value: Sequence[float] = ..., min: float = ..., max: float = ..., min_is_strict: bool = ..., max_is_strict: bool = ..., look: EnumValue = ..., naming_scheme: EnumValue = ..., disable_when: str|None = ..., is_hidden: bool = ..., is_label_hidden: bool = ..., join_with_next: bool = ..., help: str|None = ..., script_callback: str|None = ..., script_callback_language: EnumValue = ..., tags: Mapping[str, str] = ..., default_expression: Sequence[str] = ..., default_expression_language: Sequence[EnumValue] = ...) -> None:
         """
 
         __init__(self, name, label, num_components, default_value=(), min=0.0,
@@ -30308,7 +30310,7 @@ class FolderParmTemplate(ParmTemplate):
 
     """
     thisown: Incomplete
-    def __init__(self, name: str, label: str, parm_templates: Sequence[ParmTemplate] = ..., folder_type: EnumValue = ..., is_hidden: bool = ..., ends_tab_group: bool = ..., tags: dict[str, str] = ..., conditionals: dict[EnumValue, str] = ..., tab_conditionals: dict[EnumValue, str] = ...) -> None:
+    def __init__(self, name: str, label: str, parm_templates: Sequence[ParmTemplate] = ..., folder_type: EnumValue = ..., is_hidden: bool = ..., ends_tab_group: bool = ..., tags: Mapping[str, str] = ..., conditionals: Mapping[EnumValue, str] = ..., tab_conditionals: Mapping[EnumValue, str] = ...) -> None:
         """
 
         __init__(name, label, parm_templates=(),
@@ -30570,7 +30572,7 @@ class FolderSetParmTemplate(ParmTemplate):
 
     """
     thisown: Incomplete
-    def __init__(self, name: str, folder_names: Sequence[str], folder_type: EnumValue, tags: dict[str, str] = ...) -> None:
+    def __init__(self, name: str, folder_names: Sequence[str], folder_type: EnumValue, tags: Mapping[str, str] = ...) -> None:
         """
 
         hou.FolderSetParmTemplate
@@ -35206,7 +35208,7 @@ class GeometryDrawable(AdvancedDrawable):
 
     """
     thisown: Incomplete
-    def __init__(self, scene_viewer: SceneViewer, geo_type: EnumValue, name: str, label: str|None = ..., geometry: Geometry|None = ..., params: dict[str, Any]|None = ...) -> None:
+    def __init__(self, scene_viewer: SceneViewer, geo_type: EnumValue, name: str, label: str|None = ..., geometry: Geometry|None = ..., params: Mapping[str, Any]|None = ...) -> None:
         """
 
         __init__(self, scene_viewer, geo_type, name, label=None, geometry=None,
@@ -45968,7 +45970,7 @@ class hmath:
 
         """
     @staticmethod
-    def buildTransform(values_dict: dict[str, Vector3|Sequence[float]], transform_order: Literal['srt','str','rst','rts','tsr','trs'] = ..., rotate_order: Literal['xyz','xzy','yxz','yzx','zxy','zyx'] = ...) -> Matrix4:
+    def buildTransform(values_dict: Mapping[str, Vector3|Sequence[float]], transform_order: Literal['srt','str','rst','rts','tsr','trs'] = ..., rotate_order: Literal['xyz','xzy','yxz','yzx','zxy','zyx'] = ...) -> Matrix4:
         '''
 
         buildTransform(values_dict, transform_order=\\"srt\\", rotate_order=\\"xyz\\")
@@ -48144,7 +48146,7 @@ class IntParmTemplate(ParmTemplate):
 
     """
     thisown: Incomplete
-    def __init__(self, name: str, label: str, num_components: int, default_value: Sequence[int] = ..., min: int = ..., max: int = ..., min_is_strict=..., max_is_strict: bool = ..., look: EnumValue = ..., naming_scheme: EnumValue = ..., menu_items: Sequence[str] = ..., menu_labels: Sequence[str] = ..., icon_names: Sequence[str] = ..., item_generator_script: str|None = ..., item_generator_script_language: EnumValue|None = ..., menu_type: EnumValue = ..., disable_when: str|None = ..., is_hidden: bool = ..., is_label_hidden: bool = ..., join_with_next: bool = ..., help: str|None = ..., script_callback: str|None = ..., script_callback_language: EnumValue = ..., tags: dict[str, str] = ..., default_expression: Sequence[str] = ..., default_expression_language: Sequence[str] = ...) -> None:
+    def __init__(self, name: str, label: str, num_components: int, default_value: Sequence[int] = ..., min: int = ..., max: int = ..., min_is_strict=..., max_is_strict: bool = ..., look: EnumValue = ..., naming_scheme: EnumValue = ..., menu_items: Sequence[str] = ..., menu_labels: Sequence[str] = ..., icon_names: Sequence[str] = ..., item_generator_script: str|None = ..., item_generator_script_language: EnumValue|None = ..., menu_type: EnumValue = ..., disable_when: str|None = ..., is_hidden: bool = ..., is_label_hidden: bool = ..., join_with_next: bool = ..., help: str|None = ..., script_callback: str|None = ..., script_callback_language: EnumValue = ..., tags: Mapping[str, str] = ..., default_expression: Sequence[str] = ..., default_expression_language: Sequence[str] = ...) -> None:
         """
 
         __init__(self, name, label, num_components, default_value=(), min=0,
@@ -49721,7 +49723,7 @@ class LabelParmTemplate(ParmTemplate):
 
     """
     thisown: Incomplete
-    def __init__(self, name: str, label: str, column_labels: Sequence[str] = ..., is_hidden: bool = ..., is_label_hidden: bool = ..., join_with_next: bool = ..., help: str|None = ..., tags: dict[str, str] = ...) -> None:
+    def __init__(self, name: str, label: str, column_labels: Sequence[str] = ..., is_hidden: bool = ..., is_label_hidden: bool = ..., join_with_next: bool = ..., help: str|None = ..., tags: Mapping[str, str] = ...) -> None:
         """
 
         __init__(self, name, label, column_labels=(), is_hidden=False,
@@ -50839,7 +50841,7 @@ class LopNode(OpNode):
 
 
         """
-    def activeLayer(self, output_index: int = ..., ignore_errors: bool = ..., use_last_cook_context_options: bool = ..., frame: float|None = ..., context_options: dict[str, Any] = ...) -> pxr.Sdf.Layer:
+    def activeLayer(self, output_index: int = ..., ignore_errors: bool = ..., use_last_cook_context_options: bool = ..., frame: float|None = ..., context_options: Mapping[str, Any] = ...) -> pxr.Sdf.Layer:
         """
 
         activeLayer(self, output_index = 0, ignore_errors = False,
@@ -50901,7 +50903,7 @@ class LopNode(OpNode):
 
 
         """
-    def stage(self, output_index: int = ..., apply_viewport_overrides: bool = ..., ignore_errors: bool = ..., use_last_cook_context_options: bool = ..., apply_post_layers: bool = ..., frame: float|None = ..., context_options: dict[str, Any] = ...) -> pxr.Usd.Stage:
+    def stage(self, output_index: int = ..., apply_viewport_overrides: bool = ..., ignore_errors: bool = ..., use_last_cook_context_options: bool = ..., apply_post_layers: bool = ..., frame: float|None = ..., context_options: Mapping[str, Any] = ...) -> pxr.Usd.Stage:
         """
 
         stage(self, output_index = 0, apply_viewport_overrides = False,
@@ -50939,7 +50941,7 @@ class LopNode(OpNode):
 
 
         """
-    def sourceLayer(self, layer_index: int = ..., output_index: int = ..., use_last_cook_context_options: bool = ..., frame: float|None = ..., context_options: dict[str, Any] = ...) -> pxr.Sdf.Layer:
+    def sourceLayer(self, layer_index: int = ..., output_index: int = ..., use_last_cook_context_options: bool = ..., frame: float|None = ..., context_options: Mapping[str, Any] = ...) -> pxr.Sdf.Layer:
         """
 
         sourceLayer(self, layer_index = 0, output_index = 0,
@@ -50964,7 +50966,7 @@ class LopNode(OpNode):
 
 
         """
-    def stagePrimStats(self, primpath: str|None = ..., output_index: int = ..., apply_viewport_overrides: bool = ..., ignore_errors: bool = ..., do_geometry_counts: bool = ..., do_separate_purposes: bool = ..., use_last_cook_context_options: bool = ..., apply_post_layers: bool = ..., frame: float|None = ..., context_options: dict[str, str|float]|None = ...) -> dict[str, int]:
+    def stagePrimStats(self, primpath: str|None = ..., output_index: int = ..., apply_viewport_overrides: bool = ..., ignore_errors: bool = ..., do_geometry_counts: bool = ..., do_separate_purposes: bool = ..., use_last_cook_context_options: bool = ..., apply_post_layers: bool = ..., frame: float|None = ..., context_options: Mapping[str, str|float]|None = ...) -> dict[str, int]:
         """
 
         stagePrimStats(self, primpath = None, output_index = 0,
@@ -51053,7 +51055,7 @@ class LopNode(OpNode):
 
 
         """
-    def loadMasks(self, output_index: int = ..., force_cook: bool = ..., use_last_cook_context_options: bool = ..., frame: float|None = ..., context_options: dict[str, str|float]|None = ...) -> LopViewportLoadMasks:
+    def loadMasks(self, output_index: int = ..., force_cook: bool = ..., use_last_cook_context_options: bool = ..., frame: float|None = ..., context_options: Mapping[str, str|float]|None = ...) -> LopViewportLoadMasks:
         """
 
         loadMasks(self, output_index = 0, force_cook = False,
@@ -51085,7 +51087,7 @@ class LopNode(OpNode):
 
 
         """
-    def sourceLayerCount(self, output_index: int = ..., use_last_cook_context_options: bool = ..., frame: float|None = ..., context_options: dict[str, str|float]|None = ...) -> LopViewportLoadMasks:
+    def sourceLayerCount(self, output_index: int = ..., use_last_cook_context_options: bool = ..., frame: float|None = ..., context_options: Mapping[str, str|float]|None = ...) -> LopViewportLoadMasks:
         """
 
         sourceLayerCount(self, output_index = 0, use_last_cook_context_options =
@@ -51110,7 +51112,7 @@ class LopNode(OpNode):
 
 
         """
-    def layersAboveLayerBreak(self, output_index: int = ..., use_last_cook_context_options: bool = ..., frame: float|None = ..., context_options: dict[str, str|float]|None = ...) -> Tuple[str,...]:
+    def layersAboveLayerBreak(self, output_index: int = ..., use_last_cook_context_options: bool = ..., frame: float|None = ..., context_options: Mapping[str, str|float]|None = ...) -> Tuple[str,...]:
         """
 
         layersAboveLayerBreak(self, output_index = 0,
@@ -51177,7 +51179,7 @@ class LopNode(OpNode):
 
 
         """
-    def addLockedGeometry(self, identifier: str, geo: Geometry, args: dict[str, str]|None = ...) -> str:
+    def addLockedGeometry(self, identifier: str, geo: Geometry, args: Mapping[str, str]|None = ...) -> str:
         """
 
         addLockedGeometry(self, identifier, geo, args = {}) -> str
@@ -52181,7 +52183,7 @@ class lop:
 
         """
     @staticmethod
-    def addLockedGeometry(identifier: str, geo: Geometry, args: dict[str, str]|None = ...) -> str:
+    def addLockedGeometry(identifier: str, geo: Geometry, args: Mapping[str, str]|None = ...) -> str:
         """
 
         addLockedGeometry(self, identifier, geo, args = {}) -> str
@@ -54240,7 +54242,7 @@ class MenuParmTemplate(ParmTemplate):
 
     """
     thisown: Incomplete
-    def __init__(self, name: str, label: str, menu_items: Sequence[str], menu_labels: Sequence[str] = ..., default_value: int = ..., icon_names: Sequence[str] = ..., item_generator_script: str = ..., item_generator_script_language: EnumValue|None = ..., disable_when: str|None = ..., menu_type: EnumValue = ..., is_hidden: bool = ..., is_label_hidden: bool = ..., join_with_next: bool = ..., help: str|None = ..., script_callback: str|None = ..., script_callback_language: EnumValue = ..., tags: dict[str, str] = ..., default_expression: str = ..., default_expression_language: EnumValue = ..., store_default_value_as_string: bool = ..., menu_use_token: bool = ..., is_button_strip: bool = ..., strip_uses_icons: bool = ...) -> None:
+    def __init__(self, name: str, label: str, menu_items: Sequence[str], menu_labels: Sequence[str] = ..., default_value: int = ..., icon_names: Sequence[str] = ..., item_generator_script: str = ..., item_generator_script_language: EnumValue|None = ..., disable_when: str|None = ..., menu_type: EnumValue = ..., is_hidden: bool = ..., is_label_hidden: bool = ..., join_with_next: bool = ..., help: str|None = ..., script_callback: str|None = ..., script_callback_language: EnumValue = ..., tags: Mapping[str, str] = ..., default_expression: str = ..., default_expression_language: EnumValue = ..., store_default_value_as_string: bool = ..., menu_use_token: bool = ..., is_button_strip: bool = ..., strip_uses_icons: bool = ...) -> None:
         '''
 
         __init__(self, name, label, menu_items, menu_labels=(), default_value=0,
@@ -57704,7 +57706,7 @@ class Parm:
 
 
         """
-    def pressButton(self, arguments: dict[str, int|bool|float|str] = ...) -> None:
+    def pressButton(self, arguments: Mapping[str, int|bool|float|str] = ...) -> None:
         """
 
         pressButton(self, arguments={})
@@ -64695,7 +64697,7 @@ class RampParmTemplate(ParmTemplate):
 
     """
     thisown: Incomplete
-    def __init__(self, name: str, label: str, ramp_parm_type: EnumValue, default_value: int = ..., default_basis: EnumValue|None = ..., show_controls: bool = ..., color_type: EnumValue|None = ..., disable_when: str|None = ..., is_hidden: bool = ..., help: str|None = ..., script_callback: str|None = ..., script_callback_language: EnumValue = ..., tags: dict[str, str] = ..., default_expression_language: EnumValue = ...) -> None:
+    def __init__(self, name: str, label: str, ramp_parm_type: EnumValue, default_value: int = ..., default_basis: EnumValue|None = ..., show_controls: bool = ..., color_type: EnumValue|None = ..., disable_when: str|None = ..., is_hidden: bool = ..., help: str|None = ..., script_callback: str|None = ..., script_callback_language: EnumValue = ..., tags: Mapping[str, str] = ..., default_expression_language: EnumValue = ...) -> None:
         '''
 
         __init__(self, name, label, ramp_parm_type, default_value=2,
@@ -66061,7 +66063,7 @@ class SceneViewer(PathBasedPaneTab):
 
 
         '''
-    def selectDrawableGeometry(self, drawable_selection: dict[str, Incomplete], selection_modifier: EnumValue = ...) -> None:
+    def selectDrawableGeometry(self, drawable_selection: Mapping[str, Incomplete], selection_modifier: EnumValue = ...) -> None:
         """
 
         selectDrawableGeometry(self, drawable_selection,
@@ -67286,7 +67288,7 @@ class SceneViewer(PathBasedPaneTab):
 
 
         """
-    def runStateCommand(self, name: str, args: dict[str, Any]|None = ...) -> None:
+    def runStateCommand(self, name: str, args: Mapping[str, Any]|None = ...) -> None:
         '''
 
         runStateCommand(self, name, args=None)
@@ -68798,7 +68800,7 @@ class SeparatorParmTemplate(ParmTemplate):
 
     """
     thisown: Incomplete
-    def __init__(self, name: str, is_hidden: bool = ..., tags: dict[str, str] = ...) -> None:
+    def __init__(self, name: str, is_hidden: bool = ..., tags: Mapping[str, str] = ...) -> None:
         """
 
         __init__(self, name, is_hidden=False, tags={})
@@ -70288,7 +70290,7 @@ class SopVerb:
 
 
         """
-    def setParms(self, p: dict[str, OptionMultiArgType]) -> None:
+    def setParms(self, p: Mapping[str, OptionMultiArgType]) -> None:
         """
 
         setParms(self, parmdictionary)
@@ -70353,7 +70355,7 @@ class StringParmTemplate(ParmTemplate):
 
     """
     thisown: Incomplete
-    def __init__(self, name: str, label: str, num_components: int, default_value: Sequence[str] = ..., naming_scheme: EnumValue = ..., string_type: EnumValue = ..., file_type: EnumValue = ..., menu_items: Sequence[str] = ..., menu_labels: Sequence[str] = ..., icon_names: Sequence[str] = ..., item_generator_script: str|None = ..., item_generator_script_language: EnumValue|None = ..., menu_type: EnumValue = ..., disable_when: str|None = ..., is_hidden: bool = ..., is_label_hidden: bool = ..., join_with_next: bool = ..., help: str|None = ..., script_callback: str|None = ..., script_callback_language: EnumValue = ..., tags: dict[str, str] = ..., default_expression: Sequence[str] = ..., default_expression_language: Sequence[EnumValue] = ...) -> None:
+    def __init__(self, name: str, label: str, num_components: int, default_value: Sequence[str] = ..., naming_scheme: EnumValue = ..., string_type: EnumValue = ..., file_type: EnumValue = ..., menu_items: Sequence[str] = ..., menu_labels: Sequence[str] = ..., icon_names: Sequence[str] = ..., item_generator_script: str|None = ..., item_generator_script_language: EnumValue|None = ..., menu_type: EnumValue = ..., disable_when: str|None = ..., is_hidden: bool = ..., is_label_hidden: bool = ..., join_with_next: bool = ..., help: str|None = ..., script_callback: str|None = ..., script_callback_language: EnumValue = ..., tags: Mapping[str, str] = ..., default_expression: Sequence[str] = ..., default_expression_language: Sequence[EnumValue] = ...) -> None:
         """
 
         __init__(self, name, label, num_components, default_value=(),
@@ -72216,7 +72218,7 @@ class TextDrawable(AdvancedDrawable):
 
     '''
     thisown: Incomplete
-    def __init__(self, scene_viewer: SceneViewer, name: str, label: str|None = ..., params: dict[str, Any]|None = ...) -> None:
+    def __init__(self, scene_viewer: SceneViewer, name: str, label: str|None = ..., params: Mapping[str, Any]|None = ...) -> None:
         """
 
         __init__(self, scene_viewer, name, label=None, params=None)
@@ -72314,7 +72316,7 @@ class ToggleParmTemplate(ParmTemplate):
 
     """
     thisown: Incomplete
-    def __init__(self, name: str, label: str, default_value: bool = ..., disable_when: str|None = ..., is_hidden: bool = ..., is_label_hidden: bool = ..., join_with_next: bool = ..., help: str|None = ..., script_callback: str|None = ..., script_callback_language: EnumValue = ..., tags: dict[str, str] = ..., default_expression: str = ..., default_expression_language: EnumValue = ...) -> None:
+    def __init__(self, name: str, label: str, default_value: bool = ..., disable_when: str|None = ..., is_hidden: bool = ..., is_label_hidden: bool = ..., join_with_next: bool = ..., help: str|None = ..., script_callback: str|None = ..., script_callback_language: EnumValue = ..., tags: Mapping[str, str] = ..., default_expression: str = ..., default_expression_language: EnumValue = ...) -> None:
         '''
 
         __init__(self, name, label, default_value=False, disable_when=None,
@@ -75548,7 +75550,7 @@ class ui:
 
         """
     @staticmethod
-    def fireResourceCustomEvent(resource_type: EnumValue, user_data: dict[str, bool|AttribBasicType], queue: bool = ...) -> None:
+    def fireResourceCustomEvent(resource_type: EnumValue, user_data: Mapping[str, bool|AttribBasicType], queue: bool = ...) -> None:
         """
 
         fireResourceCustomEvent(resource_type, user_data, queue=True)
@@ -76577,7 +76579,7 @@ class ui:
 
         """
     @staticmethod
-    def openFileEditor(title: str, file_path: str, action_callback: Callable[[dict[str, int|float|bool|str]], None]|None = ..., params: dict[str, int|float|bool|str]|None = ...) -> None:
+    def openFileEditor(title: str, file_path: str, action_callback: Callable[[Mapping[str, int|float|bool|str]], None]|None = ..., params: Mapping[str, int|float|bool|str]|None = ...) -> None:
         """
 
         openFileEditor(title, file_path, action_callback=None, params=None)
@@ -76656,7 +76658,7 @@ class ui:
 
         """
     @staticmethod
-    def openViewerStateCodeGenDialog(category: NodeTypeCategory, action_callback: Callable[[dict[str, int|float|bool|str]], None], operator_name: str|None = ...) -> None:
+    def openViewerStateCodeGenDialog(category: NodeTypeCategory, action_callback: Callable[[Mapping[str, int|float|bool|str]], None], operator_name: str|None = ...) -> None:
         """
 
         openViewerStateCodeGenDialog(category, action_callback,
@@ -76737,7 +76739,7 @@ class ui:
 
         """
     @staticmethod
-    def openViewerHandleCodeGenDialog(category: NodeTypeCategory, action_callback: Callable[[dict[str, str|bool]], None]) -> None:
+    def openViewerHandleCodeGenDialog(category: NodeTypeCategory, action_callback: Callable[[Mapping[str, str|bool]], None]) -> None:
         """
 
         openViewerHandleCodeGenDialog(categories, action_callback)
@@ -86453,7 +86455,7 @@ def updateProgressAndCheckForInterrupt(percentage: int = -1) -> bool:
 
 
     """
-def runVex(vex_file: str, inputs: dict[str, OptionType|OptionSequenceType], precision: Literal['32','64'] = ...) -> dict[str, Any]:
+def runVex(vex_file: str, inputs: Mapping[str, OptionType|OptionSequenceType], precision: Literal['32','64'] = ...) -> dict[str, Any]:
     '''
 
     hou.runVex

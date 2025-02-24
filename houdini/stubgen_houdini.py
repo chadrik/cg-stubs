@@ -373,8 +373,8 @@ class ASTStubGenerator(mypy.stubgen.ASTStubGenerator):
         imports += "import datetime\n"
         imports += "import typing\n"
         imports += "from types import TracebackType\n"
-        imports += ("from typing import Any, Callable, Dict, Iterator, Iterable, Literal, Optional, "
-                    "Sequence, Self, Union, Tuple, TypeAlias\n\n")
+        imports += ("from typing import Any, Callable, Dict, Iterator, Iterable, Mapping, "
+                    "Literal, Optional, Sequence, Self, Union, Tuple, TypeAlias\n\n")
         imports += "import pxr.Sdf\n"
         imports += "import pxr.Usd\n"
         imports += f"from {pyside} import QtGui, QtWidgets\n\n"
