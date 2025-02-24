@@ -31,9 +31,6 @@ from stubgenlib import (
 tupleTypeRegex = re.compile("^_([a-zA-Z0-9]+)Tuple$")
 tupleGenTypeRegex = re.compile("^_([a-zA-Z0-9]+)TupleGenerator$")
 
-# Fix the type annotation for the `is_valid_type` to include subscripted types and the | character
-mypy.stubdoc._TYPE_RE = re.compile(r"^[a-zA-Z_][\w\[\], .\"\'|]*(\.[a-zA-Z_][\w\[\], ]*)*$")
-
 
 class IsResult:
     """Indicates whether an annotating type is an argument or a return.
