@@ -97,8 +97,10 @@ class AnnotationFixer(ast.NodeTransformer):
         new_node = self.generic_visit(node)
         if isinstance(new_node, ast.Subscript) and is_std(new_node.value, "vector"):
             if IsResult.is_set:
+                # NOTE: we use Tuple instead of tuple because Parm.tuple() method interferes
+                #  with the tuple type from parsing properly.
                 return ast.Subscript(
-                    value=ast.Name(id="tuple", ctx=ast.Load()),
+                    value=ast.Name(id="Tuple", ctx=ast.Load()),
                     slice=ast.Tuple(
                         elts=[new_node.slice, ast.Constant(value=Ellipsis)], ctx=ast.Load()
                     ),
@@ -159,12 +161,11 @@ class HoudiniCppTypeConverter(CppTypeConverter):
         (r"\bhboost::any\b", "Any"),
         (r"\bPyObject\b", "Any"),
         (r"\bPY_OpaqueObject\b", "Any"),
-        (r"\bUT_Tuple\b", "tuple"),
+        (r"\bUT_Tuple\b", "Tuple"),
         (r"\bswig::SwigPyIterator\b", "Self"),
         (r"\bUT_InfoTree\b", "NodeInfoTree"),
-        # FIXME: These types are not fixed.  See Bookmark.metadata and ui.getDragSourceData
-        (r"\bDDSourceAny\b", "Any"),
-        (r"\bUTOptionAny\b", "Any"),
+        # NOTE: Overriding std::pair to return Tuple instead of tuple
+        (r"\bstd::pair\b", "Tuple"),
     ] + CppTypeConverter.TYPE_MAP
 
     # Don't replace vector with list.  Instead, we'll replace std.vector with
