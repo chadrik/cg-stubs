@@ -58,7 +58,7 @@ def get_type_fullname(typ: type) -> str:
 class PySideHelper:
     _flag_group_to_item: dict[str, str] = {}
     _flag_item_short_name_to_type: defaultdict[str, set[str]] = defaultdict(set)
-    _signals: dict[str, list[str]] = {}
+    _signals: dict[str, list[list[str]]] = {}
 
     def __init__(self) -> None:
         self._pyside_package: str | None = None
@@ -132,28 +132,29 @@ class PySideHelper:
 
         signatures = signal.signatures
         if signatures:
-            # Take the first signature (there might be multiple overloads)
-            signature = signatures[0]
-
-            # Parse the signature string to extract argument types
-            # Format is like "timeout()" or "columnsAboutToBeInserted(QModelIndex,int,int)"
-            if "(" in signature and ")" in signature:
-                args_part = signature.split("(")[1].split(")")[0]
-                if args_part.strip():
-                    # Split by comma and clean up whitespace
-                    arg_types = [
-                        self.c_type_to_python_type(
-                            full_class_name, arg_type.strip(), signal_name
-                        )
-                        for arg_type in args_part.split(",")
-                    ]
+            signature_types: list[list[str]] = []
+            for signature in signatures:
+                # Parse the signature string to extract argument types
+                # Format is like "timeout()" or "columnsAboutToBeInserted(QModelIndex,int,int)"
+                if "(" in signature and ")" in signature:
+                    args_part = signature.split("(")[1].split(")")[0]
+                    if args_part.strip():
+                        # Split by comma and clean up whitespace
+                        arg_types = [
+                            self.c_type_to_python_type(
+                                full_class_name, arg_type.strip(), signal_name
+                            )
+                            for arg_type in args_part.split(",")
+                        ]
+                    else:
+                        arg_types = []
                 else:
                     arg_types = []
-            else:
-                arg_types = []
-            self.__class__._signals[f"{full_class_name}.{signal_name}"] = arg_types
+                signature_types.append(arg_types)
 
-    def get_signal(self, cls: type, signal_name: str) -> list[str] | None:
+            self.__class__._signals[f"{full_class_name}.{signal_name}"] = signature_types
+
+    def get_signal(self, cls: type, signal_name: str) -> list[list[str]] | None:
         full_class_name = get_type_fullname(cls)
         try:
             return self.__class__._signals[f"{full_class_name}.{signal_name}"]
@@ -389,12 +390,71 @@ class PySideSignatureGenerator(AdvancedSignatureGenerator):
                 "*.VolatileBool.set": "(self, a: object) -> None",
                 # * Add all signals and make all new-style signal patterns work.  e.g.
                 # `myobject.mysignal.connect(func) and `myobject.mysignal[type].connect(func)`
-                "PySide6.QtCore.Signal.__get__": [
-                    "(self, instance: None, owner: type[QObject]) -> Signal[*_SignalTypes]",
-                    "(self, instance: QObject, owner: type[QObject]) -> SignalInstance[*_SignalTypes]",
+                # Manually unpack some common type configurations to prevent users
+                # needing to type annotate their signals in common use cases.
+                "PySide6.QtCore.Signal.__init__": [
+                    # A signal with a single signature that has no arguments requires no constructor arguments.
+                    "(self: Signal[tuple[()]], /, name: str | None = ..., arguments: Optional[List[str]] = ...) -> None",
+                    # A signal with a single signature can have its types passed directly.
+                    # Support up to three arguments without needing to type annotate.
+                    "(self: Signal[tuple[T1]], /, arg1: type[T1], name: str | None = ..., arguments: Optional[List[str]] = ...) -> None",
+                    "(self: Signal[tuple[T1, T2]], /, arg1: type[T1], arg2: type[T2], name: str | None = ..., arguments: Optional[List[str]] = ...) -> None",
+                    "(self: Signal[tuple[T1, T2, T3]], /, arg1: type[T1], arg2: type[T2], arg3: type[T3], name: str | None = ..., arguments: Optional[List[str]] = ...) -> None",
+                    # All other signals with a single signature must be type annotated manually.
+                    "(self, /, *types: type, name: str | None = ..., arguments: Optional[List[str]] = ...) -> None",
+                    # A signal with multiple signatures has each signature defined in a tuple.
+                    # Support up to two signatures with up to two arguments each.
+                    "(self: Signal[tuple[T1], tuple[T3]], /, types: tuple[type[T1]], types2: tuple[type[T3]], name: str | None = ..., arguments: Optional[List[str]] = ...) -> None",
+                    "(self: Signal[tuple[T1, T2], tuple[T3]], /, types: tuple[type[T1], type[T2]], types2: tuple[type[T3]], name: str | None = ..., arguments: Optional[List[str]] = ...) -> None",
+                    "(self: Signal[tuple[T1], tuple[T3, T4]], /, types: tuple[type[T1]], types2: tuple[type[T3], type[T4]], name: str | None = ..., arguments: Optional[List[str]] = ...) -> None",
+                    "(self: Signal[tuple[T1, T2], tuple[T3, T4]], /, types: tuple[type[T1], type[T2]], types2: tuple[type[T3], type[T4]], name: str | None = ..., arguments: Optional[List[str]] = ...) -> None",
+                    # All other signals with multiple signature must be type annotated manually.
+                    "(self, /, *types: tuple[type, ...], name: str | None = ..., arguments: Optional[List[str]] = ...) -> None",
                 ],
-                "PySide6.QtCore.Signal.__getitem__": "(self, index) -> SignalInstance[*_SignalTypes]",
-                "PySide6.QtCore.SignalInstance.__getitem__": "(self, index) -> SignalInstance[*_SignalTypes]",
+                "PySide6.QtCore.Signal.__get__": [
+                    "(self, instance: None, owner: type[QObject]) -> Signal[*_SignalSignatures]",
+                    "(self, instance: QObject, owner: type[QObject]) -> SignalInstance[*_SignalSignatures]",
+                ],
+                # Restrict the possible signatures of the Signal based on the given index.
+                "PySide6.QtCore.Signal.__getitem__": [
+                    # A signal signature with a single argument can be indexed with a single type.
+                    "(self: Signal[tuple[T1], *_SignalSignatures1], index: type[T1]) -> SignalInstance[tuple[T1]]",
+                    # A signal signature with a multiple arguments is indexed with a tuple of types.
+                    # We support type restriction for up to three arguments,
+                    # for either the first or last signature.
+                    "(self: Signal[tuple[T1, T2], *_SignalSignatures1], index: tuple[type[T1], type[T2]]) -> SignalInstance[tuple[T1, T2]]",
+                    "(self: Signal[tuple[T1, T2, T3], *_SignalSignatures1], index: tuple[type[T1], type[T2], type[T3]]) -> SignalInstance[tuple[T1, T2, T3]]",
+                    "(self: Signal[*_SignalSignatures1, tuple[T1]], index: type[T1]) -> SignalInstance[tuple[T1]]",
+                    "(self: Signal[*_SignalSignatures1, tuple[T1, T2]], index: tuple[type[T1], type[T2]]) -> SignalInstance[tuple[T1, T2]]",
+                    "(self: Signal[*_SignalSignatures1, tuple[T1, T2, T3]], index: tuple[type[T1], type[T2], type[T3]]) -> SignalInstance[tuple[T1, T2, T3]]",
+                    # At the time of writing, mypy implements TypeVarTuple unpacking as greedy.
+                    # In other words it treats `Signal[*SignalSignatures1, T1]` and `Signal[*SignalSignatures1, T1, *SignalSignatures2]`
+                    # as equivalent. Therefore we can't represent all possible valid signatures of this method,
+                    # and must allow an arbitrary tuple of types to be passed.
+                    "(self, index: tuple[type, ...]) -> SignalInstance",
+                ],
+                "PySide6.QtCore.SignalInstance.__getitem__": [
+                    "(self: SignalInstance[tuple[T1], *_SignalSignatures1], index: type[T1]) -> SignalInstance[tuple[T1]]",
+                    "(self: SignalInstance[tuple[T1, T2], *_SignalSignatures1], index: tuple[type[T1], type[T2]]) -> SignalInstance[tuple[T1, T2]]",
+                    "(self: SignalInstance[tuple[T1, T2, T3], *_SignalSignatures1], index: tuple[type[T1], type[T2], type[T3]]) -> SignalInstance[tuple[T1, T2, T3]]",
+                    "(self: SignalInstance[*_SignalSignatures1, tuple[T1]], index: type[T1]) -> SignalInstance[tuple[T1]]",
+                    "(self: SignalInstance[*_SignalSignatures1, tuple[T1, T2]], index: tuple[type[T1], type[T2]]) -> SignalInstance[tuple[T1, T2]]",
+                    "(self: SignalInstance[*_SignalSignatures1, tuple[T1, T2, T3]], index: tuple[type[T1], type[T2], type[T3]]) -> SignalInstance[tuple[T1, T2, T3]]",
+                    "(self, index: tuple[type, ...]) -> SignalInstance",
+                ],
+                # * Fix slot arg of `SignalInstance.connect()` to support validating the types of the callable args
+                # Signals with multiple signatures use the default signature (the first signature),
+                # so we always access the types of the first signature.
+                "PySide6.QtCore.SignalInstance.connect": [
+                    # Signals can be connected to slots with fewer arguments than the signal.
+                    # We support this pattern for signals with up to three arguments.
+                    "(self: SignalInstance[tuple[T1, *_SignalArgT], *_SignalSignatures], slot: _SlotFunc[()] | _SlotFunc[T1], /, type: Qt.ConnectionType = ...) -> QMetaObject.Connection",
+                    "(self: SignalInstance[tuple[T1, T2, *_SignalArgT], *_SignalSignatures], slot: _SlotFunc[T1, T2], /, type: Qt.ConnectionType = ...) -> QMetaObject.Connection",
+                    "(self: SignalInstance[tuple[T1, T2, T3, *_SignalArgT], *_SignalSignatures], slot: _SlotFunc[T1, T2, T3], /, type: Qt.ConnectionType = ...) -> QMetaObject.Connection",
+                    "(self: SignalInstance[tuple[*_SignalArgT], *_SignalSignatures], slot: _SlotFunc[*_SignalArgT], /, type: Qt.ConnectionType = ...) -> QMetaObject.Connection",
+                ],
+                "PySide6.QtCore.SignalInstance.disconnect": "(self: SignalInstance[tuple[*_SignalArgT], *_SignalSignatures], /, slot: _SlotFunc[*_SignalArgT] | None = ...) -> bool",
+                "PySide6.QtCore.SignalInstance.emit": "(self: SignalInstance[tuple[*_SignalArgT], *_SignalSignatures], /, *args: *_SignalArgT) -> None",
                 # * Fix `QTreeWidgetItemIterator.__iter__()` to iterate over `QTreeWidgetItemIterator`
                 "*.QTreeWidgetItemIterator.__iter__": "(self) -> typing.Iterator[QTreeWidgetItemIterator]",
                 "*.QTreeWidgetItemIterator.__next__": "(self) -> QTreeWidgetItemIterator",
@@ -463,22 +523,6 @@ class PySideSignatureGenerator(AdvancedSignatureGenerator):
                     "to",
                     "*",
                 ): f"list[{PYSIDE}.QtCore.QModelIndex]",
-                # * Fix slot arg of `SignalInstance.connect()` to support validating the types of the callable args
-                (
-                    "PySide6.QtCore.SignalInstance.connect",
-                    "slot",
-                    "*",
-                ): "_SlotFunc[*_SignalTypes]",
-                (
-                    "PySide6.QtCore.SignalInstance.disconnect",
-                    "slot",
-                    "*",
-                ): "_SlotFunc[*_SignalTypes] | None",
-                (
-                    "PySide6.QtCore.SignalInstance.emit",
-                    "*args",
-                    "Any",
-                ): "*_SignalTypes",
                 #
                 (
                     "PySide6.QtCore.QObject.findChild*",
@@ -964,10 +1008,18 @@ P = typing.ParamSpec('P')\n"""
 
         if self.module_name == "PySide6.QtCore":
             boilerplate += """
-_SignalTypes = typing.TypeVarTuple('_SignalTypes')
+T1 = typing.TypeVar('T1')
+T2 = typing.TypeVar('T2')
+T3 = typing.TypeVar('T3')
+T4 = typing.TypeVar('T4')
 
-class _SlotFunc(typing.Protocol[*_SignalTypes]):
-    def __call__(self, *args: *_SignalTypes) -> typing.Any:
+_SignalSignatures = typing.TypeVarTuple('_SignalSignatures')
+_SignalSignatures1 = typing.TypeVarTuple('_SignalSignatures1')
+_SignalSignatures2 = typing.TypeVarTuple('_SignalSignatures2')
+_SignalArgT = typing.TypeVarTuple('_SignalArgT')
+
+class _SlotFunc(typing.Protocol[*_SignalArgT]):
+    def __call__(self, *args: *_SignalArgT) -> typing.Any:
         pass\n\n"""
 
         if helper.pyside_package == "PySide6":
@@ -1096,14 +1148,21 @@ class _SlotFunc(typing.Protocol[*_SignalTypes]):
             "Signal",
             "SignalInstance",
         ]:
-            return ["typing.Generic[*_SignalTypes]"]
+            return ["typing.Generic[*_SignalSignatures]"]
         return super().get_base_types(obj)
 
     def generate_class_attr(self, cls: type, attr: str, value: object) -> str | None:
-        signal_types = helper.get_signal(cls, attr)
-        if signal_types is not None:
+        signal_signatures = helper.get_signal(cls, attr)
+        if signal_signatures is not None:
             prop_type_name = self.strip_or_import(self.get_type_annotation(value))
-            signal_types_str = ", ".join(signal_types) if signal_types else "()"
+            signature_strs: list[str] = []
+            for signature in signal_signatures:
+                if signature:
+                    signature_strs.append(f"tuple[{', '.join(signature)}]")
+                else:
+                    signature_strs.append("tuple[()]")
+
+            signal_types_str = ", ".join(signature_strs)
             classvar = self.add_name("typing.ClassVar")
             return f"{self._indent}{attr}: {classvar}[{prop_type_name}[{signal_types_str}]] = ..."
         else:
